@@ -1,6 +1,7 @@
 "use client"
 import * as React from "react"
 import NextLink from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -15,6 +16,11 @@ const navLinks = [
 export function Navbar() {
   const [scrolled, setScrolled] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)
+  const pathname = usePathname()
+
+  // Only show transparent navbar on the homepage (hero has dark bg behind it)
+  const isHomepage = pathname === "/"
+  const isTransparent = isHomepage && !scrolled
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -26,9 +32,9 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
-          ? "bg-[#FBF6EE]/95 backdrop-blur-sm border-b border-[#E0D9CF] shadow-sm"
-          : "bg-transparent"
+        isTransparent
+          ? "bg-transparent"
+          : "bg-[#FBF6EE]/95 backdrop-blur-sm border-b border-[#E0D9CF] shadow-sm"
       )}
     >
       <div className="container mx-auto max-w-7xl px-4 md:px-8 h-20 flex items-center justify-between">
@@ -37,7 +43,7 @@ export function Navbar() {
           <span
             className={cn(
               "font-serif text-2xl font-normal tracking-tight transition-colors",
-              scrolled ? "text-[#221F1C]" : "text-white"
+              isTransparent ? "text-white" : "text-[#221F1C]"
             )}
           >
             PrintBloom
@@ -45,7 +51,7 @@ export function Navbar() {
           <span
             className={cn(
               "font-mono text-[9px] uppercase tracking-[0.2em] transition-colors",
-              scrolled ? "text-[#9A8F85]" : "text-white/70"
+              isTransparent ? "text-white/70" : "text-[#9A8F85]"
             )}
           >
             Memory Gifts
@@ -60,7 +66,8 @@ export function Navbar() {
               href={link.href}
               className={cn(
                 "font-sans text-sm tracking-wide transition-colors hover:text-[#C1502E]",
-                scrolled ? "text-[#221F1C]" : "text-white/90"
+                isTransparent ? "text-white/90" : "text-[#221F1C]",
+                pathname === link.href && "text-[#C1502E] font-medium"
               )}
             >
               {link.label}
@@ -84,21 +91,21 @@ export function Navbar() {
           <span
             className={cn(
               "block w-6 h-0.5 transition-all duration-300",
-              scrolled ? "bg-[#221F1C]" : "bg-white",
+              isTransparent ? "bg-white" : "bg-[#221F1C]",
               menuOpen && "rotate-45 translate-y-2"
             )}
           />
           <span
             className={cn(
               "block w-6 h-0.5 transition-all duration-300",
-              scrolled ? "bg-[#221F1C]" : "bg-white",
+              isTransparent ? "bg-white" : "bg-[#221F1C]",
               menuOpen && "opacity-0"
             )}
           />
           <span
             className={cn(
               "block w-6 h-0.5 transition-all duration-300",
-              scrolled ? "bg-[#221F1C]" : "bg-white",
+              isTransparent ? "bg-white" : "bg-[#221F1C]",
               menuOpen && "-rotate-45 -translate-y-2"
             )}
           />
