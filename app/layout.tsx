@@ -1,6 +1,8 @@
+import * as React from "react";
 import type { Metadata } from "next";
 import { Fraunces, Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
