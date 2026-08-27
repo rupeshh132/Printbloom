@@ -22,8 +22,24 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PrintBloom | Personalised Memory Gifts",
-  description: "Turn your favorite memories into gifts they'll never forget.",
+  title: "PrintBloom | Turn Your Memories into Gifts",
+  description: "Personalized magazines, polaroids, and frames. Turn your favorite memories into beautifully crafted gifts they'll keep forever.",
+  keywords: ["personalized gifts", "custom magazine", "photo printing", "polaroid prints", "anniversary gifts", "birthday gifts"],
+  openGraph: {
+    title: "PrintBloom",
+    description: "Personalized custom magazines and photo gifts.",
+    url: "https://printbloom.in",
+    siteName: "PrintBloom",
+    images: [
+      {
+        url: "https://printbloom.in/og-image.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
