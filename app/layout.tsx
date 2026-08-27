@@ -53,6 +53,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${fraunces.variable} ${publicSans.variable} ${ibmPlexMono.variable} antialiased bg-[#FBF6EE] text-[#221F1C] font-sans selection:bg-[#C1502E] selection:text-white`}
+        suppressHydrationWarning
       >
         {children}
       </body>
