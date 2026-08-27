@@ -1,0 +1,21 @@
+import { SectionHeading } from "@/components/ui/section-heading"
+import { ProductGrid } from "@/components/marketing/product-grid"
+
+export default function ProductsPage() {
+  return (
+    <main className="flex flex-col min-h-screen py-24 px-4 md:px-8">
+      <div className="container mx-auto max-w-6xl">
+        <header className="mb-16 text-center md:text-left">
+          <SectionHeading as="h1">
+            Gifts They'll Keep Forever
+          </SectionHeading>
+          <p className="mt-4 text-text-muted text-lg max-w-2xl">
+            From our signature custom magazine to framed memories and polaroids, everything is made-to-order from your photos and stories.
+          </p>
+        </header>
+        
+        <ProductGrid />
+      </div>
+    </main>
+  )
+}
