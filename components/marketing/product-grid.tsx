@@ -35,8 +35,8 @@ export function ProductGrid() {
       {MOCK_PRODUCTS.map((product) => (
         <Link 
           key={product.slug} 
-          href={/products/}
-          className={group flex flex-col }
+          href={`/products/${product.slug}`}
+          className={`group flex flex-col ${product.isHero ? 'md:col-span-2 lg:col-span-2' : 'col-span-1'}`}
         >
           <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-[500px] overflow-hidden bg-surface mb-6">
             <Image
