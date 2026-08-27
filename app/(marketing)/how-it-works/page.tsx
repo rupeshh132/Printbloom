@@ -2,7 +2,7 @@ import { SectionHeading } from "@/components/ui/section-heading"
 
 export default function HowItWorksPage() {
   return (
-    <main className="flex flex-col min-h-screen py-24 px-4 md:px-8">
+    <main className="flex flex-col min-h-screen pt-36 pb-24 px-4 md:px-8">
       <div className="container mx-auto max-w-3xl">
         <SectionHeading as="h1" className="text-center mb-16">How It Works</SectionHeading>
         <div className="space-y-12">

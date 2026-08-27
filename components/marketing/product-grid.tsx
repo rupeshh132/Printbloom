@@ -8,7 +8,7 @@ const MOCK_PRODUCTS = [
     name: "The Custom Magazine",
     benefit: "A beautifully crafted editorial starring your favorite people.",
     startingPrice: "₹1,499",
-    image: "https://images.unsplash.com/photo-1544928147-79a2dbc1f389?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
     isHero: true
   },
   {
@@ -16,7 +16,7 @@ const MOCK_PRODUCTS = [
     name: "Vintage Polaroid Set",
     benefit: "Your digital memories, printed with a classic retro feel.",
     startingPrice: "₹499",
-    image: "https://images.unsplash.com/photo-1526485856375-9110812fbf35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1509281373149-e957c6296406?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     isHero: false
   },
   {
@@ -24,7 +24,7 @@ const MOCK_PRODUCTS = [
     name: "Classic Photo Frame",
     benefit: "Ready-to-hang wooden frames for your best moments.",
     startingPrice: "₹899",
-    image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1531685250784-7569952593d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     isHero: false
   }
 ]

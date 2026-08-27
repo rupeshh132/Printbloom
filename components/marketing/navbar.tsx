@@ -70,15 +70,7 @@ export function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-4">
-          <Button
-            asChild
-            variant={scrolled ? "default" : "outline"}
-            size="sm"
-            className={cn(
-              !scrolled &&
-                "border-white text-white hover:bg-white hover:text-[#221F1C] bg-transparent"
-            )}
-          >
+          <Button asChild size="sm">
             <NextLink href="/order">Order Now</NextLink>
           </Button>
         </div>

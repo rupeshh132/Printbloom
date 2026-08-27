@@ -3,7 +3,7 @@ import { Link } from "@/components/ui/link"
 
 export default function JournalPage() {
   return (
-    <main className="flex flex-col min-h-screen py-24 px-4 md:px-8">
+    <main className="flex flex-col min-h-screen pt-36 pb-24 px-4 md:px-8">
       <div className="container mx-auto max-w-6xl">
         <header className="mb-16">
           <SectionHeading as="h1">Bloom Journal</SectionHeading>
