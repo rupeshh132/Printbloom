@@ -5,18 +5,18 @@ import Image from "next/image"
 
 export function HeroSection() {
   return (
-    <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full h-screen min-h-[680px] flex items-center justify-center overflow-hidden">
       {/* Background Image Placeholder */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src="https://images.unsplash.com/photo-1606240724602-5b21f896eae8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-          alt="Hands holding a beautifully printed custom magazine"
+          src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80"
+          alt="Friends laughing and sharing memories together"
           fill
           priority
           className="object-cover object-center"
         />
-        {/* Soft overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-ink/30"></div>
+        {/* Warm dark overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/40 to-ink/70"></div>
       </div>
       
       <div className="relative z-10 container mx-auto px-4 md:px-8 flex flex-col items-center text-center">
