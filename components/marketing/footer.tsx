@@ -74,13 +74,25 @@ export function Footer() {
         </div>
 
         {/* Bottom section */}
-        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[#9A8F85] text-xs">
+        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[#9A8F85] text-xs">
+          <p>
             © {new Date().getFullYear()} PrintBloom. All rights reserved.
           </p>
-          <p className="text-[#9A8F85] text-xs font-mono">
-            Made with love in India 🇮🇳
-          </p>
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+            <p className="font-mono">
+              Made with love in India 🇮🇳
+            </p>
+            <span className="hidden md:inline-block w-1 h-1 rounded-full bg-[#9A8F85]/50"></span>
+            <a 
+              href="https://github.com/rupeshh132" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative inline-block group hover:text-[#FBF6EE] transition-colors"
+            >
+              Designed & Developed by Rupesh Vishwakarma
+              <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-[#C1502E] scale-x-0 origin-right transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:origin-left"></span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
