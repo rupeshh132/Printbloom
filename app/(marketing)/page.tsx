@@ -7,6 +7,7 @@ import { CustomerReactionsSection } from "@/components/marketing/customer-reacti
 import { ReviewsSection } from "@/components/marketing/reviews-section"
 import { BehindTheScenesSection } from "@/components/marketing/behind-the-scenes-section"
 import { WhyPrintBloomSection } from "@/components/marketing/why-printbloom-section"
+import { RemindersCTASection } from "@/components/marketing/reminders-cta-section"
 import { FinalCTASection } from "@/components/marketing/final-cta-section"
 
 export default function HomePage() {
@@ -21,6 +22,7 @@ export default function HomePage() {
       <ReviewsSection />
       <BehindTheScenesSection />
       <WhyPrintBloomSection />
+      <RemindersCTASection />
       <FinalCTASection />
     </main>
   )
