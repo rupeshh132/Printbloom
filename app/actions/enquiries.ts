@@ -174,3 +174,32 @@ export async function getEnquiryUploads(token: string) {
   
   return { files }
 }
+
+// Hard delete all uploads for an enquiry to free up storage
+export async function deleteEnquiryUploads(token: string) {
+  const supabase = await createSupabaseServerClient()
+  
+  // 1. List all files in the directory
+  const { data: files, error: listError } = await supabase.storage.from("images").list(`customer_uploads/${token}`)
+  
+  if (listError || !files || files.length === 0) {
+    return { success: false, error: "No files found to delete." }
+  }
+  
+  // 2. Map to their full paths
+  const filePaths = files.map(f => `customer_uploads/${token}/${f.name}`)
+  
+  // 3. Remove all files
+  const { error: deleteError } = await supabase.storage.from("images").remove(filePaths)
+  
+  if (deleteError) {
+    console.error("Error deleting files:", deleteError)
+    return { success: false, error: deleteError.message }
+  }
+  
+  // 4. Update the enquiry status so Admin knows it was cleared
+  await supabase.from("enquiries").update({ upload_status: "archived" }).eq("upload_token", token)
+  revalidatePath("/admin/enquiries")
+  
+  return { success: true }
+}
