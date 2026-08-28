@@ -24,7 +24,7 @@ export function FinalCTASection() {
         </div>
       </div>
 
-      <div className="w-full h-auto mt-auto opacity-40 select-none pointer-events-auto">
+      <div className="w-full h-[20vw] min-h-[120px] max-h-[300px] mt-auto select-none pointer-events-auto opacity-30">
         <TextPressure
           text="PRINTBLOOM"
           flex={true}
@@ -33,7 +33,7 @@ export function FinalCTASection() {
           width={true}
           weight={true}
           italic={true}
-          textColor="#A8432A"
+          textColor="#FBF6EE"
           minFontSize={36}
         />
       </div>
