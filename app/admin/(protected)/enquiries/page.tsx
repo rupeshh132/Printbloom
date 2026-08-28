@@ -77,9 +77,19 @@ export default async function AdminEnquiries() {
                           {enq.status === "new" ? "Mark Contacted →" : enq.status === "contacted" ? "Mark Converted →" : "Close"}
                         </button>
                       </form>
-                      <div className="flex items-center mt-2 pt-2 border-t border-[#E0D9CF]">
-                        <span className="text-[10px] uppercase tracking-wider text-[#9A8F85]">Upload: {enq.upload_status || 'pending'}</span>
-                        <CopyUploadLink token={enq.upload_token} />
+                      <div className="flex flex-col mt-2 pt-2 border-t border-[#E0D9CF] gap-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] uppercase tracking-wider text-[#9A8F85]">Upload: {enq.upload_status || 'pending'}</span>
+                          <CopyUploadLink token={enq.upload_token} />
+                        </div>
+                        {enq.upload_status === "completed" && (
+                          <a 
+                            href={`/admin/enquiries/${enq.upload_token}`}
+                            className="text-xs bg-[#4B6B4F] text-white text-center py-1.5 rounded-sm hover:bg-[#3A533D] transition-colors"
+                          >
+                            View Photos & Captions
+                          </a>
+                        )}
                       </div>
                     </div>
                   </td>

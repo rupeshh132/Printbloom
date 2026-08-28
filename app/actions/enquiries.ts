@@ -127,4 +127,50 @@ export async function getEnquiryByToken(token: string) {
 export async function updateEnquiryUploadStatus(token: string, status: string) {
   const supabase = await createSupabaseServerClient()
   await supabase.from("enquiries").update({ upload_status: status }).eq("upload_token", token)
+  revalidatePath("/admin/enquiries")
+}
+
+// Fetch uploaded files for a specific enquiry
+export async function getEnquiryUploads(token: string) {
+  const supabase = await createSupabaseServerClient()
+  
+  const { data, error } = await supabase.storage.from("images").list(`customer_uploads/${token}`)
+  
+  if (error || !data || data.length === 0) {
+    return { files: [] }
+  }
+  
+  const images = data.filter(f => !f.name.endsWith('.json'))
+  const jsonFiles = data.filter(f => f.name.endsWith('.json'))
+  
+  let captions: Record<string, string> = {}
+  
+  if (jsonFiles.length > 0) {
+    // Get the most recent captions file
+    const latestJson = jsonFiles.sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]
+    const { data: fileData } = await supabase.storage.from("images").download(`customer_uploads/${token}/${latestJson.name}`)
+    
+    if (fileData) {
+      const text = await fileData.text()
+      try { 
+        captions = JSON.parse(text) 
+      } catch(e) {
+        console.error("Failed to parse captions JSON", e)
+      }
+    }
+  }
+  
+  // Generate public URLs and attach captions
+  const files = images.map(img => {
+    const path = `customer_uploads/${token}/${img.name}`
+    const { data: urlData } = supabase.storage.from("images").getPublicUrl(path)
+    
+    return {
+      name: img.name,
+      url: urlData.publicUrl,
+      caption: captions[path] || null
+    }
+  })
+  
+  return { files }
 }
