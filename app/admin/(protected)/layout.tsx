@@ -8,6 +8,7 @@ const adminNavLinks = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/enquiries", label: "Enquiries" },
   { href: "/admin/products", label: "Products" },
+  { href: "/admin/reminders", label: "Reminders" },
 ]
 
 export default async function AdminLayout({
