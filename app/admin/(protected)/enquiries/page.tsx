@@ -2,6 +2,8 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { getEnquiries, updateEnquiryStatus } from "@/app/actions/enquiries"
 import { CopyUploadLink } from "@/components/admin/copy-upload-link"
 
+export const dynamic = "force-dynamic"
+
 const STATUS_COLORS: Record<string, string> = {
   new: "bg-yellow-100 text-yellow-800",
   contacted: "bg-blue-100 text-blue-800",

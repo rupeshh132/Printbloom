@@ -48,6 +48,9 @@ export async function saveEnquiryAction(formData: FormData) {
       quantity: 1,
     })
   }
+  
+  revalidatePath("/admin/enquiries")
+  revalidatePath("/admin")
 
   return { success: true, enquiryId: enquiry.id }
 }

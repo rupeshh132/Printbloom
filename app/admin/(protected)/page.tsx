@@ -3,6 +3,8 @@ import { getDashboardCounts } from "@/app/actions/enquiries"
 import { seedProducts } from "@/app/actions/products"
 import { Button } from "@/components/ui/button"
 
+export const dynamic = "force-dynamic"
+
 async function handleSeed() {
   "use server"
   await seedProducts()
