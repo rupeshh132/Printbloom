@@ -23,7 +23,13 @@ export function OrderForm({ products }: OrderFormProps) {
     const formData = new FormData(e.currentTarget);
 
     // 1. Save enquiry to Supabase
-    await saveEnquiryAction(formData);
+    const result = await saveEnquiryAction(formData);
+
+    if (result.error) {
+      alert("Oops! There was an error saving your order to the database. Please try again.");
+      setLoading(false);
+      return;
+    }
 
     // 2. Build WhatsApp message
     const name = formData.get("name") as string;
