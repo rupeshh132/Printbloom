@@ -34,7 +34,7 @@ export default function OrderPage() {
     if (pages) text += "*Pages:* " + pages + "%0A";
     if (notes) text += "*Notes:* " + notes + "%0A";
 
-    const waLink = "https://wa.me/919999999999?text=" + text;
+    const waLink = "https://wa.me/918090683207?text=" + text;
 
     setLoading(false);
     setSubmitted(true);
@@ -54,7 +54,7 @@ export default function OrderPage() {
             If not, click below to chat with us directly.
           </p>
           <Button asChild>
-            <a href="https://wa.me/919999999999" target="_blank" rel="noreferrer">
+            <a href="https://wa.me/918090683207" target="_blank" rel="noreferrer">
               Open WhatsApp
             </a>
           </Button>
