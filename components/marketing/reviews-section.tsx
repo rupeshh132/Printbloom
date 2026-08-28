@@ -15,7 +15,7 @@ const mockReviews = [
     name: "Aman K.",
     content: "Ordered the polaroid set for my girlfriend. The packaging was beautiful and the prints have that perfect vintage feel.",
     product: "Polaroid Set",
-    image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    image: "https://images.unsplash.com/photo-1528697203043-733daf42c073?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
   },
   {
     id: 3,
@@ -29,7 +29,7 @@ const mockReviews = [
     name: "Vikram R.",
     content: "The wooden frames are super premium. They came ready to hang, exactly as promised. Very happy with the purchase.",
     product: "Classic Photo Frame",
-    image: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
   }
 ]
 
