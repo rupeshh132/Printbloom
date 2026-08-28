@@ -1,11 +1,12 @@
 import * as React from "react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { Button } from "@/components/ui/button"
+import { TextPressure } from "@/components/ui/text-pressure"
 
 export function FinalCTASection() {
   return (
-    <section className="py-32 px-4 md:px-8 bg-[#C1502E] text-white">
-      <div className="container mx-auto max-w-4xl text-center flex flex-col items-center">
+    <section className="relative pt-32 pb-16 px-4 md:px-8 bg-[#C1502E] text-white overflow-hidden flex flex-col items-center">
+      <div className="container mx-auto max-w-4xl text-center flex flex-col items-center relative z-10 mb-16">
         <SectionHeading as="h2" className="text-white mb-6 text-4xl md:text-5xl lg:text-6xl">
           Ready to tell your story?
         </SectionHeading>
@@ -21,6 +22,20 @@ export function FinalCTASection() {
             <a href="/how-it-works">See How It Works</a>
           </Button>
         </div>
+      </div>
+
+      <div className="w-full h-auto mt-auto opacity-40 select-none pointer-events-auto">
+        <TextPressure
+          text="PRINTBLOOM"
+          flex={true}
+          alpha={false}
+          stroke={false}
+          width={true}
+          weight={true}
+          italic={true}
+          textColor="#A8432A"
+          minFontSize={36}
+        />
       </div>
     </section>
   )
