@@ -84,7 +84,7 @@ export function Footer() {
             </p>
             <span className="hidden md:inline-block w-1 h-1 rounded-full bg-[#9A8F85]/50"></span>
             <a 
-              href="https://github.com/rupeshh132" 
+              href="https://my-portfolio-coral-rho-5fuq441i1t.vercel.app/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="relative inline-block group hover:text-[#FBF6EE] transition-colors"
