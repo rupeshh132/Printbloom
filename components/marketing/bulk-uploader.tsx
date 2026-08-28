@@ -4,13 +4,9 @@ import * as React from "react"
 import { useState, useCallback } from "react"
 import { createClient } from "@supabase/supabase-js"
 import { AICaptionButton } from "@/components/ui/ai-caption-button"
+import { updateEnquiryUploadStatus } from "@/app/actions/enquiries"
 
 // Initialize Supabase client
-// We can use standard supabase-js here because we are just doing storage uploads.
-// If RLS applies, we might need a specific policy or we'll assume the images bucket is public-write for the path.
-// Wait, the images bucket is public, but what are its upload policies?
-// If the user hasn't set an upload policy for anon users, uploads will fail!
-// We'll write the logic and if it fails with RLS, we'll ask the user to add an INSERT policy.
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabase = createClient(supabaseUrl, supabaseKey)
@@ -27,6 +23,7 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
   const [files, setFiles] = useState<UploadFile[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [overallProgress, setOverallProgress] = useState(0)
+  const [isComplete, setIsComplete] = useState(false)
   
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
@@ -53,7 +50,6 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
     setIsUploading(true)
 
     let completed = 0
-    // Simple batching: process 3 files at a time to prevent browser freezing
     const batchSize = 3
     const pendingFiles = files.filter(f => f.status === "pending" || f.status === "error")
     
@@ -61,7 +57,6 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
       const batch = pendingFiles.slice(i, i + batchSize)
       
       await Promise.all(batch.map(async (f) => {
-        // Mark as uploading
         setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "uploading" } : pf))
         
         try {
@@ -78,8 +73,6 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
 
           if (error) throw error
 
-          // We don't change the status immediately to allow us to map the filename to caption later.
-          // Wait, actually, let's just save the final filePath into the file object so we can use it.
           setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "success", progress: 100, finalPath: filePath } : pf))
         } catch (err) {
           console.error("Upload error for file", f.file.name, err)
@@ -91,11 +84,12 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
       }))
     }
     
-    // Once all files are uploaded, let's generate a captions.json for the successful ones that have captions
     try {
+      let hasSuccess = false;
       setFiles(prev => {
         const successFiles = prev.filter(f => f.status === "success" && f.caption && (f as any).finalPath);
         if (successFiles.length > 0) {
+          hasSuccess = true;
           const captionsMap = successFiles.reduce((acc, f) => {
             acc[(f as any).finalPath] = f.caption;
             return acc;
@@ -109,17 +103,38 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
         }
         return prev;
       });
+
+      // Update backend status to completed
+      await updateEnquiryUploadStatus(token, "completed");
+      setIsComplete(true);
+
     } catch(e) {}
 
     setIsUploading(false)
-    
-    // Optional: Call a server action here to update upload_status = 'completed' on the enquiry
-    // We can do that via fetch or server action if passed as a prop.
   }
 
   const successCount = files.filter(f => f.status === "success").length
   const pendingCount = files.filter(f => f.status === "pending").length
   const errorCount = files.filter(f => f.status === "error").length
+
+  if (isComplete) {
+    return (
+      <div className="bg-white p-12 border border-[#E0D9CF] shadow-sm rounded-sm text-center animate-in fade-in zoom-in-95 duration-500">
+        <div className="w-20 h-20 bg-[#4B6B4F]/10 text-[#4B6B4F] rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h2 className="font-serif text-3xl text-[#221F1C] mb-4">Upload Successful!</h2>
+        <p className="text-[#6B6259] max-w-md mx-auto mb-8 text-lg">
+          Thank you, {enquiryName}. We have received your {successCount} photos along with your captions.
+        </p>
+        <p className="text-sm text-[#9A8F85]">
+          Our design team will now start crafting your beautiful magazine. We will reach out to you on WhatsApp with the preview soon!
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-white p-6 border border-[#E0D9CF] shadow-sm rounded-sm">
