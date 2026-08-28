@@ -69,7 +69,7 @@ export async function getEnquiries() {
     .order("created_at", { ascending: false })
 
   if (error) {
-    console.error("Fetch enquiries error:", error)
+    console.error("Fetch enquiries error details:", JSON.stringify(error, null, 2))
     return []
   }
 

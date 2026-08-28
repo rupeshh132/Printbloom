@@ -12,9 +12,14 @@ export default async function AdminProducts() {
           <SectionHeading as="h1" className="text-[#221F1C]">Products</SectionHeading>
           <p className="text-sm text-[#9A8F85] mt-1">{products.length} products</p>
         </div>
-        <form action={seedProducts}>
-          <Button size="sm" type="submit">Seed Default Products</Button>
-        </form>
+        <div className="flex items-center gap-3">
+          <Button asChild size="sm" variant="default">
+            <a href="/admin/products/new">Add New Product</a>
+          </Button>
+          <form action={seedProducts}>
+            <Button size="sm" variant="outline" type="submit">Seed Default Products</Button>
+          </form>
+        </div>
       </div>
 
       {products.length === 0 ? (

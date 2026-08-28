@@ -85,3 +85,36 @@ export async function toggleProductStatus(id: string, currentStatus: string) {
   await supabase.from("products").update({ status: newStatus }).eq("id", id)
   revalidatePath("/admin/(protected)/products")
 }
+
+// Create a new product
+export async function createProduct(formData: FormData) {
+  const supabase = await createSupabaseServerClient()
+
+  const name = formData.get("name") as string
+  const slug = formData.get("slug") as string
+  const tagline = formData.get("tagline") as string
+  const description = formData.get("description") as string
+  const price = formData.get("starting_price_label") as string
+  const mainImageUrl = formData.get("main_image_url") as string
+  const isHero = formData.get("is_hero") === "on"
+  
+  const { error } = await supabase.from("products").insert({
+    name,
+    slug,
+    tagline,
+    description,
+    starting_price_label: price,
+    main_image_url: mainImageUrl || null,
+    is_hero: isHero,
+    status: "draft"
+  })
+
+  if (error) {
+    console.error("Error creating product:", error)
+    return { error: error.message }
+  }
+
+  revalidatePath("/admin/(protected)/products")
+  revalidatePath("/products")
+  return { success: true }
+}
