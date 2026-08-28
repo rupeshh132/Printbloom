@@ -41,7 +41,7 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="bg-amber-50 border border-amber-200 p-4 rounded-sm text-sm text-amber-800">
-        <strong>First time setup?</strong> Click "Seed Products (Run Once)" button above to add the 3 default products to your database.
+        <strong>First time setup?</strong> Click "Seed Products (Run Once)" button above to add PrintBloom's full product catalog to your database.
       </div>
     </div>
   )

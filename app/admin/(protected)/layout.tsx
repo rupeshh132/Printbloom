@@ -51,7 +51,7 @@ export default async function AdminLayout({
         </nav>
 
         {/* User + Logout */}
-        <div className="px-6 py-5 border-t border-white/10">
+        <div className="px-6 py-5 border-t border-white/10 pb-10">
           <p className="text-[#9A8F85] text-xs font-mono truncate mb-3">{user.email}</p>
           <form action={logoutAction}>
             <button
