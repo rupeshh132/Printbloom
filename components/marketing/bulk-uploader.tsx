@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useState, useCallback } from "react"
 import { createClient } from "@supabase/supabase-js"
+import { AICaptionButton } from "@/components/ui/ai-caption-button"
 
 // Initialize Supabase client
 // We can use standard supabase-js here because we are just doing storage uploads.
@@ -19,6 +20,7 @@ type UploadFile = {
   id: string
   status: "pending" | "uploading" | "success" | "error"
   progress: number
+  caption?: string
 }
 
 export function BulkUploader({ token, enquiryName }: { token: string; enquiryName: string }) {
@@ -32,13 +34,18 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
       file,
       id: Math.random().toString(36).substring(7),
       status: "pending" as const,
-      progress: 0
+      progress: 0,
+      caption: ""
     }))
     setFiles(prev => [...prev, ...newFiles])
   }
 
   const removeFile = (id: string) => {
     setFiles(prev => prev.filter(f => f.id !== id))
+  }
+
+  const updateCaption = (id: string, caption: string) => {
+    setFiles(prev => prev.map(f => f.id === id ? { ...f, caption } : f))
   }
 
   const startUpload = async () => {
@@ -71,7 +78,9 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
 
           if (error) throw error
 
-          setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "success", progress: 100 } : pf))
+          // We don't change the status immediately to allow us to map the filename to caption later.
+          // Wait, actually, let's just save the final filePath into the file object so we can use it.
+          setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "success", progress: 100, finalPath: filePath } : pf))
         } catch (err) {
           console.error("Upload error for file", f.file.name, err)
           setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "error" } : pf))
@@ -82,6 +91,26 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
       }))
     }
     
+    // Once all files are uploaded, let's generate a captions.json for the successful ones that have captions
+    try {
+      setFiles(prev => {
+        const successFiles = prev.filter(f => f.status === "success" && f.caption && (f as any).finalPath);
+        if (successFiles.length > 0) {
+          const captionsMap = successFiles.reduce((acc, f) => {
+            acc[(f as any).finalPath] = f.caption;
+            return acc;
+          }, {} as Record<string, string>);
+          
+          const blob = new Blob([JSON.stringify(captionsMap, null, 2)], { type: 'application/json' });
+          const captionsPath = `customer_uploads/${token}/captions_${Date.now()}.json`;
+          
+          supabase.storage.from("images").upload(captionsPath, blob, { upsert: false })
+            .catch(e => console.error("Failed to upload captions json", e));
+        }
+        return prev;
+      });
+    } catch(e) {}
+
     setIsUploading(false)
     
     // Optional: Call a server action here to update upload_status = 'completed' on the enquiry
@@ -128,38 +157,56 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-h-[400px] overflow-y-auto p-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto p-2">
             {files.map(f => (
-              <div key={f.id} className="relative aspect-square group rounded-sm overflow-hidden border border-[#E0D9CF]">
-                {/* We use a blob URL to preview the image without uploading it yet */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src={URL.createObjectURL(f.file)} 
-                  alt={f.file.name} 
-                  className="w-full h-full object-cover" 
-                />
-                
-                {/* Status Overlay */}
-                <div className={`absolute inset-0 flex flex-col items-center justify-center bg-black/40 ${f.status === 'success' ? 'opacity-100 bg-black/20' : f.status === 'error' ? 'opacity-100 bg-red-900/40' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
-                  {f.status === "pending" && !isUploading && (
-                    <button 
-                      onClick={() => removeFile(f.id)}
-                      className="bg-white/90 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-xl hover:bg-white transition-colors"
-                    >
-                      ×
-                    </button>
-                  )}
-                  {f.status === "uploading" && (
-                    <span className="text-white text-xs font-mono bg-black/50 px-2 py-1 rounded">Uploading...</span>
-                  )}
-                  {f.status === "success" && (
-                    <span className="text-white bg-[#4B6B4F] p-1 rounded-full">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                    </span>
-                  )}
-                  {f.status === "error" && (
-                    <span className="text-white text-xs font-mono bg-[#A5322A] px-2 py-1 rounded text-center">Failed</span>
-                  )}
+              <div key={f.id} className="flex flex-col bg-[#FBF6EE] rounded-sm overflow-hidden border border-[#E0D9CF]">
+                {/* Image Preview */}
+                <div className="relative aspect-video group bg-black/5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src={URL.createObjectURL(f.file)} 
+                    alt={f.file.name} 
+                    className="w-full h-full object-contain" 
+                  />
+                  
+                  {/* Status Overlay */}
+                  <div className={`absolute inset-0 flex flex-col items-center justify-center bg-black/40 ${f.status === 'success' ? 'opacity-100 bg-black/20' : f.status === 'error' ? 'opacity-100 bg-red-900/40' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
+                    {f.status === "pending" && !isUploading && (
+                      <button 
+                        onClick={() => removeFile(f.id)}
+                        className="bg-white/90 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-xl hover:bg-white transition-colors"
+                      >
+                        ×
+                      </button>
+                    )}
+                    {f.status === "uploading" && (
+                      <span className="text-white text-xs font-mono bg-black/50 px-2 py-1 rounded">Uploading...</span>
+                    )}
+                    {f.status === "success" && (
+                      <span className="text-white bg-[#4B6B4F] p-1 rounded-full">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                      </span>
+                    )}
+                    {f.status === "error" && (
+                      <span className="text-white text-xs font-mono bg-[#A5322A] px-2 py-1 rounded text-center">Failed</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Caption Area */}
+                <div className="p-4 flex flex-col gap-3 bg-white border-t border-[#E0D9CF] flex-1">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-medium text-[#9A8F85] uppercase tracking-wider">Caption (Optional)</label>
+                    <AICaptionButton onSelect={(caption) => updateCaption(f.id, caption)} />
+                  </div>
+                  <textarea
+                    value={f.caption || ""}
+                    onChange={(e) => updateCaption(f.id, e.target.value)}
+                    disabled={f.status !== "pending" && f.status !== "error"}
+                    placeholder="Write a caption for this photo..."
+                    className="w-full text-sm border border-[#E0D9CF] p-2 rounded-sm resize-none focus:outline-none focus:border-[#C1502E] disabled:bg-gray-50 disabled:text-gray-500"
+                    rows={2}
+                  />
                 </div>
               </div>
             ))}
