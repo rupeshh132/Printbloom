@@ -2,6 +2,7 @@ import * as React from "react"
 import Image from "next/image"
 import { Link } from "@/components/ui/link"
 import { SectionHeading } from "@/components/ui/section-heading"
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/fade-in"
 
 const occasions = [
   {
@@ -30,7 +31,7 @@ export function ShopByOccasionSection() {
   return (
     <section className="py-24 px-4 md:px-8 bg-surface">
       <div className="container mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 space-y-4 md:space-y-0">
+        <FadeIn className="flex flex-col md:flex-row md:items-end justify-between mb-12 space-y-4 md:space-y-0">
           <div>
             <div className="font-mono text-xs tracking-[0.2em] uppercase text-text-muted mb-4">
               Find the perfect gift
@@ -40,32 +41,33 @@ export function ShopByOccasionSection() {
           <Link href="/products" variant="underline" className="text-sm">
             View All Products &rarr;
           </Link>
-        </div>
+        </FadeIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <FadeInStagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {occasions.map((occasion) => (
-            <a 
-              key={occasion.title} 
-              href={occasion.href}
-              className="group relative block aspect-[4/5] overflow-hidden bg-bg border border-border"
-            >
-              <Image 
-                src={occasion.image}
-                alt={occasion.title}
-                fill
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
-              
-              <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                <h3 className="text-white font-serif text-2xl mb-1">{occasion.title}</h3>
-                <span className="text-white/80 font-mono text-xs uppercase tracking-wider opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                  Shop Gifts &rarr;
-                </span>
-              </div>
-            </a>
+            <FadeInStaggerItem key={occasion.title}>
+              <a 
+                href={occasion.href}
+                className="group relative block aspect-[4/5] overflow-hidden bg-bg border border-border"
+              >
+                <Image 
+                  src={occasion.image}
+                  alt={occasion.title}
+                  fill
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
+                
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <h3 className="text-white font-serif text-2xl mb-1">{occasion.title}</h3>
+                  <span className="text-white/80 font-mono text-xs uppercase tracking-wider opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                    Shop Gifts &rarr;
+                  </span>
+                </div>
+              </a>
+            </FadeInStaggerItem>
           ))}
-        </div>
+        </FadeInStagger>
       </div>
     </section>
   )

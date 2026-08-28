@@ -1,6 +1,7 @@
 import * as React from "react"
 import Image from "next/image"
 import { SectionHeading } from "@/components/ui/section-heading"
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/fade-in"
 
 const mockReviews = [
   {
@@ -37,7 +38,7 @@ export function ReviewsSection() {
   return (
     <section className="py-24 px-4 md:px-8 bg-[#FBF6EE]">
       <div className="container mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 space-y-4 md:space-y-0">
+        <FadeIn className="flex flex-col md:flex-row md:items-end justify-between mb-16 space-y-4 md:space-y-0">
           <div className="max-w-xl">
             <div className="font-mono text-xs tracking-[0.2em] uppercase text-[#9A8F85] mb-4">
               Wall of Love
@@ -46,11 +47,11 @@ export function ReviewsSection() {
               Don't just take our word for it.
             </SectionHeading>
           </div>
-        </div>
+        </FadeIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <FadeInStagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {mockReviews.map((review) => (
-            <div 
+            <FadeInStaggerItem 
               key={review.id} 
               className="bg-white p-6 border border-[#E0D9CF] rounded-sm flex flex-col justify-between"
             >
@@ -76,9 +77,9 @@ export function ReviewsSection() {
                 <p className="font-serif text-[#221F1C]">{review.name}</p>
                 <p className="text-xs font-mono text-[#9A8F85] uppercase tracking-wider mt-1">{review.product}</p>
               </div>
-            </div>
+            </FadeInStaggerItem>
           ))}
-        </div>
+        </FadeInStagger>
       </div>
     </section>
   )
