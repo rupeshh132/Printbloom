@@ -100,3 +100,28 @@ export async function getDashboardCounts() {
     totalStories: stories.count ?? 0,
   }
 }
+
+// Fetch enquiry by token for the customer upload page
+export async function getEnquiryByToken(token: string) {
+  const supabase = await createSupabaseServerClient()
+
+  // The upload_token column might not exist if the user hasn't run the migration yet,
+  // but if they have, we can query it.
+  const { data, error } = await supabase
+    .from("enquiries")
+    .select("id, name, upload_status")
+    .eq("upload_token", token)
+    .single()
+
+  if (error || !data) {
+    return null
+  }
+
+  return data
+}
+
+// Update upload status
+export async function updateEnquiryUploadStatus(token: string, status: string) {
+  const supabase = await createSupabaseServerClient()
+  await supabase.from("enquiries").update({ upload_status: status }).eq("upload_token", token)
+}

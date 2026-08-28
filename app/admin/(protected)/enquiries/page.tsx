@@ -1,5 +1,6 @@
 import { SectionHeading } from "@/components/ui/section-heading"
 import { getEnquiries, updateEnquiryStatus } from "@/app/actions/enquiries"
+import { CopyUploadLink } from "@/components/admin/copy-upload-link"
 
 const STATUS_COLORS: Record<string, string> = {
   new: "bg-yellow-100 text-yellow-800",
@@ -65,14 +66,20 @@ export default async function AdminEnquiries() {
                     </span>
                   </td>
                   <td className="p-4">
-                    <form action={async () => {
-                      "use server"
-                      await updateEnquiryStatus(enq.id, enq.status === "new" ? "contacted" : enq.status === "contacted" ? "converted" : "closed")
-                    }}>
-                      <button type="submit" className="text-xs text-[#C1502E] hover:underline">
-                        {enq.status === "new" ? "Mark Contacted →" : enq.status === "contacted" ? "Mark Converted →" : "Close"}
-                      </button>
-                    </form>
+                    <div className="flex flex-col gap-2">
+                      <form action={async () => {
+                        "use server"
+                        await updateEnquiryStatus(enq.id, enq.status === "new" ? "contacted" : enq.status === "contacted" ? "converted" : "closed")
+                      }}>
+                        <button type="submit" className="text-xs text-[#C1502E] hover:underline">
+                          {enq.status === "new" ? "Mark Contacted →" : enq.status === "contacted" ? "Mark Converted →" : "Close"}
+                        </button>
+                      </form>
+                      <div className="flex items-center mt-2 pt-2 border-t border-[#E0D9CF]">
+                        <span className="text-[10px] uppercase tracking-wider text-[#9A8F85]">Upload: {enq.upload_status || 'pending'}</span>
+                        <CopyUploadLink token={enq.upload_token} />
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ))}
