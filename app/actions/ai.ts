@@ -25,7 +25,7 @@ Return ONLY a valid JSON array of strings containing the 3 options, like this:
 Do not include markdown blocks, just the JSON array.`
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.6-flash",
       contents: prompt,
     })
 
