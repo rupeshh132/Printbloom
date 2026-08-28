@@ -11,12 +11,12 @@ const steps = [
   {
     title: "Premium Print",
     description: "We use archival-grade paper and industry-leading printers to ensure your memories don't fade after a few years.",
-    image: "https://images.unsplash.com/photo-1598306447814-747dceeb4336?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1603513492128-ba7df983f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Hand Packaged",
     description: "Wrapped in butter paper, tied with twine, and sealed carefully. Unboxing it feels just as special as reading it.",
-    image: "https://images.unsplash.com/photo-1577700201538-423f04f2bf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
   }
 ]
 
