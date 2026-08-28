@@ -1,12 +1,60 @@
 import * as React from "react"
+import Image from "next/image"
 import { SectionHeading } from "@/components/ui/section-heading"
+
+const steps = [
+  {
+    title: "Editorial Design",
+    description: "Every photo is manually placed, color-corrected, and curated by our team. No automated templates cutting off faces.",
+    image: "https://images.unsplash.com/photo-1542744094-3a31f272c490?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    title: "Premium Print",
+    description: "We use archival-grade paper and industry-leading printers to ensure your memories don't fade after a few years.",
+    image: "https://images.unsplash.com/photo-1598306447814-747dceeb4336?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    title: "Hand Packaged",
+    description: "Wrapped in butter paper, tied with twine, and sealed carefully. Unboxing it feels just as special as reading it.",
+    image: "https://images.unsplash.com/photo-1577700201538-423f04f2bf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  }
+]
 
 export function BehindTheScenesSection() {
   return (
-    <section className="py-24 px-4 md:px-8">
-      <div className="container mx-auto max-w-6xl text-center">
-        <SectionHeading as="h2">Behind The Scenes</SectionHeading>
-        <p className="mt-6 text-text-muted">Placeholder for Behind The Scenes section.</p>
+    <section className="py-24 px-4 md:px-8 bg-surface border-t border-[#E0D9CF]/50">
+      <div className="container mx-auto max-w-7xl">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="font-mono text-xs tracking-[0.2em] uppercase text-text-muted mb-4">
+            How It's Made
+          </div>
+          <SectionHeading as="h2" className="mb-4">Behind the scenes.</SectionHeading>
+          <p className="text-text-muted text-lg">
+            There is no "Print" button. Every piece that leaves our studio is crafted with human hands.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {steps.map((step, index) => (
+            <div key={step.title} className="flex flex-col">
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-bg border border-border mb-6">
+                <Image 
+                  src={step.image}
+                  alt={step.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute top-4 left-4 w-8 h-8 bg-white border border-[#E0D9CF] flex items-center justify-center font-serif text-[#C1502E]">
+                  {index + 1}
+                </div>
+              </div>
+              <h3 className="font-serif text-2xl text-ink mb-3">{step.title}</h3>
+              <p className="text-text-muted leading-relaxed">
+                {step.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )
