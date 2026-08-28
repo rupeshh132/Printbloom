@@ -2,8 +2,10 @@
 
 import * as React from "react"
 import { loginAction } from "@/app/admin/actions"
+import { useRouter } from "next/navigation"
 
 export default function AdminLoginPage() {
+  const router = useRouter()
   const [error, setError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(false)
 
@@ -18,6 +20,9 @@ export default function AdminLoginPage() {
     if (result?.error) {
       setError(result.error)
       setLoading(false)
+    } else if (result?.success) {
+      router.push("/admin")
+      router.refresh()
     }
   }
 

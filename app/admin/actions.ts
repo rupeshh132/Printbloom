@@ -18,7 +18,7 @@ export async function loginAction(formData: FormData) {
     return { error: error.message }
   }
 
-  redirect("/admin")
+  return { success: true }
 }
 
 export async function logoutAction() {
