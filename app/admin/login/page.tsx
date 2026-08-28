@@ -2,29 +2,14 @@
 
 import * as React from "react"
 import { loginAction } from "@/app/admin/actions"
-import { useRouter } from "next/navigation"
+import { useActionState } from "react"
+
+const initialState = {
+  error: null,
+}
 
 export default function AdminLoginPage() {
-  const router = useRouter()
-  const [error, setError] = React.useState<string | null>(null)
-  const [loading, setLoading] = React.useState(false)
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-
-    const formData = new FormData(e.currentTarget)
-    const result = await loginAction(formData)
-
-    if (result?.error) {
-      setError(result.error)
-      setLoading(false)
-    } else if (result?.success) {
-      router.push("/admin")
-      router.refresh()
-    }
-  }
+  const [state, formAction, isPending] = useActionState(loginAction, initialState)
 
   return (
     <div className="min-h-screen bg-[#221F1C] flex items-center justify-center px-4">
@@ -41,7 +26,7 @@ export default function AdminLoginPage() {
         <div className="bg-[#2C2926] border border-white/10 p-8">
           <h2 className="font-serif text-2xl text-[#FBF6EE] mb-6">Sign In</h2>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <form action={formAction} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <label htmlFor="email" className="text-sm font-mono text-[#9A8F85] uppercase tracking-wider">
                 Email
@@ -72,20 +57,20 @@ export default function AdminLoginPage() {
               />
             </div>
 
-            {error && (
+            {state?.error && (
               <div className="bg-red-900/30 border border-red-500/30 text-red-300 text-sm px-4 py-3">
-                {error === "Invalid login credentials"
+                {state.error === "Invalid login credentials"
                   ? "Galat email ya password. Dobara check karein."
-                  : error}
+                  : state.error}
               </div>
             )}
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={isPending}
               className="h-12 bg-[#C1502E] text-white font-medium hover:bg-[#a8432a] transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-2"
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {isPending ? "Signing in..." : "Sign In"}
             </button>
           </form>
         </div>

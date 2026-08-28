@@ -3,7 +3,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { redirect } from "next/navigation"
 
-export async function loginAction(formData: FormData) {
+export async function loginAction(prevState: any, formData: FormData) {
   const email = formData.get("email") as string
   const password = formData.get("password") as string
 
@@ -18,7 +18,8 @@ export async function loginAction(formData: FormData) {
     return { error: error.message }
   }
 
-  return { success: true }
+  // Redirect to admin dashboard on success
+  redirect("/admin")
 }
 
 export async function logoutAction() {
