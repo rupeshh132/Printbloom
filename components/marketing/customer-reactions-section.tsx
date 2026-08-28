@@ -5,12 +5,12 @@ import { SectionHeading } from "@/components/ui/section-heading"
 const mockReactions = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1530103862676-de8892ebeea0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     label: "Her 25th Birthday",
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1522850613220-192a54fbac52?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     label: "Our Anniversary",
   },
   {
