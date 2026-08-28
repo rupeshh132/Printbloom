@@ -92,7 +92,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Your digital memories, printed with a classic retro feel.",
       description: "Authentic Polaroid-style prints on premium matte paper. Perfect for your wall or as a small surprise.",
       starting_price_label: "From ₹249",
-      main_image_url: "https://images.unsplash.com/photo-1528697203043-733daf42c073?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       is_hero: false,
       sort_order: 5,
       status: "published",

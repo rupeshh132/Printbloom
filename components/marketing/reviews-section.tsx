@@ -15,7 +15,7 @@ const mockReviews = [
     name: "Aman K.",
     content: "Ordered the polaroid set for my girlfriend. The packaging was beautiful and the prints have that perfect vintage feel.",
     product: "Polaroid Set",
-    image: "https://images.unsplash.com/photo-1528697203043-733daf42c073?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
   },
   {
     id: 3,
