@@ -2,12 +2,13 @@ import * as React from "react"
 import { redirect } from "next/navigation"
 import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { Navbar } from "@/components/marketing/navbar"
-import { User, Package, MapPin, Heart, ArrowRight, Wallet } from "lucide-react"
+import { User, Package, MapPin, Heart, ArrowRight, Wallet, CalendarDays } from "lucide-react"
 import { SignOutButton } from "@/components/auth/signout-button"
 import NextLink from "next/link"
 import { OrderHistory } from "@/components/profile/order-history"
 import { AddressBook } from "@/components/profile/address-book"
 import { WalletRewards } from "@/components/profile/wallet-rewards"
+import { SmartReminders } from "@/components/profile/smart-reminders"
 
 export const dynamic = "force-dynamic"
 
@@ -44,6 +45,13 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
     .select("*")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
+
+  // Fetch reminders
+  const { data: reminders } = await supabase
+    .from("user_reminders")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("event_date", { ascending: true })
 
   return (
     <div className="min-h-screen bg-[#FBF6EE] pt-28 pb-20">
@@ -99,6 +107,14 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               >
                 <div className="flex items-center gap-3">
                   <Wallet className="w-5 h-5" /> Wallet & Rewards
+                </div>
+              </NextLink>
+              <NextLink 
+                href="/profile?tab=reminders" 
+                className={`flex items-center justify-between p-4 transition-colors ${currentTab === "reminders" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+              >
+                <div className="flex items-center gap-3">
+                  <CalendarDays className="w-5 h-5" /> Smart Reminders
                 </div>
               </NextLink>
               <NextLink 
@@ -159,6 +175,10 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
 
             {currentTab === "rewards" && (
               <WalletRewards pointsHistory={pointsHistory || []} userId={user.id} />
+            )}
+
+            {currentTab === "reminders" && (
+              <SmartReminders reminders={reminders || []} />
             )}
 
             {currentTab === "wishlist" && (
