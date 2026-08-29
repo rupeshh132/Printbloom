@@ -9,6 +9,7 @@ export type CartItem = {
   quantity: number;
   image: string;
   variant?: string;
+  customization_data?: any[];
 }
 
 interface CartState {
