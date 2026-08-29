@@ -9,11 +9,14 @@ import { BehindTheScenesSection } from "@/components/marketing/behind-the-scenes
 import { WhyPrintBloomSection } from "@/components/marketing/why-printbloom-section"
 import { RemindersCTASection } from "@/components/marketing/reminders-cta-section"
 import { FinalCTASection } from "@/components/marketing/final-cta-section"
+import { ReviewsMarquee } from "@/components/marketing/reviews-marquee"
+import { HomepageTrustSection } from "@/components/marketing/homepage-trust-section"
 
 export default function HomePage() {
   return (
     <main className="flex flex-col min-h-screen">
       <HeroSection />
+      <ReviewsMarquee />
       <SignatureProductSection />
       <MemoryTransformationSection />
       <ShopByOccasionSection />
@@ -22,6 +25,7 @@ export default function HomePage() {
       <ReviewsSection />
       <BehindTheScenesSection />
       <WhyPrintBloomSection />
+      <HomepageTrustSection />
       <RemindersCTASection />
       <FinalCTASection />
     </main>
