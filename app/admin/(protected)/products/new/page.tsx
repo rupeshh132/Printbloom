@@ -29,6 +29,54 @@ export default function NewProductPage() {
     }
   }
 
+  const [category, setCategory] = React.useState("blank")
+
+  // Form states to allow auto-filling
+  const [formDataState, setFormDataState] = React.useState({
+    name: "",
+    slug: "",
+    tagline: "",
+    description: "",
+    price: ""
+  })
+
+  const productTemplates: Record<string, any> = {
+    "blank": { name: "", slug: "", tagline: "", description: "", price: "" },
+    "magazine-a4": {
+      name: "Custom Magazine — A4",
+      slug: "custom-magazine-a4",
+      tagline: "Large-format editorial for your biggest moments.",
+      description: "A stunning A4 large-format magazine. Ideal for wedding albums, big anniversaries, and grand gestures.",
+      price: "₹499"
+    },
+    "magazine-a5": {
+      name: "Custom Magazine — A5",
+      slug: "custom-magazine-a5",
+      tagline: "A compact, beautiful editorial of your memories.",
+      description: "Our signature A5 custom magazine. Perfectly sized to hold in your hands. You provide the photos, we craft the story.",
+      price: "₹399"
+    },
+    "polaroids": {
+      name: "Vintage Polaroids",
+      slug: "polaroids",
+      tagline: "Your digital memories, printed with a classic retro feel.",
+      description: "Authentic Polaroid-style prints on premium matte paper. Perfect for your wall or as a small surprise.",
+      price: "₹249"
+    }
+  }
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value
+    setCategory(val)
+    if (productTemplates[val]) {
+      setFormDataState(productTemplates[val])
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormDataState({ ...formDataState, [e.target.name]: e.target.value })
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
@@ -93,12 +141,31 @@ export default function NewProductPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          
+          <div className="space-y-2 pb-6 border-b border-[#E0D9CF]">
+            <label htmlFor="category" className="text-sm font-medium text-[#C1502E]">' Smart Product Template</label>
+            <select
+              id="category"
+              value={category}
+              onChange={handleCategoryChange}
+              className="w-full h-11 px-4 border border-[#C1502E]/30 bg-[#FBF6EE] focus:outline-none focus:border-[#C1502E] rounded-sm text-[#221F1C]"
+            >
+              <option value="blank">Custom / Normal Product</option>
+              <option value="magazine-a4">Custom Magazine (A4)</option>
+              <option value="magazine-a5">Custom Magazine (A5)</option>
+              <option value="polaroids">Vintage Polaroids</option>
+            </select>
+            <p className="text-xs text-[#9A8F85]">Select a template to auto-fill product details.</p>
+          </div>
+
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-medium text-[#221F1C]">Product Name *</label>
             <input
               type="text"
               id="name"
               name="name"
+              value={formDataState.name}
+              onChange={handleChange}
               required
               className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
               placeholder="e.g. Classic Photo Frame"
@@ -111,6 +178,8 @@ export default function NewProductPage() {
               type="text"
               id="slug"
               name="slug"
+              value={formDataState.slug}
+              onChange={handleChange}
               className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm bg-gray-50"
               placeholder="e.g. classic-photo-frame"
             />
@@ -123,6 +192,8 @@ export default function NewProductPage() {
               type="text"
               id="tagline"
               name="tagline"
+              value={formDataState.tagline}
+              onChange={handleChange}
               className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
               placeholder="e.g. Ready-to-hang wooden frames."
             />
@@ -133,6 +204,8 @@ export default function NewProductPage() {
             <textarea
               id="description"
               name="description"
+              value={formDataState.description}
+              onChange={handleChange}
               rows={4}
               className="w-full p-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm resize-none"
               placeholder="Detailed description of the product..."
@@ -145,6 +218,8 @@ export default function NewProductPage() {
               type="text"
               id="starting_price_label"
               name="starting_price_label"
+              value={formDataState.price}
+              onChange={handleChange}
               required
               className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
               placeholder="e.g. ₹899"
