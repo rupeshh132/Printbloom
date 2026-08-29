@@ -5,6 +5,7 @@ import { getProductBySlug } from "@/app/actions/products"
 import { checkWishlistStatus } from "@/app/actions/wishlist"
 import { ProductCustomizer } from "@/components/products/product-customizer"
 import { PincodeChecker } from "@/components/products/pincode-checker"
+import { ProductMiniReviews } from "@/components/products/product-mini-reviews"
 import { ShieldCheck, Award, Map, Clock, Plus } from "lucide-react"
 
 export const revalidate = 3600
@@ -126,6 +127,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <span className="text-[10px] text-[#9A8F85] uppercase tracking-wider">Timely Delivery</span>
               </div>
             </div>
+
+            {/* Real Customer Reviews */}
+            <ProductMiniReviews productSlug={slug} />
 
           </div>
         </div>

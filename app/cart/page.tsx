@@ -311,6 +311,17 @@ export default function CartPage() {
                   Pay Now
                 </button>
               )}
+
+              {/* Trust Quotes — always visible */}
+              <div className="mt-4 space-y-2">
+                {[
+                  "💗 \"It felt worth every penny\"",
+                  "🚀 \"Delivered before the deadline — wow!\"",
+                  "🤌 \"Quality soo premium — better than I expected\"",
+                ].map((quote, i) => (
+                  <p key={i} className="text-[11px] text-[#9A8F85] text-center font-mono">{quote}</p>
+                ))}
+              </div>
             </div>
           </div>
 
