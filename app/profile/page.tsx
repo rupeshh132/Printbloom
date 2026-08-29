@@ -2,11 +2,12 @@ import * as React from "react"
 import { redirect } from "next/navigation"
 import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { Navbar } from "@/components/marketing/navbar"
-import { User, Package, MapPin, Heart, ArrowRight } from "lucide-react"
+import { User, Package, MapPin, Heart, ArrowRight, Wallet } from "lucide-react"
 import { SignOutButton } from "@/components/auth/signout-button"
 import NextLink from "next/link"
 import { OrderHistory } from "@/components/profile/order-history"
 import { AddressBook } from "@/components/profile/address-book"
+import { WalletRewards } from "@/components/profile/wallet-rewards"
 
 export const dynamic = "force-dynamic"
 
@@ -23,19 +24,23 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
   const currentTab = resolvedParams.tab || "profile"
   const fullName = user.user_metadata?.full_name || "PrintBloom User"
 
-  // Fetch orders from the new table
+  // Fetch orders
   const { data: orders } = await supabase
     .from("orders")
-    .select(`
-      *,
-      order_items (*)
-    `)
+    .select(`*, order_items (*)`)
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
 
   // Fetch addresses
   const { data: addresses } = await supabase
     .from("addresses")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+
+  // Fetch points history
+  const { data: pointsHistory } = await supabase
+    .from("reward_points")
     .select("*")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
@@ -87,6 +92,14 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
                 className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "addresses" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
               >
                 <MapPin className="w-5 h-5" /> Saved Addresses
+              </NextLink>
+              <NextLink 
+                href="/profile?tab=rewards" 
+                className={`flex items-center justify-between p-4 transition-colors ${currentTab === "rewards" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+              >
+                <div className="flex items-center gap-3">
+                  <Wallet className="w-5 h-5" /> Wallet & Rewards
+                </div>
               </NextLink>
               <NextLink 
                 href="/profile?tab=wishlist" 
@@ -142,6 +155,10 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
 
             {currentTab === "addresses" && (
               <AddressBook addresses={addresses || []} />
+            )}
+
+            {currentTab === "rewards" && (
+              <WalletRewards pointsHistory={pointsHistory || []} userId={user.id} />
             )}
 
             {currentTab === "wishlist" && (
