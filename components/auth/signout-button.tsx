@@ -1,15 +1,11 @@
 "use client"
 import * as React from "react"
-import { createClient } from "@supabase/supabase-js"
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 import { useRouter } from "next/navigation"
 import { LogOut } from "lucide-react"
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
 export function SignOutButton() {
+  const supabase = createSupabaseBrowserClient()
   const router = useRouter()
   
   const handleSignOut = async () => {

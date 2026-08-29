@@ -8,12 +8,7 @@ import { Search, User, ShoppingCart } from "lucide-react"
 import { useUIStore } from "@/store/use-ui-store"
 import { useCart } from "@/store/use-cart"
 import { useRouter } from "next/navigation"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 
 const navLinks = [
   { href: "/products", label: "Products" },
@@ -33,6 +28,7 @@ export function Navbar() {
   const cartItems = useCart((state) => state.items)
 
   // Auth State
+  const supabase = createSupabaseBrowserClient()
   const [user, setUser] = React.useState<any>(null)
   const router = useRouter()
 
