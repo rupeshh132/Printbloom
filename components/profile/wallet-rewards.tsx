@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react"
 import { Coins, Gift, Copy, CheckCircle2, ArrowRight } from "lucide-react"
 
