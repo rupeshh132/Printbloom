@@ -20,11 +20,6 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-[#FBF6EE] pt-28 pb-20">
       <Navbar />
-      
-      {/* Promo Banner */}
-      <div className="bg-[#221F1C] text-[#FBF6EE] text-center py-2 text-xs md:text-sm fixed top-0 w-full z-[60]">
-        Flat ₹75 assured cashback on 1st MobiKwik UPI Payment (min ₹399)
-      </div>
 
       <div className="container mx-auto max-w-5xl px-4 md:px-8 mt-4">
         
