@@ -38,7 +38,7 @@ export function ShopByOccasionSection() {
             </div>
             <SectionHeading as="h2">Shop by Occasion</SectionHeading>
           </div>
-          <Link href="/products" variant="underline" className="text-sm">
+          <Link href="/products" variant="default" className="text-sm">
             View All Products &rarr;
           </Link>
         </FadeIn>

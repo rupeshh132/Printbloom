@@ -149,7 +149,7 @@ export async function getEnquiryUploads(token: string) {
   
   if (jsonFiles.length > 0) {
     // Get the most recent captions file
-    const latestJson = jsonFiles.sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]
+    const latestJson = jsonFiles.sort((a,b) => new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime())[0]
     const { data: fileData } = await supabase.storage.from("images").download(`customer_uploads/${token}/${latestJson.name}`)
     
     if (fileData) {

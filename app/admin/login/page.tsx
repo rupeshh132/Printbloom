@@ -5,7 +5,7 @@ import { loginAction } from "@/app/admin/actions"
 import { useActionState } from "react"
 
 const initialState = {
-  error: null,
+  error: "",
 }
 
 export default function AdminLoginPage() {

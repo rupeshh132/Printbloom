@@ -22,8 +22,7 @@ export function FadeIn({ children, delay = 0, className, direction = "up" }: Fad
   return (
     <motion.div
       initial={{ opacity: 0, ...directions[direction] }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
       transition={{ duration: 0.7, ease: [0.25, 0.25, 0, 1], delay }}
       className={className}
     >
@@ -36,8 +35,7 @@ export function FadeInStagger({ children, className }: { children: React.ReactNo
   return (
     <motion.div
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
+      animate="visible"
       variants={{
         hidden: {},
         visible: {

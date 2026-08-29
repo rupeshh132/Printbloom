@@ -68,7 +68,7 @@ export function BloomJournalSection() {
         </div>
 
         <div className="mt-16 text-center">
-          <Link href="/journal" variant="outline">
+          <Link href="/journal" variant="default">
             Read More Stories
           </Link>
         </div>

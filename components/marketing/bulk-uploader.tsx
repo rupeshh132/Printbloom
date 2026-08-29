@@ -18,6 +18,7 @@ type UploadFile = {
   status: "pending" | "uploading" | "success" | "error"
   progress: number
   caption?: string
+  finalPath?: string
 }
 
 export function BulkUploader({ token, enquiryName }: { token: string; enquiryName: string }) {
@@ -88,11 +89,13 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
     try {
       let hasSuccess = false;
       setFiles(prev => {
-        const successFiles = prev.filter(f => f.status === "success" && f.caption && (f as any).finalPath);
+        const successFiles = prev.filter(f => f.status === "success" && f.caption && f.finalPath);
         if (successFiles.length > 0) {
           hasSuccess = true;
           const captionsMap = successFiles.reduce((acc, f) => {
-            acc[(f as any).finalPath] = f.caption;
+            if (f.finalPath) {
+              acc[f.finalPath] = f.caption || "";
+            }
             return acc;
           }, {} as Record<string, string>);
           
