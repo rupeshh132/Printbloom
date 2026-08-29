@@ -6,6 +6,7 @@ import { logoutAction } from "@/app/admin/actions"
 
 const adminNavLinks = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/orders", label: "Orders" },
   { href: "/admin/enquiries", label: "Enquiries" },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/reminders", label: "Reminders" },
