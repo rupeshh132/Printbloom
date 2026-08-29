@@ -4,6 +4,9 @@ import NextLink from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { Search, User, ShoppingCart } from "lucide-react"
+import { useUIStore } from "@/store/use-ui-store"
+import { useCart } from "@/store/use-cart"
 
 const navLinks = [
   { href: "/products", label: "Products" },
@@ -18,6 +21,9 @@ export function Navbar() {
   const [scrolled, setScrolled] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)
   const pathname = usePathname()
+  
+  const { openSearchModal, openAuthModal, openCartDrawer } = useUIStore()
+  const cartItems = useCart((state) => state.items)
 
   // Only show transparent navbar on the homepage (hero has dark bg behind it)
   const isHomepage = pathname === "/"
@@ -76,11 +82,40 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* CTA */}
-        <div className="hidden md:flex items-center gap-4">
-          <Button asChild size="sm">
-            <NextLink href="/order">Order Now</NextLink>
-          </Button>
+        {/* Actions */}
+        <div className="hidden md:flex items-center gap-6">
+          <button 
+            onClick={openSearchModal}
+            className={cn(
+              "transition-colors hover:text-[#C1502E]",
+              isTransparent ? "text-white" : "text-[#221F1C]"
+            )}
+          >
+            <Search className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={openAuthModal}
+            className={cn(
+              "transition-colors hover:text-[#C1502E]",
+              isTransparent ? "text-white" : "text-[#221F1C]"
+            )}
+          >
+            <User className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={openCartDrawer}
+            className={cn(
+              "relative transition-colors hover:text-[#C1502E]",
+              isTransparent ? "text-white" : "text-[#221F1C]"
+            )}
+          >
+            <ShoppingCart className="w-5 h-5" />
+            {cartItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[#C1502E] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                {cartItems.length}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* Mobile Hamburger */}

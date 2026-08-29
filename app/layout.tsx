@@ -44,6 +44,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { GlobalModals } from "@/components/global-modals";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -56,6 +58,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         {children}
+        <GlobalModals />
       </body>
     </html>
   );

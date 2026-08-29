@@ -34,6 +34,26 @@ export async function getProductsAdmin() {
   return data ?? []
 }
 
+// Fetch a single product by slug
+export async function getProductBySlug(slug: string) {
+  const supabase = await createSupabaseServerClient()
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("slug", slug)
+    .single()
+
+  if (error) return null
+  
+  // Extract number from starting_price_label for the cart
+  // E.g., "From ₹1399" -> 1399
+  const numMatch = data.starting_price_label?.match(/\d+/)
+  const starting_price = numMatch ? parseInt(numMatch[0]) : 0
+  
+  return { ...data, starting_price }
+}
+
 // Seed initial products (run once from admin)
 export async function seedProducts(): Promise<void> {
   const supabase = await createSupabaseServerClient()
