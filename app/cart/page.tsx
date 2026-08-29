@@ -125,11 +125,6 @@ export default function CartPage() {
 
             {currentStep === "address" && (
               <div>
-                <div className="flex bg-white rounded-sm border border-gray-200 mb-8 overflow-hidden">
-                  <button className="flex-1 py-3 text-sm font-medium bg-[#221F1C] text-white">Delivery to Location</button>
-                  <button className="flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50">Pickup at Store</button>
-                </div>
-                
                 <h2 className="font-serif text-2xl mb-6">Shipping Address</h2>
                 
                 <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); setCurrentStep("payment"); }}>
@@ -222,9 +217,6 @@ export default function CartPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-500">Delivery Fee</span>
                   <span>₹{deliveryFee}</span>
-                </div>
-                <div className="bg-[#FFF8DD] text-[#A67F12] text-xs p-3 rounded-sm">
-                  Free Pickup at store also available
                 </div>
               </div>
               
