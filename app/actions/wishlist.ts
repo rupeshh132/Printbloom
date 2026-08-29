@@ -20,19 +20,24 @@ export async function toggleWishlist(productSlug: string, productName: string, p
 
   if (existing) {
     // Remove from wishlist
-    await supabase.from("wishlist").delete().eq("id", existing.id)
+    const { error } = await supabase.from("wishlist").delete().eq("id", existing.id)
+    if (error) return { error: error.message }
+    
     revalidatePath("/profile")
     revalidatePath(`/products/${productSlug}`)
     return { success: true, isWishlisted: false }
   } else {
     // Add to wishlist
-    await supabase.from("wishlist").insert({
+    const { error } = await supabase.from("wishlist").insert({
       user_id: user.id,
       product_slug: productSlug,
       product_name: productName,
       product_image_url: productImageUrl,
       product_price: productPrice
     })
+    
+    if (error) return { error: error.message }
+
     revalidatePath("/profile")
     revalidatePath(`/products/${productSlug}`)
     return { success: true, isWishlisted: true }
