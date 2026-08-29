@@ -10,6 +10,7 @@ import { AddressBook } from "@/components/profile/address-book"
 import { WalletRewards } from "@/components/profile/wallet-rewards"
 import { SmartReminders } from "@/components/profile/smart-reminders"
 import { WishlistTab } from "@/components/profile/wishlist-tab"
+import { EnquiryTab } from "@/components/profile/enquiry-tab"
 
 export const dynamic = "force-dynamic"
 
@@ -125,6 +126,12 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               >
                 <Heart className="w-5 h-5" /> Wishlist
               </NextLink>
+              <NextLink 
+                href="/profile?tab=enquiry" 
+                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "enquiry" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+              >
+                <MessageSquare className="w-5 h-5" /> Custom Request
+              </NextLink>
               
               <div className="p-2 border-t border-[#E0D9CF] mt-2">
                 <SignOutButton />
@@ -185,6 +192,10 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
 
             {currentTab === "wishlist" && (
               <WishlistTab items={wishlist || []} />
+            )}
+            
+            {currentTab === "enquiry" && (
+              <EnquiryTab />
             )}
             
           </div>
