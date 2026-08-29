@@ -232,3 +232,19 @@ export async function createProduct(formData: FormData) {
   revalidatePath("/products")
   return { success: true }
 }
+
+// Delete a product
+export async function deleteProduct(id: string) {
+  const supabase = await createSupabaseServerClient()
+  
+  const { error } = await supabase.from("products").delete().eq("id", id)
+  
+  if (error) {
+    console.error("Error deleting product:", error)
+    return { error: error.message }
+  }
+
+  revalidatePath("/admin/(protected)/products")
+  revalidatePath("/products")
+  return { success: true }
+}

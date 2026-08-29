@@ -57,14 +57,43 @@ export default async function AdminProducts() {
                     </span>
                   </td>
                   <td className="p-4">
-                    <form action={async () => {
-                      "use server"
-                      await toggleProductStatus(product.id, product.status)
-                    }}>
-                      <button type="submit" className="text-xs text-[#C1502E] hover:underline">
-                        {product.status === "published" ? "Unpublish" : "Publish"}
-                      </button>
-                    </form>
+                    <div className="flex items-center gap-3">
+                      {/* Edit Button (Placeholder link for now) */}
+                      <a 
+                        href={`/admin/products/${product.id}/edit`} 
+                        className="text-xs text-blue-600 hover:underline flex items-center"
+                        title="Edit Product"
+                      >
+                        Edit
+                      </a>
+
+                      {/* Publish / Unpublish Toggle */}
+                      <form action={async () => {
+                        "use server"
+                        await toggleProductStatus(product.id, product.status)
+                      }}>
+                        <button type="submit" className="text-xs text-amber-600 hover:underline">
+                          {product.status === "published" ? "Unpublish" : "Publish"}
+                        </button>
+                      </form>
+
+                      {/* Delete Product */}
+                      <form action={async () => {
+                        "use server"
+                        // Import deleteProduct dynamically here if needed or at top.
+                        // Wait, let's just make sure deleteProduct is imported at the top.
+                        const { deleteProduct } = await import("@/app/actions/products")
+                        await deleteProduct(product.id)
+                      }}>
+                        <button 
+                          type="submit" 
+                          className="text-xs text-red-600 hover:underline"
+                          title="Delete Product"
+                        >
+                          Delete
+                        </button>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               ))}
