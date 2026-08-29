@@ -10,21 +10,46 @@ type AddToCartProps = {
     price: number
     image: string
   }
+  customizationData?: any[]
 }
 
-export function AddToCartButton({ product }: AddToCartProps) {
+export function AddToCartButton({ product, customizationData = [] }: AddToCartProps) {
   const { addItem } = useCart()
   const { openCartDrawer } = useUIStore()
 
   const handleAdd = () => {
+    // Basic validation: require at least one uploaded photo if customizing
+    if (customizationData.length === 0) {
+      alert("Please upload at least one photo before adding to cart.")
+      return
+    }
+
+    // Check if any uploads are still pending
+    const isStillUploading = customizationData.some(photo => photo.isUploading)
+    if (isStillUploading) {
+      alert("Please wait for all photos to finish uploading to Cloudinary.")
+      return
+    }
+
+    // Clean up the data to just store URLs and captions for the cart
+    const cleanedCustomization = customizationData.map(photo => ({
+      cloudinaryUrl: photo.cloudinaryUrl,
+      caption: photo.caption
+    }))
+
+    // Use a unique cart item ID so we can have multiple of the same product with different photos
+    const cartItemId = `${product.id}-${Date.now()}`
+
     addItem({
-      id: product.id,
+      id: cartItemId,
       productId: product.id,
       name: product.name,
       price: product.price,
       quantity: 1,
       image: product.image,
+      customization_data: cleanedCustomization
     })
+    
     openCartDrawer()
   }
 
