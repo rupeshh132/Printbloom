@@ -105,8 +105,13 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
         return prev;
       });
 
-      // Update backend status to completed
-      await updateEnquiryUploadStatus(token, "completed");
+      // Update backend status
+      try {
+        await updateEnquiryUploadStatus(token, "completed")
+      } catch (e) {
+        console.error("Failed to update enquiry status:", e)
+        alert("Upload successful, but failed to notify admin. Please contact support.")
+      }
       setIsComplete(true);
 
     } catch(e) {}

@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache"
 
 export async function createFlipbook(enquiryToken: string, title: string, images: string[]) {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: "Unauthorized" }
   
   const { data, error } = await supabase
     .from("flipbooks")

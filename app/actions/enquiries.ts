@@ -82,6 +82,8 @@ export async function getEnquiries() {
 // Update enquiry status
 export async function updateEnquiryStatus(id: string, status: string) {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthorized")
 
   await supabase.from("enquiries").update({ status }).eq("id", id)
   revalidatePath("/admin/enquiries")
@@ -178,6 +180,8 @@ export async function getEnquiryUploads(token: string) {
 // Hard delete all uploads for an enquiry to free up storage
 export async function deleteEnquiryUploads(token: string) {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthorized")
   
   // 1. List all files in the directory
   const { data: files, error: listError } = await supabase.storage.from("images").list(`customer_uploads/${token}`)
