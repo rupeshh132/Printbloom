@@ -13,7 +13,9 @@ export function EnquiryTab() {
     setLoading(true)
     setError(null)
 
-    const formData = new FormData(e.currentTarget)
+    // Save form reference BEFORE await — currentTarget becomes null after async
+    const form = e.currentTarget
+    const formData = new FormData(form)
     const result = await saveEnquiryAction(formData)
 
     setLoading(false)
@@ -22,7 +24,7 @@ export function EnquiryTab() {
       setError(result.error)
     } else {
       setSuccess(true)
-      e.currentTarget.reset()
+      form.reset()
     }
   }
 
