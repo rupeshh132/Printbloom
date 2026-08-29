@@ -6,6 +6,7 @@ import { User, Package, MapPin, Heart, ArrowRight } from "lucide-react"
 import { SignOutButton } from "@/components/auth/signout-button"
 import NextLink from "next/link"
 import { OrderHistory } from "@/components/profile/order-history"
+import { AddressBook } from "@/components/profile/address-book"
 
 export const dynamic = "force-dynamic"
 
@@ -29,6 +30,13 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
       *,
       order_items (*)
     `)
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+
+  // Fetch addresses
+  const { data: addresses } = await supabase
+    .from("addresses")
+    .select("*")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
 
@@ -133,16 +141,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
             )}
 
             {currentTab === "addresses" && (
-              <div className="flex flex-col items-center justify-center py-16 text-center h-full">
-                <div className="w-16 h-16 bg-[#F5F0E8] rounded-full flex items-center justify-center text-[#9A8F85] mb-4">
-                  <MapPin className="w-8 h-8" />
-                </div>
-                <h3 className="text-xl font-medium text-[#221F1C] mb-2">No addresses saved</h3>
-                <p className="text-[#6B6259] mb-6 max-w-md">You haven't saved any delivery addresses yet. Add one now for faster checkout.</p>
-                <button className="px-6 py-3 border border-[#E0D9CF] text-[#221F1C] rounded-full font-medium hover:bg-[#F5F0E8] transition-colors">
-                  Add New Address
-                </button>
-              </div>
+              <AddressBook addresses={addresses || []} />
             )}
 
             {currentTab === "wishlist" && (

@@ -5,7 +5,8 @@ import { useCart } from "@/store/use-cart"
 import { Navbar } from "@/components/marketing/navbar"
 import NextLink from "next/link"
 import Image from "next/image"
-import { Trash2, CheckCircle2, Circle, MapPin } from "lucide-react"
+import { Trash2, CheckCircle2, Circle, MapPin, Plus } from "lucide-react"
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 
 type Step = "cart" | "address" | "payment"
 
@@ -13,9 +14,37 @@ export default function CartPage() {
   const { items, updateQuantity, removeItem, getCartTotal } = useCart()
   const [currentStep, setCurrentStep] = useState<Step>("cart")
   const [isMounted, setIsMounted] = useState(false)
+  
+  // Address State
+  const [savedAddresses, setSavedAddresses] = useState<any[]>([])
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
+  const [showNewAddressForm, setShowNewAddressForm] = useState(false)
+  const supabase = createSupabaseBrowserClient()
 
   React.useEffect(() => {
     setIsMounted(true)
+    
+    // Fetch saved addresses if logged in
+    async function fetchAddresses() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        const { data } = await supabase
+          .from("addresses")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .order("created_at", { ascending: false })
+          
+        if (data && data.length > 0) {
+          setSavedAddresses(data)
+          setSelectedAddressId(data[0].id) // auto-select first
+        } else {
+          setShowNewAddressForm(true) // force show form if no addresses
+        }
+      } else {
+        setShowNewAddressForm(true)
+      }
+    }
+    fetchAddresses()
   }, [])
   
   const total = getCartTotal()
@@ -127,66 +156,106 @@ export default function CartPage() {
               <div>
                 <h2 className="font-serif text-2xl mb-6">Shipping Address</h2>
                 
-                <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); setCurrentStep("payment"); }}>
-                  <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Customer Name*</label>
-                    <input required type="text" placeholder="Name" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
+                {/* Saved Addresses List */}
+                {savedAddresses.length > 0 && !showNewAddressForm && (
+                  <div className="mb-6 space-y-3">
+                    {savedAddresses.map((addr) => (
+                      <div 
+                        key={addr.id} 
+                        onClick={() => setSelectedAddressId(addr.id)}
+                        className={`p-4 border rounded-sm cursor-pointer transition-colors ${selectedAddressId === addr.id ? 'border-[#221F1C] bg-[#F5F0E8]' : 'border-gray-200 hover:border-gray-300'}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1">
+                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${selectedAddressId === addr.id ? 'border-[#C1502E]' : 'border-gray-300'}`}>
+                              {selectedAddressId === addr.id && <div className="w-2 h-2 rounded-full bg-[#C1502E]"></div>}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="font-medium text-[#221F1C]">{addr.full_name}</p>
+                            <p className="text-sm text-gray-600 mt-1">{addr.address_line_1}, {addr.address_line_2 && addr.address_line_2 + ","} {addr.city}, {addr.state} - {addr.pincode}</p>
+                            <p className="text-sm text-gray-600 mt-1 font-medium">Phone: {addr.phone_number}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    <button 
+                      type="button" 
+                      onClick={() => setShowNewAddressForm(true)}
+                      className="text-[#C1502E] text-sm font-medium flex items-center gap-2 mt-4 hover:underline"
+                    >
+                      <Plus className="w-4 h-4" /> Add a new address
+                    </button>
                   </div>
-                  
-                  <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Mobile Number*</label>
-                    <div className="flex">
-                      <span className="border border-gray-300 border-r-0 rounded-l-sm p-3 bg-gray-50 text-sm text-gray-600">+91</span>
-                      <input required type="tel" placeholder="Enter Input" className="w-full border border-gray-300 rounded-r-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
+                )}
+
+                {(!savedAddresses.length || showNewAddressForm) && (
+                  <form className="space-y-5" onSubmit={async (e) => { 
+                    e.preventDefault(); 
+                    setCurrentStep("payment"); 
+                  }}>
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-medium text-[#221F1C]">New Address</h3>
+                      {savedAddresses.length > 0 && (
+                        <button type="button" onClick={() => setShowNewAddressForm(false)} className="text-sm text-gray-500 hover:text-black">Cancel</button>
+                      )}
                     </div>
-                    <p className="text-[10px] text-gray-400 mt-1">Order updates will be sent via WhatsApp.</p>
-                  </div>
 
-                  <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Pincode*</label>
-                    <div className="relative">
-                      <input required type="text" placeholder="Eg. 410055" className="w-full border border-gray-300 rounded-sm p-3 pr-12 focus:outline-none focus:border-[#221F1C] text-sm" />
-                      <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#221F1C]">
-                        <MapPin className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Flat, House no, Building, Company*</label>
-                    <input required type="text" placeholder="House / Flat / Floor No." className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
-                  </div>
-
-                  <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Apartment, Area, Street, Sector, Village*</label>
-                    <input required type="text" placeholder="Apartment / Road / Area" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
-                  </div>
-
-                  <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Landmark</label>
-                    <input type="text" placeholder="Near Apollo Hospital" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Town / City*</label>
-                      <input required type="text" placeholder="Enter Input" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
+                      <label className="text-xs text-gray-500 mb-1 block">Customer Name*</label>
+                      <input required name="full_name" type="text" placeholder="Name" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
                     </div>
+                    
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">State*</label>
-                      <select required className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm bg-white">
-                        <option value="">Select State</option>
-                        <option value="MH">Maharashtra</option>
-                        <option value="KA">Karnataka</option>
-                        <option value="DL">Delhi</option>
-                      </select>
+                      <label className="text-xs text-gray-500 mb-1 block">Mobile Number*</label>
+                      <div className="flex">
+                        <span className="bg-gray-100 border border-gray-300 border-r-0 rounded-l-sm p-3 text-sm text-gray-600">+91</span>
+                        <input required name="phone_number" type="tel" placeholder="Enter Input" className="flex-1 border border-gray-300 rounded-r-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
+                      </div>
                     </div>
-                  </div>
-                  
-                  <button type="submit" className="w-full bg-[#9A8F85] text-white py-4 rounded-full font-medium mt-4 hover:bg-[#221F1C] transition-colors">
-                    Save Address
+
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Pincode*</label>
+                      <div className="relative">
+                        <input required name="pincode" type="text" placeholder="Eg. 410055" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
+                        <MapPin className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Address*</label>
+                      <input required name="address_line_1" type="text" placeholder="Flat, House no., Building, Company" className="w-full border border-gray-300 rounded-sm p-3 mb-2 focus:outline-none focus:border-[#221F1C] text-sm" />
+                      <input name="address_line_2" type="text" placeholder="Area, Street, Sector, Village" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs text-gray-500 mb-1 block">City*</label>
+                        <input required name="city" type="text" placeholder="City" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-500 mb-1 block">State*</label>
+                        <input required name="state" type="text" placeholder="State" className="w-full border border-gray-300 rounded-sm p-3 focus:outline-none focus:border-[#221F1C] text-sm" />
+                      </div>
+                    </div>
+
+                    <button type="submit" className="w-full bg-[#221F1C] text-white rounded-full py-4 font-medium hover:bg-black transition-colors mt-6">
+                      Deliver to this address
+                    </button>
+                  </form>
+                )}
+
+                {/* Proceed with selected saved address */}
+                {savedAddresses.length > 0 && !showNewAddressForm && (
+                  <button 
+                    onClick={() => setCurrentStep("payment")}
+                    disabled={!selectedAddressId}
+                    className="w-full bg-[#221F1C] text-white rounded-full py-4 font-medium hover:bg-black transition-colors mt-6 disabled:opacity-50"
+                  >
+                    Deliver Here
                   </button>
-                </form>
+                )}
               </div>
             )}
 
