@@ -45,6 +45,7 @@ export const metadata: Metadata = {
 };
 
 import { GlobalModals } from "@/components/global-modals";
+import { WhatsAppFloat } from "@/components/ui/whatsapp-float";
 
 export default function RootLayout({
   children,
@@ -59,6 +60,7 @@ export default function RootLayout({
       >
         {children}
         <GlobalModals />
+        <WhatsAppFloat />
       </body>
     </html>
   );
