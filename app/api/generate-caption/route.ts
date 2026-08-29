@@ -16,8 +16,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Image data is required" }, { status: 400 })
     }
 
-    // We use gemini-1.5-flash as it is fast and supports multi-modal (vision)
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    // We use gemini-2.5-flash as it is fast and supports multi-modal (vision)
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
 
     const prompt = `
       You are an expert copywriter for a custom gifting brand called PrintBloom.
