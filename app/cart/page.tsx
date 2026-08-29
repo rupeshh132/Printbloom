@@ -12,10 +12,23 @@ type Step = "cart" | "address" | "payment"
 export default function CartPage() {
   const { items, updateQuantity, removeItem, getCartTotal } = useCart()
   const [currentStep, setCurrentStep] = useState<Step>("cart")
+  const [isMounted, setIsMounted] = useState(false)
+
+  React.useEffect(() => {
+    setIsMounted(true)
+  }, [])
   
   const total = getCartTotal()
   const deliveryFee = total > 0 ? 60 : 0
   const orderTotal = total + deliveryFee
+
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen bg-[#FBF6EE] pt-28 pb-20">
+        <Navbar />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[#FBF6EE] pt-28 pb-20">

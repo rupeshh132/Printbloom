@@ -31,8 +31,11 @@ export function Navbar() {
   const supabase = createSupabaseBrowserClient()
   const [user, setUser] = React.useState<any>(null)
   const router = useRouter()
+  const [isMounted, setIsMounted] = React.useState(false)
 
   React.useEffect(() => {
+    setIsMounted(true)
+    
     // Check initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -139,7 +142,7 @@ export function Navbar() {
             )}
           >
             <ShoppingCart className="w-5 h-5" />
-            {cartItems.length > 0 && (
+            {isMounted && cartItems.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-[#C1502E] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
                 {cartItems.length}
               </span>

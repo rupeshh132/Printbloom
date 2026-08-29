@@ -9,8 +9,13 @@ import Image from "next/image"
 export function CartDrawer() {
   const { isCartDrawerOpen, closeCartDrawer } = useUIStore()
   const { items, removeItem, updateQuantity, getCartTotal } = useCart()
+  const [isMounted, setIsMounted] = React.useState(false)
 
-  if (!isCartDrawerOpen) return null
+  React.useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted || !isCartDrawerOpen) return null
 
   const total = getCartTotal()
 
