@@ -8,6 +8,11 @@ import { toggleWishlist } from "@/app/actions/wishlist"
 export function WishlistTab({ items }: { items: any[] }) {
   const [wishlistItems, setWishlistItems] = React.useState(items)
 
+  // Sync state when props change (e.g. returning from product page after adding)
+  React.useEffect(() => {
+    setWishlistItems(items)
+  }, [items])
+
   const handleRemove = async (slug: string) => {
     try {
       setWishlistItems(prev => prev.filter(item => item.product_slug !== slug))
