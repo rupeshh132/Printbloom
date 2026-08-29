@@ -2,7 +2,9 @@ import * as React from "react"
 import Image from "next/image"
 import { notFound } from "next/navigation"
 import { getProductBySlug } from "@/app/actions/products"
+import { checkWishlistStatus } from "@/app/actions/wishlist"
 import { AddToCartButton } from "@/components/products/add-to-cart-button"
+import { WishlistButton } from "@/components/products/wishlist-button"
 import { PincodeChecker } from "@/components/products/pincode-checker"
 import { ShieldCheck, Award, Map, Clock, Plus } from "lucide-react"
 
@@ -30,6 +32,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       description: "A beautiful personalized item crafted just for you."
     }
   }
+
+  // Check wishlist status
+  const isWishlisted = await checkWishlistStatus(slug)
 
   return (
     <main className="flex flex-col min-h-screen pt-32 pb-24 px-4 md:px-8">
@@ -67,18 +72,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
 
             {/* Actions */}
-            <div className="flex gap-4 mb-10">
-              <AddToCartButton 
-                product={{
-                  id: product.id,
-                  name: product.name,
-                  price: product.starting_price,
-                  image: product.main_image_url
-                }} 
-              />
-              <button className="w-full bg-[#221F1C] text-white py-4 rounded-full font-medium hover:bg-black transition-colors">
+            <div className="flex gap-3 mb-10">
+              <div className="flex-1">
+                <AddToCartButton 
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    price: product.starting_price,
+                    image: product.main_image_url
+                  }} 
+                />
+              </div>
+              <button className="flex-1 bg-[#221F1C] text-white py-4 rounded-full font-medium hover:bg-black transition-colors">
                 Buy Now
               </button>
+              <WishlistButton 
+                productSlug={slug}
+                productName={product.name}
+                productImageUrl={product.main_image_url}
+                productPrice={product.starting_price}
+                initialStatus={isWishlisted}
+              />
             </div>
 
             {/* Pincode Checker */}
