@@ -5,6 +5,7 @@ import { useState } from "react"
 import { createClient } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
 import { createFlipbook } from "@/app/actions/flipbooks"
+import CloudLoader from "@/components/ui/quantum-cloud-loader"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -134,11 +135,12 @@ export function FlipbookCreator({ token }: { token: string }) {
       )}
 
       {isUploading ? (
-        <div className="space-y-2">
-          <div className="h-2 bg-[#F5F0E8] rounded-full overflow-hidden">
+        <div className="space-y-3">
+          <CloudLoader />
+          <div className="h-1.5 bg-[#F5F0E8] rounded-full overflow-hidden -mt-4">
             <div className="h-full bg-[#C1502E] transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
-          <p className="text-center text-xs text-[#9A8F85]">Creating Flipbook... {progress}%</p>
+          <p className="text-center text-xs text-[#9A8F85]">Generating Flipbook... {progress}%</p>
         </div>
       ) : (
         <button

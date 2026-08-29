@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useState } from "react"
 import { generateCaptions } from "@/app/actions/ai"
+import CloudLoader from "@/components/ui/quantum-cloud-loader"
 
 interface AICaptionButtonProps {
   onSelect: (caption: string) => void
@@ -84,19 +85,20 @@ export function AICaptionButton({ onSelect }: AICaptionButtonProps) {
                       autoFocus
                     />
                   </div>
-                  <button
-                    type="submit"
-                    disabled={loading || !keywords.trim()}
-                    className="w-full bg-[#221F1C] text-white text-sm py-3 rounded-sm disabled:opacity-50 hover:bg-black transition-colors font-medium flex justify-center items-center gap-2"
-                  >
-                    {loading ? (
-                      <>
-                        <span className="animate-spin text-lg leading-none">⟳</span> Generating...
-                      </>
-                    ) : (
-                      "Generate Magic ✨"
-                    )}
-                  </button>
+                  {loading ? (
+                    <div className="py-2">
+                      <CloudLoader />
+                      <p className="text-center text-xs text-[#9A8F85] -mt-6">Writing your captions...</p>
+                    </div>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={!keywords.trim()}
+                      className="w-full bg-[#221F1C] text-white text-sm py-3 rounded-sm disabled:opacity-50 hover:bg-black transition-colors font-medium"
+                    >
+                      Generate Magic ✨
+                    </button>
+                  )}
                   {error && <p className="text-sm text-red-500 mt-2 text-center">{error}</p>}
                 </form>
               )}

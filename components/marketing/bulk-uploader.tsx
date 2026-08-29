@@ -5,6 +5,7 @@ import { useState, useCallback } from "react"
 import { createClient } from "@supabase/supabase-js"
 import { AICaptionButton } from "@/components/ui/ai-caption-button"
 import { updateEnquiryUploadStatus } from "@/app/actions/enquiries"
+import CloudLoader from "@/components/ui/quantum-cloud-loader"
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -228,15 +229,16 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
           </div>
 
           {isUploading ? (
-            <div className="space-y-2">
-              <div className="h-2 bg-[#F5F0E8] rounded-full overflow-hidden">
+            <div className="space-y-3 py-4">
+              <CloudLoader />
+              <div className="h-1.5 bg-[#F5F0E8] rounded-full overflow-hidden -mt-4">
                 <div 
                   className="h-full bg-[#C1502E] transition-all duration-300"
                   style={{ width: `${overallProgress}%` }}
                 />
               </div>
-              <p className="text-center text-sm font-mono text-[#9A8F85]">
-                Uploading... {overallProgress}% (Please don't close this page)
+              <p className="text-center text-xs font-mono text-[#9A8F85]">
+                Uploading your memories... {overallProgress}% &nbsp;·&nbsp; Please don't close this page
               </p>
             </div>
           ) : (
