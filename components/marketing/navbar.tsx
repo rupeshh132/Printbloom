@@ -7,6 +7,13 @@ import { cn } from "@/lib/utils"
 import { Search, User, ShoppingCart } from "lucide-react"
 import { useUIStore } from "@/store/use-ui-store"
 import { useCart } from "@/store/use-cart"
+import { useRouter } from "next/navigation"
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 const navLinks = [
   { href: "/products", label: "Products" },
@@ -24,6 +31,32 @@ export function Navbar() {
   
   const { openSearchModal, openAuthModal, openCartDrawer } = useUIStore()
   const cartItems = useCart((state) => state.items)
+
+  // Auth State
+  const [user, setUser] = React.useState<any>(null)
+  const router = useRouter()
+
+  React.useEffect(() => {
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+    })
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleUserClick = () => {
+    if (user) {
+      router.push("/profile")
+    } else {
+      openAuthModal()
+    }
+  }
 
   // Only show transparent navbar on the homepage (hero has dark bg behind it)
   const isHomepage = pathname === "/"
@@ -94,7 +127,7 @@ export function Navbar() {
             <Search className="w-5 h-5" />
           </button>
           <button 
-            onClick={openAuthModal}
+            onClick={handleUserClick}
             className={cn(
               "transition-colors hover:text-[#C1502E]",
               isTransparent ? "text-white" : "text-[#221F1C]"

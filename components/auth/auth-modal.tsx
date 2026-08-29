@@ -44,11 +44,11 @@ export function AuthModal() {
 
     if (mode === "signup") {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: email.trim(),
         password,
         options: {
           data: {
-            full_name: name,
+            full_name: name.trim(),
           }
         }
       })
@@ -63,7 +63,7 @@ export function AuthModal() {
       }
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password,
       })
 
@@ -73,6 +73,7 @@ export function AuthModal() {
         // Success!
         closeAuthModal()
         resetForm()
+        window.location.href = "/profile" // Force a hard navigation to profile to ensure server components update
       }
     }
 

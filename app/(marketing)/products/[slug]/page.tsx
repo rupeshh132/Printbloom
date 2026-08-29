@@ -8,11 +8,14 @@ import { ShieldCheck, Award, Map, Clock, Plus } from "lucide-react"
 
 export const revalidate = 3600
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
+
   // Try to fetch product, or use mock if missing so we can at least see the UI
   let product
   try {
-    product = await getProductBySlug(params.slug)
+    product = await getProductBySlug(slug)
   } catch (e) {
     product = null
   }
@@ -21,7 +24,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
     // For demo purposes, we will mock the product if it doesn't exist in DB yet
     product = {
       id: "demo-id",
-      name: params.slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+      name: slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
       starting_price: 50,
       main_image_url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
       description: "A beautiful personalized item crafted just for you."
