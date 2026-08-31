@@ -1,6 +1,16 @@
+"use client"
+
+import { usePathname } from "next/navigation"
+
 export function WhatsAppFloat() {
-  const phoneNumber = "918090683207" // India country code + number
-  const message = encodeURIComponent("Hi PrintBloom! I need help with my custom memory gift. 🌸")
+  const pathname = usePathname()
+  
+  if (pathname?.startsWith("/admin")) {
+    return null
+  }
+
+  const phoneNumber = "918691094045" // Official PrintBloom number
+  const message = encodeURIComponent("Hi PrintBloom! I need help with my custom memory gift. 🤍")
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
 
   return (

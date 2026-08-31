@@ -7,12 +7,12 @@ export default function CloudLoader() {
 
         {/* RED — Fast inner particle */}
         <div className="absolute z-30 h-4 w-4 animate-quantum-red">
-          <div className="h-full w-full rounded-full bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.75),0_0_24px_rgba(248,113,113,0.3)]" />
+          <div className="h-full w-full rounded-full bg-red-400 shadow-[0_0_12px_rgba(248₹13₹13,0.75),0_0_24px_rgba(248₹13₹13,0.3)]" />
         </div>
 
         {/* BLUE — Large outer particle */}
         <div className="absolute z-10 h-6 w-6 animate-quantum-blue">
-          <div className="h-full w-full rounded-full bg-blue-400 shadow-[0_0_16px_rgba(96,165,250,0.7),0_0_30px_rgba(96,165,250,0.25)]" />
+          <div className="h-full w-full rounded-full bg-blue-400 shadow-[0_0_16px_rgba(96₹65,250,0.7),0_0_30px_rgba(96₹65,250,0.25)]" />
         </div>
 
         {/* YELLOW — Center particle */}
@@ -22,7 +22,7 @@ export default function CloudLoader() {
 
         {/* GREEN — Slow orbital particle */}
         <div className="absolute z-0 h-3.5 w-3.5 animate-quantum-green">
-          <div className="h-full w-full rounded-full bg-green-400 shadow-[0_0_12px_rgba(74,222,128,0.75),0_0_24px_rgba(74,222,128,0.3)]" />
+          <div className="h-full w-full rounded-full bg-green-400 shadow-[0_0_12px_rgba(74,222₹28,0.75),0_0_24px_rgba(74,222₹28,0.3)]" />
         </div>
 
       </div>

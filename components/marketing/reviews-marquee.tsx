@@ -11,7 +11,7 @@ export function ReviewsMarquee() {
       <div className="flex animate-marquee gap-0">
         {items.map((item, i) => (
           <div key={i} className="flex items-center gap-3 px-8 shrink-0">
-            <span className="text-[#C1502E] text-lg">★★★★★</span>
+            <span className="text-[#DFBC94] text-lg">★★★★★</span>
             <p className="text-[#FBF6EE]/80 text-sm font-sans whitespace-nowrap">
               "{item.quote}"
             </p>

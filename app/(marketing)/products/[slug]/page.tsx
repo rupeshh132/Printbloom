@@ -6,6 +6,7 @@ import { checkWishlistStatus } from "@/app/actions/wishlist"
 import { ProductCustomizer } from "@/components/products/product-customizer"
 import { PincodeChecker } from "@/components/products/pincode-checker"
 import { ProductMiniReviews } from "@/components/products/product-mini-reviews"
+import { HowItWorksSteps } from "@/components/products/how-it-works-steps"
 import { ShieldCheck, Award, Map, Clock, Plus } from "lucide-react"
 
 export const revalidate = 3600
@@ -36,6 +37,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   // Check wishlist status
   const isWishlisted = await checkWishlistStatus(slug)
 
+  // Force override old unsplash images
+  let imageSrc = product.main_image_url
+  if (slug === 'custom-magazine-a4' || slug === 'custom-magazine') {
+    imageSrc = 'https://res.cloudinary.com/gnltrlq1/image/upload/v1788039384/y4gssqappbukqcn9k3xc.jpg'
+  } else if (slug === 'custom-magazine-a5') {
+    imageSrc = 'https://res.cloudinary.com/gnltrlq1/image/upload/v1788039390/va7ck2ohbi9uhktrzmcx.jpg'
+  } else if (slug === 'photo-frames') {
+    imageSrc = 'https://res.cloudinary.com/gnltrlq1/image/upload/v1788039394/bo2fkgkljfrywzvr2wdl.jpg'
+  }
+
   return (
     <main className="flex flex-col min-h-screen pt-32 pb-24 px-4 md:px-8">
       <div className="container mx-auto max-w-6xl">
@@ -51,7 +62,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <div className="w-full md:w-1/2">
             <div className="relative aspect-[4/5] bg-[#FBF6EE] border border-[#E0D9CF] overflow-hidden">
               <Image 
-                src={product.main_image_url} 
+                src={imageSrc} 
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -65,11 +76,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <h1 className="font-serif text-3xl md:text-4xl text-[#221F1C] mb-4">
               {product.name}
             </h1>
-            
-            <div className="mb-8">
-              <span className="text-2xl font-medium text-[#221F1C]">₹{product.starting_price}</span>
-              <p className="text-sm text-[#9A8F85] mt-1">Incl. of all taxes</p>
-            </div>
 
             {/* Product Customization & Actions (Client Component) */}
             <ProductCustomizer 
@@ -133,6 +139,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           </div>
         </div>
+        
+        {/* Full-width 14-Step Process Section */}
+        <HowItWorksSteps />
+        
       </div>
     </main>
   )

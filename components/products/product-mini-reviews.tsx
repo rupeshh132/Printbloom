@@ -9,7 +9,7 @@ export function ProductMiniReviews({ productSlug }: { productSlug: string }) {
     <div className="mt-10 pt-8 border-t border-[#E0D9CF]">
       <div className="flex items-center gap-3 mb-6">
         <div>
-          <p className="text-xs font-mono uppercase tracking-widest text-[#C1502E] mb-0.5">Verified Reactions</p>
+          <p className="text-xs font-mono uppercase tracking-widest text-[#DFBC94] mb-0.5">Verified Reactions</p>
           <h3 className="font-serif text-xl text-[#221F1C]">What customers said</h3>
         </div>
         <div className="ml-auto text-right">
@@ -44,7 +44,7 @@ export function ProductMiniReviews({ productSlug }: { productSlug: string }) {
         ))}
       </div>
 
-      <a href="/reviews" className="block text-center text-sm text-[#C1502E] hover:underline mt-5 font-medium">
+      <a href="/reviews" className="block text-center text-sm text-[#DFBC94] hover:underline mt-5 font-medium">
         View all customer reviews →
       </a>
     </div>

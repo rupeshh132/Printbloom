@@ -62,7 +62,7 @@ export function FlipbookViewer({ title, images }: FlipbookViewerProps) {
             <a 
               href="/"
               target="_blank"
-              className="bg-[#C1502E] text-white px-6 py-3 rounded-sm hover:bg-[#A5411F] transition-colors text-sm font-medium"
+              className="bg-[#DFBC94] text-white px-6 py-3 rounded-sm hover:bg-[#A5411F] transition-colors text-sm font-medium"
             >
               Create Your Own Magazine
             </a>

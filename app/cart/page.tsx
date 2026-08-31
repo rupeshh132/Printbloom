@@ -4,8 +4,9 @@ import { useState } from "react"
 import { useCart } from "@/store/use-cart"
 import { Navbar } from "@/components/marketing/navbar"
 import NextLink from "next/link"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { Trash2, CheckCircle2, Circle, MapPin, Plus } from "lucide-react"
+import { Trash2, CheckCircle2, Circle, MapPin, Plus, Tag } from "lucide-react"
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 
 type Step = "cart" | "address" | "payment"
@@ -20,6 +21,93 @@ export default function CartPage() {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
   const [showNewAddressForm, setShowNewAddressForm] = useState(false)
   const supabase = createSupabaseBrowserClient()
+
+  const router = useRouter()
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  const handlePayment = async () => {
+    if (!selectedAddressId) {
+      alert("Please select an address before paying");
+      setCurrentStep("address");
+      return;
+    }
+
+    try {
+      setIsProcessing(true);
+      const deliveryFee = total > 999 ? 0 : 150;
+      const orderTotal = total + deliveryFee;
+
+      const orderRes = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: orderTotal })
+      });
+      const orderData = await orderRes.json();
+      
+      if (!orderData.id) throw new Error("Could not create Razorpay order");
+
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
+      if (!user) {
+        alert("Please login first");
+        setIsProcessing(false);
+        return;
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "PrintBloom",
+        description: "Your Order",
+        image: "/logo.png",
+        order_id: orderData.id,
+        handler: async function (response: any) {
+          try {
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                orderDetails: {
+                  userId: user.id,
+                  amount: orderTotal,
+                  items: items,
+                  addressId: selectedAddressId
+                }
+              })
+            });
+            const verifyData = await verifyRes.json();
+            if (verifyData.success) {
+              useCart.getState().clearCart();
+              router.push("/profile?tab=orders");
+            } else {
+              alert("Payment verification failed: " + (verifyData.message || "Unknown DB error"));
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Error verifying payment");
+          }
+        },
+        prefill: { email: user.email, contact: "" },
+        theme: { color: "#221F1C" }
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        alert(response.error.description);
+      });
+      rzp.open();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to initiate checkout");
+    } finally {
+      setIsProcessing(false);
+    }
+  }
+
 
   React.useEffect(() => {
     setIsMounted(true)
@@ -48,8 +136,67 @@ export default function CartPage() {
   }, [])
   
   const total = getCartTotal()
-  const deliveryFee = total > 0 ? 60 : 0
-  const orderTotal = total + deliveryFee
+  
+  // Dynamic Delivery Logic
+  const selectedAddress = savedAddresses.find(a => a.id === selectedAddressId)
+  let deliveryFee = 0
+  if (currentStep !== "cart") {
+    if (selectedAddress?.pincode?.startsWith("4")) {
+      deliveryFee = 100 // Example: Cheaper shipping for Maharashtra
+    } else {
+      deliveryFee = 150 // Standard PAN India
+    }
+  }
+  
+  // Promo Code State
+  const [promoCodeInput, setPromoCodeInput] = useState("")
+  const [appliedPromo, setAppliedPromo] = useState<{code: string, type: string, value: number} | null>(null)
+  const [promoError, setPromoError] = useState<string | null>(null)
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false)
+  
+  let discountAmount = 0
+  if (appliedPromo) {
+    if (appliedPromo.type === 'percentage') {
+      discountAmount = (total * appliedPromo.value) / 100
+    } else {
+      discountAmount = appliedPromo.value
+    }
+  }
+  
+  const orderTotal = Math.max(0, total + deliveryFee - discountAmount)
+
+  const handleApplyPromo = async () => {
+    if (!promoCodeInput.trim()) return
+    setIsApplyingPromo(true)
+    setPromoError(null)
+
+    // Using fetch to an API route or server action
+    try {
+      const { validatePromoCode } = await import("@/app/actions/promo-codes")
+      const res = await validatePromoCode(promoCodeInput)
+      
+      if (res.error) {
+        setPromoError(res.error)
+        setAppliedPromo(null)
+      } else {
+        setAppliedPromo({
+          code: promoCodeInput.toUpperCase(),
+          type: res.discount_type,
+          value: res.discount_value
+        })
+        setPromoCodeInput("")
+      }
+    } catch (e) {
+      setPromoError("Failed to apply promo code")
+    } finally {
+      setIsApplyingPromo(false)
+    }
+  }
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null)
+    setPromoError(null)
+  }
 
   if (!isMounted) {
     return (
@@ -115,7 +262,7 @@ export default function CartPage() {
                 {items.length === 0 ? (
                   <div className="text-center py-10">
                     <p className="text-gray-500 mb-4">Your cart is empty.</p>
-                    <NextLink href="/products" className="text-[#C1502E] underline">Continue Shopping</NextLink>
+                    <NextLink href="/products" className="text-[#DFBC94] underline">Continue Shopping</NextLink>
                   </div>
                 ) : (
                   <div className="space-y-6">
@@ -139,7 +286,7 @@ export default function CartPage() {
                               <Trash2 className="w-3 h-3 mr-1.5" /> Remove
                             </button>
                             <div className="flex items-center border border-gray-300 rounded-sm overflow-hidden">
-                              <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="px-3 py-1 hover:bg-gray-100">−</button>
+                              <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="px-3 py-1 hover:bg-gray-100">-</button>
                               <span className="px-3 py-1 text-sm border-x border-gray-300 min-w-[40px] text-center">{item.quantity}</span>
                               <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="px-3 py-1 hover:bg-gray-100">+</button>
                             </div>
@@ -156,7 +303,6 @@ export default function CartPage() {
               <div>
                 <h2 className="font-serif text-2xl mb-6">Shipping Address</h2>
                 
-                {/* Saved Addresses List */}
                 {savedAddresses.length > 0 && !showNewAddressForm && (
                   <div className="mb-6 space-y-3">
                     {savedAddresses.map((addr) => (
@@ -167,8 +313,8 @@ export default function CartPage() {
                       >
                         <div className="flex items-start gap-3">
                           <div className="mt-1">
-                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${selectedAddressId === addr.id ? 'border-[#C1502E]' : 'border-gray-300'}`}>
-                              {selectedAddressId === addr.id && <div className="w-2 h-2 rounded-full bg-[#C1502E]"></div>}
+                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${selectedAddressId === addr.id ? 'border-[#DFBC94]' : 'border-gray-300'}`}>
+                              {selectedAddressId === addr.id && <div className="w-2 h-2 rounded-full bg-[#DFBC94]"></div>}
                             </div>
                           </div>
                           <div>
@@ -183,7 +329,7 @@ export default function CartPage() {
                     <button 
                       type="button" 
                       onClick={() => setShowNewAddressForm(true)}
-                      className="text-[#C1502E] text-sm font-medium flex items-center gap-2 mt-4 hover:underline"
+                      className="text-[#DFBC94] text-sm font-medium flex items-center gap-2 mt-4 hover:underline"
                     >
                       <Plus className="w-4 h-4" /> Add a new address
                     </button>
@@ -192,9 +338,43 @@ export default function CartPage() {
 
                 {(!savedAddresses.length || showNewAddressForm) && (
                   <form className="space-y-5" onSubmit={async (e) => { 
-                    e.preventDefault(); 
-                    setCurrentStep("payment"); 
-                  }}>
+                      e.preventDefault(); 
+                      try {
+                        const formData = new FormData(e.currentTarget);
+                        
+                        // Save address to DB if logged in
+                        const { data: { session } } = await supabase.auth.getSession();
+                        if (session?.user) {
+                          const { data, error } = await supabase.from('addresses').insert({
+                            user_id: session.user.id,
+                            full_name: formData.get("full_name"),
+                            phone_number: formData.get("phone_number"),
+                            pincode: formData.get("pincode"),
+                            address_line_1: formData.get("address_line_1"),
+                            address_line_2: formData.get("address_line_2"),
+                            city: formData.get("city"),
+                            state: formData.get("state"),
+                            is_default: true
+                          }).select().single();
+                          
+                          if (data) {
+                            setSavedAddresses(prev => [data, ...prev]);
+                            setSelectedAddressId(data.id);
+                            setShowNewAddressForm(false);
+                          } else {
+                            // Fallback if error
+                            setSelectedAddressId("temp-id");
+                          }
+                        } else {
+                          // Allow guest to proceed to next step (will be prompted to login at payment)
+                          setSelectedAddressId("temp-id");
+                        }
+
+                        const { saveFollowUpLead } = await import("@/app/actions/follow-ups")
+                        await saveFollowUpLead(formData.get("full_name") as string, formData.get("phone_number") as string, total)
+                      } catch(err) { console.error(err) }
+                      setCurrentStep("payment"); 
+                    }}>
                     <div className="flex items-center justify-between">
                       <h3 className="font-medium text-[#221F1C]">New Address</h3>
                       {savedAddresses.length > 0 && (
@@ -246,10 +426,18 @@ export default function CartPage() {
                   </form>
                 )}
 
-                {/* Proceed with selected saved address */}
                 {savedAddresses.length > 0 && !showNewAddressForm && (
                   <button 
-                    onClick={() => setCurrentStep("payment")}
+                    onClick={async () => {
+                      const addr = savedAddresses.find(a => a.id === selectedAddressId)
+                      if (addr) {
+                        try {
+                          const { saveFollowUpLead } = await import("@/app/actions/follow-ups")
+                          await saveFollowUpLead(addr.full_name, addr.phone_number, orderTotal)
+                        } catch(err) { console.error(err) }
+                      }
+                      setCurrentStep("payment")
+                    }}
                     disabled={!selectedAddressId}
                     className="w-full bg-[#221F1C] text-white rounded-full py-4 font-medium hover:bg-black transition-colors mt-6 disabled:opacity-50"
                   >
@@ -273,7 +461,6 @@ export default function CartPage() {
             )}
           </div>
 
-          {/* Right Column (Bill Details) */}
           <div className="w-full lg:w-80">
             <div className="bg-[#F6F6F6] rounded-sm p-6 border border-gray-200 sticky top-32">
               <h3 className="font-medium mb-6">Bill Details</h3>
@@ -285,13 +472,49 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Delivery Fee</span>
-                  <span>₹{deliveryFee}</span>
+                  <span>{currentStep === "cart" ? "Calculated at next step" : `₹${deliveryFee}`}</span>
                 </div>
+                
+                {appliedPromo && (
+                  <div className="flex justify-between text-green-700">
+                    <div className="flex items-center gap-1">
+                      <Tag className="w-3 h-3" />
+                      <span>{appliedPromo.code}</span>
+                      <button onClick={handleRemovePromo} className="text-[10px] text-red-500 underline ml-2">Remove</button>
+                    </div>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
               </div>
+
+              {!appliedPromo && currentStep === "cart" && (
+                <div className="mb-6 pt-4 border-t border-gray-100">
+                  <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
+                    Have a Promo Code?
+                  </label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="text"
+                      placeholder="e.g. SAVE20"
+                      value={promoCodeInput}
+                      onChange={(e) => setPromoCodeInput(e.target.value)}
+                      className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#DFBC94]"
+                    />
+                    <button 
+                      onClick={handleApplyPromo}
+                      disabled={isApplyingPromo || !promoCodeInput.trim()}
+                      className="bg-[#221F1C] text-white px-4 py-2 rounded-sm text-xs font-medium disabled:opacity-50 hover:bg-black transition-colors"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                  {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
+                </div>
+              )}
               
               <div className="flex justify-between font-medium mb-8">
                 <span>Order Total:</span>
-                <span>₹{orderTotal}</span>
+                <span>₹{orderTotal.toFixed(2)}</span>
               </div>
 
               {currentStep === "cart" && (
@@ -306,18 +529,19 @@ export default function CartPage() {
               
               {currentStep === "payment" && (
                 <button 
-                  className="w-full bg-[#221F1C] text-white py-4 rounded-full font-medium hover:bg-black transition-colors"
-                >
-                  Pay Now
-                </button>
+                    onClick={handlePayment}
+                    disabled={isProcessing}
+                    className="w-full bg-[#221F1C] text-white py-4 rounded-full font-medium hover:bg-black transition-colors disabled:opacity-50"
+                  >
+                    {isProcessing ? "Processing..." : "Pay Now"}
+                  </button>
               )}
 
-              {/* Trust Quotes — always visible */}
-              <div className="mt-4 space-y-2">
+              <div className="mt-6 space-y-3">
                 {[
-                  "💗 \"It felt worth every penny\"",
-                  "🚀 \"Delivered before the deadline — wow!\"",
-                  "🤌 \"Quality soo premium — better than I expected\"",
+                  "\"It felt worth every penny\"",
+                  "\"Delivered before the deadline — wow!\"",
+                  "\"Quality soo premium — better than I expected\"",
                 ].map((quote, i) => (
                   <p key={i} className="text-[11px] text-[#9A8F85] text-center font-mono">{quote}</p>
                 ))}

@@ -21,7 +21,7 @@ export function WhyPrintBloomSection() {
             
             <FadeInStagger className="space-y-6">
               <FadeInStaggerItem className="flex gap-4">
-                <div className="w-1.5 h-1.5 bg-[#C1502E] rounded-full mt-2 shrink-0" />
+                <div className="w-1.5 h-1.5 bg-[#DFBC94] rounded-full mt-2 shrink-0" />
                 <div>
                   <h4 className="font-serif text-xl text-[#221F1C] mb-2">Designed by Humans</h4>
                   <p className="text-[#6B6259] leading-relaxed">
@@ -31,7 +31,7 @@ export function WhyPrintBloomSection() {
               </FadeInStaggerItem>
               
               <FadeInStaggerItem className="flex gap-4">
-                <div className="w-1.5 h-1.5 bg-[#C1502E] rounded-full mt-2 shrink-0" />
+                <div className="w-1.5 h-1.5 bg-[#DFBC94] rounded-full mt-2 shrink-0" />
                 <div>
                   <h4 className="font-serif text-xl text-[#221F1C] mb-2">Made for Keeps</h4>
                   <p className="text-[#6B6259] leading-relaxed">
@@ -41,7 +41,7 @@ export function WhyPrintBloomSection() {
               </FadeInStaggerItem>
               
               <FadeInStaggerItem className="flex gap-4">
-                <div className="w-1.5 h-1.5 bg-[#C1502E] rounded-full mt-2 shrink-0" />
+                <div className="w-1.5 h-1.5 bg-[#DFBC94] rounded-full mt-2 shrink-0" />
                 <div>
                   <h4 className="font-serif text-xl text-[#221F1C] mb-2">Zero Hassle</h4>
                   <p className="text-[#6B6259] leading-relaxed">

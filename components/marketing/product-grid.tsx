@@ -31,6 +31,7 @@ export function ProductGrid({ products }: { products: any[] }) {
                 src={imageSrc}
                 alt={product.name}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 66vw"
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
               />
             </div>
@@ -42,7 +43,11 @@ export function ProductGrid({ products }: { products: any[] }) {
                 {product.tagline}
               </p>
               <div className="flex items-center justify-between pt-2">
-                <span className="font-mono text-sm tracking-wide">From {product.starting_price_label}</span>
+                <span className="font-mono text-sm tracking-wide">
+                  {product.starting_price_label?.toLowerCase().includes('from') 
+                    ? product.starting_price_label 
+                    : `From ${product.starting_price_label}`}
+                </span>
                 <span className="text-accent font-medium text-sm group-hover:underline underline-offset-4">View Details &rarr;</span>
               </div>
             </div>

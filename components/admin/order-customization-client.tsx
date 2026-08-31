@@ -73,7 +73,7 @@ export function OrderCustomizationClient({ customizations }: { customizations: a
             {photo.caption && (
               <button
                 onClick={() => handleCopy(photo.caption, index)}
-                className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-semibold text-[#C1502E] hover:text-[#A04020] transition-colors mt-auto"
+                className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-semibold text-[#DFBC94] hover:text-[#A04020] transition-colors mt-auto"
               >
                 {copiedIndex === index ? (
                   <><Check className="w-3 h-3" /> Copied!</>

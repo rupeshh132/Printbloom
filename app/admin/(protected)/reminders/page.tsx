@@ -21,7 +21,7 @@ export default async function AdminRemindersPage() {
       </SectionHeading>
 
       <div className="bg-[#FBF6EE] border border-[#E0D9CF] p-6 rounded-sm mb-12">
-        <h2 className="font-serif text-xl text-[#C1502E] mb-2 flex items-center gap-2">
+        <h2 className="font-serif text-xl text-[#DFBC94] mb-2 flex items-center gap-2">
           <span>🔔</span> Action Required Today ({upcoming.length})
         </h2>
         <p className="text-sm text-[#6B6259] mb-6">
@@ -39,7 +39,7 @@ export default async function AdminRemindersPage() {
                 <div>
                   <h3 className="font-medium text-[#221F1C]">{rem.customer_name}</h3>
                   <p className="text-sm text-[#6B6259]">
-                    <strong className="text-[#C1502E]">{rem.occasion_name}</strong> on {new Date(rem.occasion_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })}
+                    <strong className="text-[#DFBC94]">{rem.occasion_name}</strong> on {new Date(rem.occasion_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })}
                   </p>
                   <p className="text-xs text-[#9A8F85] mt-1 font-mono">{rem.phone_number}</p>
                 </div>
@@ -76,7 +76,7 @@ export default async function AdminRemindersPage() {
               <tr key={rem.id} className="border-b border-[#E0D9CF] last:border-0 hover:bg-[#FBF6EE]/50 transition-colors">
                 <td className="px-6 py-4 font-medium text-[#221F1C]">{rem.customer_name}</td>
                 <td className="px-6 py-4 text-[#6B6259]">{rem.phone_number}</td>
-                <td className="px-6 py-4 text-[#C1502E]">{rem.occasion_name}</td>
+                <td className="px-6 py-4 text-[#DFBC94]">{rem.occasion_name}</td>
                 <td className="px-6 py-4 text-[#6B6259]">
                   {new Date(rem.occasion_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </td>

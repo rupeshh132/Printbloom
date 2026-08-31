@@ -53,7 +53,7 @@ export default async function AdminOrdersList() {
                     </span>
                   </td>
                   <td className="p-4">
-                    <NextLink href={`/admin/orders/${order.id}`} className="text-xs text-[#C1502E] hover:underline font-medium">
+                    <NextLink href={`/admin/orders/${order.id}`} className="text-xs text-[#DFBC94] hover:underline font-medium">
                       View Details & Photos &rarr;
                     </NextLink>
                   </td>

@@ -43,9 +43,10 @@ export function BehindTheScenesSection() {
                   src={step.image}
                   alt={step.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover transition-transform duration-1000 ease-out hover:scale-105"
                 />
-                <div className="absolute top-4 left-4 w-8 h-8 bg-white border border-[#E0D9CF] flex items-center justify-center font-serif text-[#C1502E]">
+                <div className="absolute top-4 left-4 w-8 h-8 bg-white border border-[#E0D9CF] flex items-center justify-center font-serif text-[#DFBC94]">
                   {index + 1}
                 </div>
               </div>

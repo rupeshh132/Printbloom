@@ -35,11 +35,11 @@ export function PincodeChecker() {
             setPincode(val)
             if (status !== "idle") setStatus("idle")
           }}
-          className="w-full h-12 border border-[#E0D9CF] rounded-sm pl-4 pr-12 focus:outline-none focus:border-[#C1502E] text-sm bg-white"
+          className="w-full h-12 border border-[#E0D9CF] rounded-sm pl-4 pr-12 focus:outline-none focus:border-[#DFBC94] text-sm bg-white"
         />
         <button
           type="button"
-          className="absolute right-3 text-[#C1502E]"
+          className="absolute right-3 text-[#DFBC94]"
           title="Detect my location"
         >
           <MapPin className="w-5 h-5" />

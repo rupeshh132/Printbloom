@@ -92,7 +92,7 @@ export function AuthModal() {
           <h2 className="font-serif text-xl text-[#221F1C]">
             {mode === "login" ? "Log In" : "Create Account"}
           </h2>
-          <button onClick={() => { closeAuthModal(); resetForm(); }} className="text-[#9A8F85] hover:text-[#C1502E]">
+          <button onClick={() => { closeAuthModal(); resetForm(); }} className="text-[#9A8F85] hover:text-[#DFBC94]">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -126,7 +126,7 @@ export function AuthModal() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="John Doe"
-                    className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#C1502E] bg-white transition-colors text-sm"
+                    className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
                   />
                 </div>
               </div>
@@ -144,7 +144,7 @@ export function AuthModal() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#C1502E] bg-white transition-colors text-sm"
+                  className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
                 />
               </div>
             </div>
@@ -162,7 +162,7 @@ export function AuthModal() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#C1502E] bg-white transition-colors text-sm"
+                  className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
                 />
               </div>
             </div>
@@ -170,7 +170,7 @@ export function AuthModal() {
             <button 
               type="submit"
               disabled={loading}
-              className="w-full h-12 mt-2 bg-[#221F1C] text-white font-medium rounded-full hover:bg-[#C1502E] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full h-12 mt-2 bg-[#221F1C] text-white font-medium rounded-full hover:bg-[#DFBC94] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? "Please wait..." : mode === "login" ? "Log In" : "Sign Up"}
             </button>
@@ -183,7 +183,7 @@ export function AuthModal() {
             <button 
               type="button"
               onClick={toggleMode}
-              className="text-[#C1502E] text-sm font-medium hover:underline"
+              className="text-[#DFBC94] text-sm font-medium hover:underline"
             >
               {mode === "login" ? "Create an account" : "Log in instead"}
             </button>

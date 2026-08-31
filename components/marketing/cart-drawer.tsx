@@ -35,7 +35,7 @@ export function CartDrawer() {
           <h2 className="font-serif text-2xl text-[#221F1C] flex items-center gap-2">
             <ShoppingBag className="w-5 h-5" /> Your Cart
           </h2>
-          <button onClick={closeCartDrawer} className="text-[#9A8F85] hover:text-[#C1502E] p-2">
+          <button onClick={closeCartDrawer} className="text-[#9A8F85] hover:text-[#DFBC94] p-2">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -52,7 +52,7 @@ export function CartDrawer() {
               <NextLink 
                 href="/products" 
                 onClick={closeCartDrawer}
-                className="bg-[#221F1C] text-white px-8 py-3 text-sm font-medium hover:bg-[#C1502E] transition-colors"
+                className="bg-[#221F1C] text-white px-8 py-3 text-sm font-medium hover:bg-[#DFBC94] transition-colors"
               >
                 Start Shopping
               </NextLink>
@@ -101,7 +101,7 @@ export function CartDrawer() {
             <NextLink 
               href="/cart"
               onClick={closeCartDrawer}
-              className="block w-full bg-[#C1502E] text-white text-center py-4 font-medium hover:bg-[#A5411F] transition-colors shadow-sm"
+              className="block w-full bg-[#DFBC94] text-white text-center py-4 font-medium hover:bg-[#A5411F] transition-colors shadow-sm"
             >
               Proceed to Checkout
             </NextLink>

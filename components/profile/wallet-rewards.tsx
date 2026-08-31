@@ -51,14 +51,14 @@ export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[],
 
       {/* Refer & Earn Card - Full width */}
       <div className="bg-[#FBF6EE] border border-[#E0D9CF] rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-8 shadow-sm relative overflow-hidden">
-        <div className="flex-shrink-0 w-16 h-16 bg-white border border-[#E0D9CF] rounded-full flex items-center justify-center text-[#C1502E] shadow-sm">
+        <div className="flex-shrink-0 w-16 h-16 bg-white border border-[#E0D9CF] rounded-full flex items-center justify-center text-[#DFBC94] shadow-sm">
           <Gift className="w-8 h-8" />
         </div>
         
         <div className="flex-1 text-center md:text-left">
           <h3 className="font-serif text-2xl text-[#221F1C] mb-2">Refer & Earn Points</h3>
           <p className="text-[#6B6259]">
-            Give your friends ₹100 off on their first custom gift, and get <span className="font-medium text-[#C1502E]">100 Points</span> when they place an order!
+            Give your friends ₹100 off on their first custom gift, and get <span className="font-medium text-[#DFBC94]">100 Points</span> when they place an order!
           </p>
         </div>
         
@@ -107,7 +107,7 @@ export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[],
                     <p className="font-medium text-[#221F1C] text-base">{txn.description || 'Order Cashback'}</p>
                     <p className="text-sm text-[#9A8F85] mt-1">{date}</p>
                   </div>
-                  <div className={`font-medium text-lg ${isPositive ? 'text-green-600' : 'text-[#C1502E]'}`}>
+                  <div className={`font-medium text-lg ${isPositive ? 'text-green-600' : 'text-[#DFBC94]'}`}>
                     {isPositive ? '+' : '-'}{txn.points}
                   </div>
                 </div>

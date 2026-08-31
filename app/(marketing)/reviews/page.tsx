@@ -14,7 +14,7 @@ export default function ReviewsPage() {
         
         {/* Header */}
         <div className="text-center mb-6">
-          <p className="font-mono text-xs uppercase tracking-widest text-[#C1502E] mb-4">Unedited • Real Customers • Real WhatsApp Chats</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-[#DFBC94] mb-4">Unedited • Real Customers • Real WhatsApp Chats</p>
           <SectionHeading as="h1" className="text-center">Customer Love</SectionHeading>
           <p className="text-[#6B6259] mt-4 max-w-2xl mx-auto">
             Every screenshot below is a real WhatsApp conversation from a real customer. We never edit them.
@@ -29,7 +29,7 @@ export default function ReviewsPage() {
             { num: "100%", label: "Made With Love" },
           ].map((stat) => (
             <div key={stat.label} className="text-center bg-white border border-[#E0D9CF] rounded-sm py-4 px-2">
-              <p className="font-serif text-2xl text-[#C1502E]">{stat.num}</p>
+              <p className="font-serif text-2xl text-[#DFBC94]">{stat.num}</p>
               <p className="text-xs text-[#9A8F85] font-mono mt-1">{stat.label}</p>
             </div>
           ))}
@@ -58,7 +58,7 @@ export default function ReviewsPage() {
 
               {/* Quote overlay */}
               <div className="p-4 border-t border-[#E0D9CF]">
-                <div className="text-[#C1502E] text-xs mb-2">★★★★★</div>
+                <div className="text-[#DFBC94] text-xs mb-2">★★★★★</div>
                 <p className="text-sm text-[#221F1C] leading-relaxed italic line-clamp-3">"{review.quote}"</p>
                 <p className="text-xs text-[#9A8F85] font-mono mt-3">— Verified Customer</p>
               </div>

@@ -143,12 +143,12 @@ export default function NewProductPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           
           <div className="space-y-2 pb-6 border-b border-[#E0D9CF]">
-            <label htmlFor="category" className="text-sm font-medium text-[#C1502E]">' Smart Product Template</label>
+            <label htmlFor="category" className="text-sm font-medium text-[#DFBC94]">' Smart Product Template</label>
             <select
               id="category"
               value={category}
               onChange={handleCategoryChange}
-              className="w-full h-11 px-4 border border-[#C1502E]/30 bg-[#FBF6EE] focus:outline-none focus:border-[#C1502E] rounded-sm text-[#221F1C]"
+              className="w-full h-11 px-4 border border-[#DFBC94]/30 bg-[#FBF6EE] focus:outline-none focus:border-[#DFBC94] rounded-sm text-[#221F1C]"
             >
               <option value="blank">Custom / Normal Product</option>
               <option value="magazine-a4">Custom Magazine (A4)</option>
@@ -167,7 +167,7 @@ export default function NewProductPage() {
               value={formDataState.name}
               onChange={handleChange}
               required
-              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"
               placeholder="e.g. Classic Photo Frame"
             />
           </div>
@@ -180,7 +180,7 @@ export default function NewProductPage() {
               name="slug"
               value={formDataState.slug}
               onChange={handleChange}
-              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm bg-gray-50"
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm bg-gray-50"
               placeholder="e.g. classic-photo-frame"
             />
             <p className="text-xs text-[#9A8F85]">Leave empty to auto-generate from name.</p>
@@ -194,7 +194,7 @@ export default function NewProductPage() {
               name="tagline"
               value={formDataState.tagline}
               onChange={handleChange}
-              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"
               placeholder="e.g. Ready-to-hang wooden frames."
             />
           </div>
@@ -207,7 +207,7 @@ export default function NewProductPage() {
               value={formDataState.description}
               onChange={handleChange}
               rows={4}
-              className="w-full p-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm resize-none"
+              className="w-full p-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm resize-none"
               placeholder="Detailed description of the product..."
             />
           </div>
@@ -221,7 +221,7 @@ export default function NewProductPage() {
               value={formDataState.price}
               onChange={handleChange}
               required
-              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"
               placeholder="e.g. ₹899"
             />
           </div>
@@ -253,7 +253,7 @@ export default function NewProductPage() {
               type="checkbox"
               id="is_hero"
               name="is_hero"
-              className="w-4 h-4 text-[#C1502E] border-[#E0D9CF] focus:ring-[#C1502E] rounded-sm"
+              className="w-4 h-4 text-[#DFBC94] border-[#E0D9CF] focus:ring-[#DFBC94] rounded-sm"
             />
             <label htmlFor="is_hero" className="text-sm text-[#221F1C]">
               Is Hero Product? (Takes up 2 slots in the product grid)

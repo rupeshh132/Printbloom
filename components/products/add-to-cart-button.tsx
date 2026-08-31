@@ -9,6 +9,7 @@ type AddToCartProps = {
     name: string
     price: number
     image: string
+    variant?: string
   }
   customizationData?: any[]
 }
@@ -47,6 +48,7 @@ export function AddToCartButton({ product, customizationData = [] }: AddToCartPr
       price: product.price,
       quantity: 1,
       image: product.image,
+      variant: product.variant,
       customization_data: cleanedCustomization
     })
     

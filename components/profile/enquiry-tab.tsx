@@ -60,7 +60,7 @@ export function EnquiryTab() {
               id="name"
               name="name"
               required
-              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"
               placeholder="e.g. Rahul Sharma"
             />
           </div>
@@ -71,7 +71,7 @@ export function EnquiryTab() {
               id="product"
               name="product"
               required
-              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm bg-white"
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm bg-white"
             >
               <option value="">Select a product...</option>
               <option value="custom-magazine-a5">Custom Magazine (A5)</option>
@@ -89,7 +89,7 @@ export function EnquiryTab() {
               type="text"
               id="occasion"
               name="occasion"
-              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"
               placeholder="e.g. Anniversary, Birthday"
             />
           </div>
@@ -100,7 +100,7 @@ export function EnquiryTab() {
               type="date"
               id="requiredBy"
               name="requiredBy"
-              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm"
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"
             />
           </div>
         </div>
@@ -111,7 +111,7 @@ export function EnquiryTab() {
             id="notes"
             name="notes"
             rows={4}
-            className="w-full p-4 border border-[#E0D9CF] focus:outline-none focus:border-[#C1502E] rounded-sm resize-none"
+            className="w-full p-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm resize-none"
             placeholder="Tell us what you have in mind..."
           ></textarea>
         </div>

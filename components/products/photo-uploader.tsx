@@ -198,7 +198,7 @@ export function PhotoUploader({ onPhotosChange }: PhotoUploaderProps) {
         onClick={() => fileInputRef.current?.click()}
         onDragOver={e => e.preventDefault()}
         onDrop={handleDrop}
-        className="border-2 border-dashed border-[#C1502E]/30 rounded-xl bg-[#FBF6EE] p-8 text-center cursor-pointer hover:bg-[#F5F0E8] hover:border-[#C1502E] transition-all group mb-6"
+        className="border-2 border-dashed border-[#DFBC94]/30 rounded-xl bg-[#FBF6EE] p-8 text-center cursor-pointer hover:bg-[#F5F0E8] hover:border-[#DFBC94] transition-all group mb-6"
       >
         <input 
           type="file" 
@@ -208,7 +208,7 @@ export function PhotoUploader({ onPhotosChange }: PhotoUploaderProps) {
           accept="image/*" 
           className="hidden" 
         />
-        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-[#C1502E] group-hover:scale-110 transition-transform">
+        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-[#DFBC94] group-hover:scale-110 transition-transform">
           <Upload className="w-8 h-8" />
         </div>
         <h3 className="font-serif text-xl text-[#221F1C] mb-2">Upload your memories</h3>

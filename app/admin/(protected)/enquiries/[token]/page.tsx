@@ -22,7 +22,7 @@ export default async function EnquiryUploadsViewer({ params }: { params: Promise
   return (
     <div>
       <div className="mb-8">
-        <NextLink href="/admin/enquiries" className="text-xs text-[#9A8F85] hover:text-[#C1502E] mb-4 inline-block tracking-wider uppercase font-medium">
+        <NextLink href="/admin/enquiries" className="text-xs text-[#9A8F85] hover:text-[#DFBC94] mb-4 inline-block tracking-wider uppercase font-medium">
           ← Back to Enquiries
         </NextLink>
         
@@ -37,7 +37,7 @@ export default async function EnquiryUploadsViewer({ params }: { params: Promise
                   <a 
                     href={`/flipbook/${fb.id}`} 
                     target="_blank" 
-                    className="text-xs text-white bg-[#C1502E] px-3 py-1.5 rounded-sm hover:bg-[#A5411F]"
+                    className="text-xs text-white bg-[#DFBC94] px-3 py-1.5 rounded-sm hover:bg-[#A5411F]"
                   >
                     View Flipbook ↗
                   </a>

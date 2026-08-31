@@ -67,7 +67,7 @@ export function WishlistTab({ items }: { items: any[] }) {
               </div>
               <div className="p-4">
                 <h3 className="font-medium text-[#221F1C] truncate">{item.product_name}</h3>
-                <p className="text-[#C1502E] font-medium mt-1">₹{item.product_price}</p>
+                <p className="text-[#DFBC94] font-medium mt-1">₹{item.product_price}</p>
               </div>
             </NextLink>
             

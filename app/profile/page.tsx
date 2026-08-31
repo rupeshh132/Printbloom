@@ -77,8 +77,12 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
             <div className="bg-white border border-[#E0D9CF] rounded-sm overflow-hidden flex flex-col">
               
               <div className="p-6 border-b border-[#E0D9CF] flex items-center gap-4 bg-[#FBF6EE]">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#221F1C] border border-[#E0D9CF]">
-                  <User className="w-6 h-6" />
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#221F1C] border border-[#E0D9CF] overflow-hidden">
+                  {user.user_metadata?.avatar_url ? (
+                    <img src={user.user_metadata.avatar_url} alt={fullName} className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-6 h-6" />
+                  )}
                 </div>
                 <div>
                   <h3 className="font-medium text-[#221F1C] truncate max-w-[150px]">{fullName}</h3>
@@ -88,25 +92,25 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
 
               <NextLink 
                 href="/profile?tab=profile" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "profile" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "profile" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
               >
                 <User className="w-5 h-5" /> Profile Info
               </NextLink>
               <NextLink 
                 href="/profile?tab=orders" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "orders" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "orders" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
               >
                 <Package className="w-5 h-5" /> My Orders
               </NextLink>
               <NextLink 
                 href="/profile?tab=addresses" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "addresses" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "addresses" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
               >
                 <MapPin className="w-5 h-5" /> Saved Addresses
               </NextLink>
               <NextLink 
                 href="/profile?tab=rewards" 
-                className={`flex items-center justify-between p-4 transition-colors ${currentTab === "rewards" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+                className={`flex items-center justify-between p-4 transition-colors ${currentTab === "rewards" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
               >
                 <div className="flex items-center gap-3">
                   <Wallet className="w-5 h-5" /> Wallet & Rewards
@@ -114,7 +118,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               </NextLink>
               <NextLink 
                 href="/profile?tab=reminders" 
-                className={`flex items-center justify-between p-4 transition-colors ${currentTab === "reminders" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+                className={`flex items-center justify-between p-4 transition-colors ${currentTab === "reminders" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
               >
                 <div className="flex items-center gap-3">
                   <CalendarDays className="w-5 h-5" /> Smart Reminders
@@ -122,13 +126,13 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               </NextLink>
               <NextLink 
                 href="/profile?tab=wishlist" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "wishlist" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "wishlist" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
               >
                 <Heart className="w-5 h-5" /> Wishlist
               </NextLink>
               <NextLink 
                 href="/profile?tab=enquiry" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "enquiry" ? "text-[#C1502E] bg-[#F5F0E8] font-medium border-l-4 border-[#C1502E]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
+                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "enquiry" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
               >
                 <MessageSquare className="w-5 h-5" /> Custom Request
               </NextLink>

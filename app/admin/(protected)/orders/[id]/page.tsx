@@ -4,8 +4,9 @@ import NextLink from "next/link"
 import { ArrowLeft, Download, Copy } from "lucide-react"
 import { OrderCustomizationClient } from "@/components/admin/order-customization-client"
 
-export default async function AdminOrderDetail({ params }: { params: { id: string } }) {
-  const order = await getAdminOrderById(params.id)
+export default async function AdminOrderDetail({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const order = await getAdminOrderById(id)
 
   if (!order) {
     return notFound()
@@ -56,7 +57,11 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
           {order.order_items.map((item: any) => (
             <div key={item.id} className="bg-white border border-[#E0D9CF] rounded-sm overflow-hidden">
               <div className="p-4 border-b border-[#E0D9CF] bg-[#F5F0E8] flex gap-4 items-center">
-                <img src={item.image_url} alt={item.product_name} className="w-16 h-16 object-cover rounded-sm border border-[#E0D9CF]" />
+                {item.image_url ? (
+                  <img src={item.image_url} alt={item.product_name} className="w-16 h-16 object-cover rounded-sm border border-[#E0D9CF]" />
+                ) : (
+                  <div className="w-16 h-16 bg-[#E0D9CF] rounded-sm flex items-center justify-center text-xs text-[#6B6259]">No img</div>
+                )}
                 <div>
                   <h3 className="font-medium text-[#221F1C]">{item.product_name}</h3>
                   <p className="text-sm text-[#6B6259]">Qty: {item.quantity} × ₹{item.price}</p>
@@ -81,28 +86,37 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
         <div className="space-y-6">
           <div className="bg-white border border-[#E0D9CF] rounded-sm p-6">
             <h3 className="font-serif text-lg text-[#221F1C] border-b border-[#E0D9CF] pb-2 mb-4">Customer</h3>
-            <p className="text-sm text-[#6B6259]">{order.user_email}</p>
+            <p className="text-sm font-medium text-[#221F1C]">{order.customer_name}</p>
+            <p className="text-sm text-[#6B6259]">{order.customer_phone}</p>
+            <p className="text-sm text-[#6B6259] mt-1">{order.user_email}</p>
           </div>
 
-          {order.addresses && (
+          {(order.addresses && Array.isArray(order.addresses) ? order.addresses[0] : order.addresses) && (
             <div className="bg-white border border-[#E0D9CF] rounded-sm p-6">
               <h3 className="font-serif text-lg text-[#221F1C] border-b border-[#E0D9CF] pb-2 mb-4">Shipping Address</h3>
-              <p className="text-sm font-medium text-[#221F1C]">{order.addresses.full_name}</p>
-              <p className="text-sm text-[#6B6259] mt-1">{order.addresses.street_address}</p>
-              <p className="text-sm text-[#6B6259]">{order.addresses.city}, {order.addresses.state} {order.addresses.pincode}</p>
-              <p className="text-sm text-[#6B6259] mt-2">Phone: {order.addresses.phone}</p>
+              {(() => {
+                const addr = Array.isArray(order.addresses) ? order.addresses[0] : order.addresses;
+                return (
+                  <>
+                    <p className="text-sm font-medium text-[#221F1C]">{addr.full_name}</p>
+                    <p className="text-sm text-[#6B6259] mt-1">{addr.address_line_1} {addr.address_line_2}</p>
+                    <p className="text-sm text-[#6B6259]">{addr.city}, {addr.state} {addr.pincode}</p>
+                    <p className="text-sm text-[#6B6259] mt-2">Phone: {addr.phone_number}</p>
+                  </>
+                )
+              })()}
             </div>
           )}
 
           <div className="bg-white border border-[#E0D9CF] rounded-sm p-6">
             <h3 className="font-serif text-lg text-[#221F1C] border-b border-[#E0D9CF] pb-2 mb-4">Payment</h3>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-[#6B6259]">Subtotal</span>
-              <span className="text-[#221F1C]">₹{order.total_amount}</span>
+            <div className="flex justify-between py-2 text-[#6B6259] text-sm">
+              <span>Subtotal</span>
+              <span>₹{order.order_items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0)}</span>
             </div>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-[#6B6259]">Shipping</span>
-              <span className="text-[#221F1C]">Free</span>
+            <div className="flex justify-between py-2 text-[#6B6259] text-sm border-b border-[#E0D9CF]">
+              <span>Shipping</span>
+              <span>₹{order.total_amount - order.order_items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0)}</span>
             </div>
             <div className="flex justify-between font-medium text-lg mt-4 pt-4 border-t border-[#E0D9CF]">
               <span>Total</span>

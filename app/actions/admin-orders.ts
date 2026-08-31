@@ -36,18 +36,19 @@ export async function getAdminOrderById(id: string) {
     .single()
 
   if (error) {
-    console.error("Error fetching order details:", error)
+    console.error("Error fetching order details (likely RLS blocked):", error.message || error)
     return null
   }
+  
+  console.log("DEBUG - Fetched Order Data:", JSON.stringify(data, null, 2))
 
-  // Also fetch the user profile (email) for this order
-  const { data: userData } = await supabase
-    .from("users")
-    .select("email")
-    .eq("id", data.user_id)
-    .single()
+  // Extract customer info from address if possible
+  const customerEmail = "Provided at checkout"
+  const addr = Array.isArray(data.addresses) ? data.addresses[0] : data.addresses
+  const customerName = addr?.full_name || "Unknown Customer"
+  const customerPhone = addr?.phone_number || ""
 
-  return { ...data, user_email: userData?.email || "Unknown User" }
+  return { ...data, user_email: customerEmail, customer_name: customerName, customer_phone: customerPhone }
 }
 
 export async function updateOrderStatus(id: string, status: string) {

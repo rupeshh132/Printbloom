@@ -37,7 +37,7 @@ export function WishlistButton({ productSlug, productName, productImageUrl, prod
       disabled={isLoading}
       className={`flex items-center justify-center w-14 h-14 rounded-full border transition-all ${
         isWishlisted 
-          ? "border-[#C1502E] bg-[#C1502E]/10 text-[#C1502E]" 
+          ? "border-[#DFBC94] bg-[#DFBC94]/10 text-[#DFBC94]" 
           : "border-[#E0D9CF] text-[#9A8F85] hover:border-[#221F1C] hover:text-[#221F1C] bg-white"
       } disabled:opacity-50`}
       title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}

@@ -4,17 +4,17 @@ import NextLink from "next/link"
 
 export function RemindersCTASection() {
   return (
-    <section className="py-24 bg-[#E0D9CF] border-y border-[#C1502E]/20 relative overflow-hidden">
+    <section className="py-24 bg-[#E0D9CF] border-y border-[#DFBC94]/20 relative overflow-hidden">
       {/* Decorative floral accent */}
       <div className="absolute top-0 right-0 opacity-10 pointer-events-none transform translate-x-1/3 -translate-y-1/3">
         <svg width="400" height="400" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="#C1502E"/>
+          <path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="#DFBC94"/>
         </svg>
       </div>
 
       <div className="container mx-auto max-w-4xl px-4 md:px-8 relative z-10 text-center">
         <FadeIn>
-          <span className="text-[#C1502E] font-mono text-[10px] tracking-widest uppercase mb-4 block">
+          <span className="text-[#DFBC94] font-mono text-[10px] tracking-widest uppercase mb-4 block">
             Plan Ahead
           </span>
           <SectionHeading as="h2" className="text-[#221F1C] mb-6">

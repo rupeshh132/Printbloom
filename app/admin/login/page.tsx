@@ -15,9 +15,9 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-[#221F1C] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-10">
-          <h1 className="font-serif text-4xl text-[#FBF6EE]">PrintBloom</h1>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#9A8F85] mt-1">
+        <div className="flex flex-col items-center mb-10">
+          <img src="/logo.png" alt="PrintBloom" className="h-20 w-auto aspect-square object-contain rounded-full shadow-lg mb-3" />
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#9A8F85]">
             Admin Panel
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
                 name="email"
                 required
                 autoComplete="email"
-                className="h-12 bg-[#221F1C] border border-white/10 text-[#FBF6EE] px-4 focus:outline-none focus:border-[#C1502E] transition-colors"
+                className="h-12 bg-[#221F1C] border border-white/10 text-[#FBF6EE] px-4 focus:outline-none focus:border-[#DFBC94] transition-colors"
                 placeholder="you@example.com"
               />
             </div>
@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
                 name="password"
                 required
                 autoComplete="current-password"
-                className="h-12 bg-[#221F1C] border border-white/10 text-[#FBF6EE] px-4 focus:outline-none focus:border-[#C1502E] transition-colors"
+                className="h-12 bg-[#221F1C] border border-white/10 text-[#FBF6EE] px-4 focus:outline-none focus:border-[#DFBC94] transition-colors"
                 placeholder="••••••••"
               />
             </div>
@@ -68,7 +68,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="h-12 bg-[#C1502E] text-white font-medium hover:bg-[#a8432a] transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+              className="h-12 bg-[#DFBC94] text-white font-medium hover:bg-[#a8432a] transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-2"
             >
               {isPending ? "Signing in..." : "Sign In"}
             </button>

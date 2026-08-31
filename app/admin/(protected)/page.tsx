@@ -1,7 +1,9 @@
 import { SectionHeading } from "@/components/ui/section-heading"
 import { getDashboardCounts } from "@/app/actions/enquiries"
 import { seedProducts } from "@/app/actions/products"
+import { getDashboardChartData } from "@/app/actions/dashboard"
 import { Button } from "@/components/ui/button"
+import { DashboardCharts } from "@/components/admin/dashboard-charts"
 
 export const dynamic = "force-dynamic"
 
@@ -12,6 +14,7 @@ async function handleSeed() {
 
 export default async function AdminDashboard() {
   const counts = await getDashboardCounts()
+  const { monthlyData, productData } = await getDashboardChartData()
 
   return (
     <div>
@@ -41,6 +44,9 @@ export default async function AdminDashboard() {
           <p className="text-xs text-[#9A8F85] mt-1">In Bloom Journal</p>
         </div>
       </div>
+
+      {/* Advanced Features Component */}
+      <DashboardCharts monthlyData={monthlyData} productData={productData} />
 
       <div className="bg-amber-50 border border-amber-200 p-4 rounded-sm text-sm text-amber-800">
         <strong>First time setup?</strong> Click "Seed Products (Run Once)" button above to add PrintBloom's full product catalog to your database.

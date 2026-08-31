@@ -87,7 +87,7 @@ export function FlipbookCreator({ token }: { token: string }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="e.g. Arhaan's 1st Birthday"
-          className="w-full text-base border border-[#E0D9CF] bg-[#FBF6EE]/30 p-3 rounded-sm focus:outline-none focus:border-[#C1502E]"
+          className="w-full text-base border border-[#E0D9CF] bg-[#FBF6EE]/30 p-3 rounded-sm focus:outline-none focus:border-[#DFBC94]"
           required
         />
       </div>
@@ -105,7 +105,7 @@ export function FlipbookCreator({ token }: { token: string }) {
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
           <div className="text-[#9A8F85]">
-            <span className="font-medium text-[#C1502E]">Click to browse</span> or drag and drop images here.
+            <span className="font-medium text-[#DFBC94]">Click to browse</span> or drag and drop images here.
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@ export function FlipbookCreator({ token }: { token: string }) {
         <div className="space-y-3">
           <CloudLoader />
           <div className="h-1.5 bg-[#F5F0E8] rounded-full overflow-hidden -mt-4">
-            <div className="h-full bg-[#C1502E] transition-all duration-300" style={{ width: `${progress}%` }} />
+            <div className="h-full bg-[#DFBC94] transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
           <p className="text-center text-xs text-[#9A8F85]">Generating Flipbook... {progress}%</p>
         </div>

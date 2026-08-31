@@ -68,7 +68,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "A compact, beautiful editorial of your memories.",
       description: "Our signature A5 custom magazine. Perfectly sized to hold in your hands. You provide the photos, we craft the story.",
       starting_price_label: "From ₹399",
-      main_image_url: "https://images.unsplash.com/photo-1588666309990-d68f08e3d4a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "https://res.cloudinary.com/gnltrlq1/image/upload/v1788039390/va7ck2ohbi9uhktrzmcx.jpg",
       is_hero: true,
       sort_order: 1,
       status: "published",
@@ -79,7 +79,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Large-format editorial for your biggest moments.",
       description: "A stunning A4 large-format magazine. Ideal for wedding albums, big anniversaries, and grand gestures.",
       starting_price_label: "From ₹499",
-      main_image_url: "https://images.unsplash.com/photo-1587614295999-6c1c13675117?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/a4-1.jpg",
       is_hero: true,
       sort_order: 2,
       status: "published",
@@ -90,7 +90,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Digital editorial you can share instantly.",
       description: "A digital-only version of our signature magazine. Formatted as a high-quality PDF flipbook, perfect for long-distance gifting.",
       starting_price_label: "From ₹199",
-      main_image_url: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/softcopy-magazine.jpg",
       is_hero: false,
       sort_order: 3,
       status: "published",
@@ -101,7 +101,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Ready-to-hang wooden frames.",
       description: "Available in Small, Medium, and Large. We print your favorite photo and mount it in a premium wooden frame.",
       starting_price_label: "From ₹349",
-      main_image_url: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/frame-1.jpg",
       is_hero: false,
       sort_order: 4,
       status: "published",
@@ -112,7 +112,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Your digital memories, printed with a classic retro feel.",
       description: "Authentic Polaroid-style prints on premium matte paper. Perfect for your wall or as a small surprise.",
       starting_price_label: "From ₹249",
-      main_image_url: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/polaroids.jpg",
       is_hero: false,
       sort_order: 5,
       status: "published",
@@ -123,7 +123,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Your special song, printed beautifully.",
       description: "A custom printed card featuring a photo and a scannable Spotify code of your favorite song.",
       starting_price_label: "From ₹179",
-      main_image_url: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/spotify-cards.jpg",
       is_hero: false,
       sort_order: 6,
       status: "published",
@@ -134,7 +134,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "A year of your favorite memories.",
       description: "A 12-month desk calendar featuring your photos for each month. Premium spiral binding and thick cardstock.",
       starting_price_label: "₹499",
-      main_image_url: "https://images.unsplash.com/photo-1506784951206-33378a5ab280?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/desk-calendar.png",
       is_hero: false,
       sort_order: 7,
       status: "published",
@@ -145,7 +145,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Extra! Extra! Read all about your love story.",
       description: "A custom 4 or 6-page vintage newspaper featuring your own headlines, articles, and photos.",
       starting_price_label: "From ₹249",
-      main_image_url: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/newspaper.jpg",
       is_hero: false,
       sort_order: 8,
       status: "published",
@@ -156,7 +156,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Stick your favorite moments to the fridge.",
       description: "High-quality polaroid prints with a magnetic backing. The perfect daily reminder of good times.",
       starting_price_label: "From ₹299",
-      main_image_url: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/fridge-magnet-polaroids.png",
       is_hero: false,
       sort_order: 9,
       status: "published",
@@ -167,7 +167,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Take your memories everywhere.",
       description: "Durable acrylic keychains featuring your favorite photos back-to-back.",
       starting_price_label: "From ₹149",
-      main_image_url: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/photo-keychains.jpg",
       is_hero: false,
       sort_order: 10,
       status: "published",
@@ -178,7 +178,7 @@ export async function seedProducts(): Promise<void> {
       tagline: "Classic photobooth aesthetics.",
       description: "Vintage-style 4-photo strips, perfect for bookmarks or sticking in a journal.",
       starting_price_label: "From ₹199",
-      main_image_url: "https://images.unsplash.com/photo-1551888998-25f0cbaf04bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      main_image_url: "/images/photo-booth-strips.jpg",
       is_hero: false,
       sort_order: 11,
       status: "published",
@@ -245,6 +245,35 @@ export async function deleteProduct(id: string) {
   }
 
   revalidatePath("/admin/(protected)/products")
+  revalidatePath("/products")
+  return { success: true }
+}
+export async function getProductById(id: string) {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase.from("products").select("*").eq("id", id).single()
+  return data
+}
+
+export async function updateProduct(id: string, formData: FormData) {
+  const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
+  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+
+  const name = formData.get("name") as string
+  const slug = formData.get("slug") as string || name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  const tagline = formData.get("tagline") as string
+  const description = formData.get("description") as string
+  const price = formData.get("price") as string
+  const main_image_url = formData.get("main_image_url") as string
+
+  const { error } = await supabase
+    .from("products")
+    .update({ name, slug, tagline, description, price, main_image_url })
+    .eq("id", id)
+
+  if (error) return { error: error.message }
+  revalidatePath("/admin/products")
   revalidatePath("/products")
   return { success: true }
 }

@@ -1,17 +1,32 @@
+"use client"
+
 import * as React from "react"
 import NextLink from "next/link"
+import { usePathname } from "next/navigation"
 
 const footerLinks = {
   Products: [
-    { href: "/products/custom-magazine", label: "Custom Magazine" },
-    { href: "/products/polaroid-set", label: "Polaroid Set" },
-    { href: "/products/photo-frame", label: "Photo Frame" },
+    { href: "/products", label: "All Products" },
+    { href: "/products/custom-magazine-a4", label: "Custom Magazine A4" },
+    { href: "/products/custom-magazine-a5", label: "Custom Magazine A5" },
+    { href: "/products/polaroids", label: "Vintage Polaroids" },
+    { href: "/products/photo-frames", label: "Classic Photo Frames" },
+    { href: "/products/spotify-cards", label: "Spotify Cards" },
+    { href: "/products/desk-calendar", label: "Desk Calendar" },
   ],
   Company: [
     { href: "/how-it-works", label: "How It Works" },
     { href: "/journal", label: "Stories" },
     { href: "/reviews", label: "Reviews" },
+    { href: "/reactions", label: "Reactions" },
     { href: "/faq", label: "FAQ" },
+  ],
+  Support: [
+    { href: "/policies/shipping", label: "Shipping Policy" },
+    { href: "/policies/refund", label: "Refund Policy" },
+    { href: "/policies/cancellation", label: "Cancellation Policy" },
+    { href: "/policies/privacy", label: "Privacy Policy" },
+    { href: "/policies/terms", label: "Terms & Conditions" },
   ],
   Contact: [
     { href: "/order", label: "Start an Order" },
@@ -21,6 +36,15 @@ const footerLinks = {
 }
 
 export function Footer() {
+  const pathname = usePathname()
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
+
   return (
     <footer className="bg-[#221F1C] text-[#FBF6EE] pt-16 pb-8">
       <div className="container mx-auto max-w-7xl px-4 md:px-8">
@@ -28,11 +52,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12 pb-12 border-b border-white/10">
           {/* Brand */}
           <div className="md:col-span-2 flex flex-col gap-4">
-            <NextLink href="/" className="flex flex-col leading-none w-fit">
-              <span className="font-serif text-3xl text-[#FBF6EE]">PrintBloom</span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#9A8F85]">
-                Memory Gifts
-              </span>
+            <NextLink 
+              href="/" 
+              onClick={handleLogoClick}
+              className="flex flex-col leading-none w-fit group"
+            >
+              <img src="/logo.png" alt="PrintBloom" className="h-12 w-auto aspect-square object-contain rounded-full shadow-sm transition-transform group-hover:scale-105" />
             </NextLink>
             <p className="text-[#9A8F85] text-sm leading-relaxed max-w-xs">
               Turn your favourite memories into beautifully crafted gifts they'll keep forever.
@@ -62,7 +87,7 @@ export function Footer() {
                   <li key={link.href}>
                     <NextLink
                       href={link.href}
-                      className="text-sm text-[#FBF6EE]/70 hover:text-[#C1502E] transition-colors"
+                      className="text-sm text-[#FBF6EE]/70 hover:text-[#DFBC94] transition-colors"
                     >
                       {link.label}
                     </NextLink>
@@ -76,11 +101,11 @@ export function Footer() {
         {/* Bottom section */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[#9A8F85] text-xs">
           <p>
-            © {new Date().getFullYear()} PrintBloom. All rights reserved.
+            &copy; {new Date().getFullYear()} PrintBloom. All rights reserved.
           </p>
           <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
             <p className="font-mono">
-              Made with love in India 🇮🇳
+              Made with love in India 🇮🇳 ❤️
             </p>
             <span className="hidden md:inline-block w-1 h-1 rounded-full bg-[#9A8F85]/50"></span>
             <a 
@@ -90,7 +115,7 @@ export function Footer() {
               className="relative inline-block group hover:text-[#FBF6EE] transition-colors"
             >
               Designed & Developed by Rupesh Vishwakarma
-              <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-[#C1502E] scale-x-0 origin-right transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:origin-left"></span>
+              <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-[#DFBC94] scale-x-0 origin-right transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:origin-left"></span>
             </a>
           </div>
         </div>

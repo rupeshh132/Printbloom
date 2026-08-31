@@ -53,7 +53,7 @@ export default function RemindersPage() {
                 <p className="text-[#6B6259] mb-6">We'll remind you 20 days before the occasion!</p>
                 <button 
                   onClick={() => setSuccess(false)}
-                  className="text-sm text-[#C1502E] font-medium hover:underline"
+                  className="text-sm text-[#DFBC94] font-medium hover:underline"
                 >
                   + Add another date
                 </button>
@@ -66,7 +66,7 @@ export default function RemindersPage() {
                     type="text"
                     name="customer_name"
                     required
-                    className="w-full text-base border border-[#E0D9CF] bg-transparent p-3 rounded-sm focus:outline-none focus:border-[#C1502E]"
+                    className="w-full text-base border border-[#E0D9CF] bg-transparent p-3 rounded-sm focus:outline-none focus:border-[#DFBC94]"
                     placeholder="John Doe"
                   />
                 </div>
@@ -77,7 +77,7 @@ export default function RemindersPage() {
                     type="tel"
                     name="phone_number"
                     required
-                    className="w-full text-base border border-[#E0D9CF] bg-transparent p-3 rounded-sm focus:outline-none focus:border-[#C1502E]"
+                    className="w-full text-base border border-[#E0D9CF] bg-transparent p-3 rounded-sm focus:outline-none focus:border-[#DFBC94]"
                     placeholder="+91 9876543210"
                   />
                 </div>
@@ -88,7 +88,7 @@ export default function RemindersPage() {
                     type="text"
                     name="occasion_name"
                     required
-                    className="w-full text-base border border-[#E0D9CF] bg-transparent p-3 rounded-sm focus:outline-none focus:border-[#C1502E]"
+                    className="w-full text-base border border-[#E0D9CF] bg-transparent p-3 rounded-sm focus:outline-none focus:border-[#DFBC94]"
                     placeholder="Wife's Birthday, 1st Anniversary..."
                   />
                 </div>
@@ -99,7 +99,7 @@ export default function RemindersPage() {
                     type="date"
                     name="occasion_date"
                     required
-                    className="w-full text-base border border-[#E0D9CF] bg-transparent p-3 rounded-sm focus:outline-none focus:border-[#C1502E]"
+                    className="w-full text-base border border-[#E0D9CF] bg-transparent p-3 rounded-sm focus:outline-none focus:border-[#DFBC94]"
                   />
                   <p className="text-xs text-[#9A8F85] mt-2">The year doesn't matter for recurring events like birthdays.</p>
                 </div>
@@ -109,7 +109,7 @@ export default function RemindersPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#C1502E] text-white py-4 rounded-sm hover:bg-[#A5411F] transition-colors font-serif text-lg tracking-wide disabled:opacity-50"
+                  className="w-full bg-[#DFBC94] text-white py-4 rounded-sm hover:bg-[#A5411F] transition-colors font-serif text-lg tracking-wide disabled:opacity-50"
                 >
                   {loading ? "Saving..." : "Set Reminder"}
                 </button>

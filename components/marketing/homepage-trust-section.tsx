@@ -7,7 +7,7 @@ export function HomepageTrustSection() {
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <p className="font-mono text-xs uppercase tracking-widest text-[#C1502E] mb-3">Real Customers. Real Reactions.</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-[#DFBC94] mb-3">Real Customers. Real Reactions.</p>
           <h2 className="font-serif text-4xl text-[#221F1C]">What they said when it arrived</h2>
           <p className="text-[#6B6259] mt-3 max-w-xl mx-auto">These are actual WhatsApp messages our customers sent us — unedited.</p>
         </div>
@@ -37,12 +37,12 @@ export function HomepageTrustSection() {
               {/* Quote (bottom half) */}
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
-                  <div className="text-[#C1502E] mb-3 text-sm">★★★★★</div>
+                  <div className="text-[#DFBC94] mb-3 text-sm">★★★★★</div>
                   <p className="text-[#221F1C] leading-relaxed text-sm italic">"{card.quote}"</p>
                 </div>
                 <div className="mt-4 pt-4 border-t border-[#E0D9CF] flex items-center justify-between">
                   <span className="text-xs text-[#9A8F85] font-mono">Verified Customer</span>
-                  <span className="text-xs text-[#C1502E] font-medium">{card.product}</span>
+                  <span className="text-xs text-[#DFBC94] font-medium">{card.product}</span>
                 </div>
               </div>
             </div>

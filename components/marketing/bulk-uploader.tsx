@@ -162,7 +162,7 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
           <div className="flex flex-col items-center gap-4">
-            <svg className="w-12 h-12 text-[#C1502E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-12 h-12 text-[#DFBC94]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
             <span className="font-medium text-[#221F1C]">Click or drag photos here to upload</span>
@@ -228,7 +228,7 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
                     onChange={(e) => updateCaption(f.id, e.target.value)}
                     disabled={f.status !== "pending" && f.status !== "error"}
                     placeholder="Write a caption for this photo..."
-                    className="w-full text-sm border border-[#E0D9CF] p-2 rounded-sm resize-none focus:outline-none focus:border-[#C1502E] disabled:bg-gray-50 disabled:text-gray-500"
+                    className="w-full text-sm border border-[#E0D9CF] p-2 rounded-sm resize-none focus:outline-none focus:border-[#DFBC94] disabled:bg-gray-50 disabled:text-gray-500"
                     rows={2}
                   />
                 </div>
@@ -241,7 +241,7 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
               <CloudLoader />
               <div className="h-1.5 bg-[#F5F0E8] rounded-full overflow-hidden -mt-4">
                 <div 
-                  className="h-full bg-[#C1502E] transition-all duration-300"
+                  className="h-full bg-[#DFBC94] transition-all duration-300"
                   style={{ width: `${overallProgress}%` }}
                 />
               </div>
@@ -254,7 +254,7 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
               <button
                 onClick={startUpload}
                 disabled={files.length === 0 || pendingCount === 0}
-                className="bg-[#C1502E] text-white px-8 py-3 rounded-sm hover:bg-[#A5411F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="bg-[#DFBC94] text-white px-8 py-3 rounded-sm hover:bg-[#A5411F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               >
                 {errorCount > 0 ? "Retry Failed Uploads" : `Start Upload (${pendingCount} files)`}
               </button>

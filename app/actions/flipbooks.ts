@@ -51,3 +51,9 @@ export async function getFlipbooksByEnquiry(token: string) {
   }
   return data
 }
+export async function getAllFlipbooks() {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase.from("flipbooks").select("*").order("created_at", { ascending: false })
+  if (error) return []
+  return data || []
+}

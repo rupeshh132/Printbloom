@@ -1,24 +1,123 @@
-import * as React from "react"
-import Image from "next/image"
-import { SectionHeading } from "@/components/ui/section-heading"
+"use client"
 
-const mockReactions = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    label: "Her 25th Birthday",
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    label: "Our Anniversary",
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    label: "Mother's Day",
-  }
+import * as React from "react"
+import { useRef, useState, useEffect } from "react"
+import { SectionHeading } from "@/components/ui/section-heading"
+import { Volume2, VolumeX } from "lucide-react"
+
+// ONLY 3 VIDEOS AS REQUESTED
+const reactions = [
+  { id: 1, src: "/videos/reactions/1.mp4", label: "Her 25th Birthday" },
+  { id: 2, src: "/videos/reactions/2.mp4", label: "Their Anniversary" },
+  { id: 3, src: "/videos/reactions/3.mp4", label: "Mother's Day Surprise" },
 ]
+
+function ReactionVideoCard({ reaction }: { reaction: typeof reactions[0] }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [playing, setPlaying] = useState(false)
+  const [muted, setMuted] = useState(true)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    let playPromise: Promise<void> | undefined
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            playPromise = video.play()
+            if (playPromise !== undefined) {
+              playPromise
+                .then(() => setPlaying(true))
+                .catch(() => {
+                  // Ignore abort errors from fast scrolling
+                })
+            }
+          } else {
+            // Safely pause after play promise is resolved to prevent AbortError
+            if (playPromise !== undefined) {
+              playPromise.then(() => {
+                video.pause()
+                setPlaying(false)
+              }).catch(() => {})
+            } else {
+              video.pause()
+              setPlaying(false)
+            }
+          }
+        })
+      },
+      { threshold: 0.5 } // Trigger when 50% of the video is visible
+    )
+
+    observer.observe(video)
+    return () => observer.disconnect()
+  }, [])
+
+  const handleClick = () => {
+    if (!videoRef.current) return
+    if (playing) {
+      videoRef.current.pause()
+      setPlaying(false)
+    } else {
+      videoRef.current.play()
+      setPlaying(true)
+    }
+  }
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!videoRef.current) return
+    videoRef.current.muted = !videoRef.current.muted
+    setMuted(videoRef.current.muted)
+  }
+
+  return (
+    <div
+      className="relative group cursor-pointer overflow-hidden bg-[#2C2926] border border-white/10 rounded-sm aspect-[9/16] md:aspect-[3/4]"
+      onClick={handleClick}
+    >
+      <video
+        ref={videoRef}
+        src={reaction.src}
+        muted={muted}
+        playsInline
+        loop
+        className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+        onEnded={() => setPlaying(false)}
+      />
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
+      {/* Play/Pause Icon */}
+      {!playing && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-hover:bg-[#DFBC94]/80 group-hover:border-[#DFBC94] transition-colors duration-300">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white ml-1">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      )}
+
+      {/* Mute button (always visible so user can unmute while it auto-plays) */}
+      <button
+        onClick={toggleMute}
+        className="absolute top-3 right-3 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors z-10"
+      >
+        {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+      </button>
+
+      {/* Label */}
+      <div className="absolute bottom-6 left-6 right-6">
+        <p className="text-white font-serif text-xl drop-shadow">{reaction.label}</p>
+      </div>
+    </div>
+  )
+}
 
 export function CustomerReactionsSection() {
   return (
@@ -33,35 +132,13 @@ export function CustomerReactionsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {mockReactions.map((reaction) => (
-            <div key={reaction.id} className="relative group cursor-pointer">
-              <div className="relative aspect-[9/16] md:aspect-[3/4] w-full overflow-hidden bg-[#2C2926] border border-white/10 rounded-sm">
-                <Image 
-                  src={reaction.image}
-                  alt={`Reaction for ${reaction.label}`}
-                  fill
-                  className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105"
-                />
-                
-                {/* Play Button Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-hover:bg-[#C1502E]/80 group-hover:border-[#C1502E] transition-colors duration-300">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white ml-1">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Label */}
-                <div className="absolute bottom-6 left-6 right-6">
-                  <p className="text-white font-serif text-xl shadow-sm">{reaction.label}</p>
-                </div>
-              </div>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+          {reactions.map((reaction) => (
+            <ReactionVideoCard key={reaction.id} reaction={reaction} />
           ))}
         </div>
       </div>
     </section>
   )
 }
+

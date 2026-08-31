@@ -46,7 +46,7 @@ export function AICaptionButton({ onSelect }: AICaptionButtonProps) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1.5 text-xs font-medium text-[#C1502E] bg-[#FBF6EE] px-3 py-1.5 rounded-sm border border-[#E0D9CF] hover:bg-[#F5F0E8] transition-colors whitespace-nowrap"
+        className="flex items-center gap-1.5 text-xs font-medium text-[#DFBC94] bg-[#FBF6EE] px-3 py-1.5 rounded-sm border border-[#E0D9CF] hover:bg-[#F5F0E8] transition-colors whitespace-nowrap"
       >
         <span>✨</span> Write with AI
       </button>
@@ -80,7 +80,7 @@ export function AICaptionButton({ onSelect }: AICaptionButtonProps) {
                       value={keywords}
                       onChange={(e) => setKeywords(e.target.value)}
                       placeholder="e.g. Goa trip, crazy friends, sunset..."
-                      className="w-full text-base border border-[#E0D9CF] bg-[#FBF6EE]/30 p-3 rounded-sm resize-none focus:outline-none focus:border-[#C1502E]"
+                      className="w-full text-base border border-[#E0D9CF] bg-[#FBF6EE]/30 p-3 rounded-sm resize-none focus:outline-none focus:border-[#DFBC94]"
                       rows={3}
                       autoFocus
                     />
@@ -115,7 +115,7 @@ export function AICaptionButton({ onSelect }: AICaptionButtonProps) {
                       >
                         <div className="flex justify-between items-start gap-4">
                           <span>{opt}</span>
-                          <span className="opacity-0 group-hover:opacity-100 text-[#C1502E] whitespace-nowrap text-xs font-medium">Use This</span>
+                          <span className="opacity-0 group-hover:opacity-100 text-[#DFBC94] whitespace-nowrap text-xs font-medium">Use This</span>
                         </div>
                       </button>
                     ))}

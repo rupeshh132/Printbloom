@@ -65,7 +65,7 @@ export function PhotoCard({ file, index }: PhotoCardProps) {
           {file.caption && (
             <button 
               onClick={handleCopy}
-              className={`text-[10px] uppercase tracking-wider font-medium flex items-center gap-1 px-2 py-1 rounded-sm transition-colors ${copied ? 'bg-green-100 text-green-700' : 'bg-[#FBF6EE] text-[#C1502E] hover:bg-[#E0D9CF]'}`}
+              className={`text-[10px] uppercase tracking-wider font-medium flex items-center gap-1 px-2 py-1 rounded-sm transition-colors ${copied ? 'bg-green-100 text-green-700' : 'bg-[#FBF6EE] text-[#DFBC94] hover:bg-[#E0D9CF]'}`}
             >
               {copied ? (
                 <>
@@ -83,7 +83,7 @@ export function PhotoCard({ file, index }: PhotoCardProps) {
         </div>
         
         {file.caption ? (
-          <p className="text-sm text-[#221F1C] leading-relaxed italic border-l-2 border-[#C1502E] pl-3 flex-1">
+          <p className="text-sm text-[#221F1C] leading-relaxed italic border-l-2 border-[#DFBC94] pl-3 flex-1">
             "{file.caption}"
           </p>
         ) : (

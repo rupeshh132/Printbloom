@@ -89,7 +89,7 @@ export function SmartReminders({ reminders }: { reminders: any[] }) {
               <button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="bg-[#C1502E] text-white px-6 py-3 rounded-full font-medium hover:bg-[#A33D20] transition-colors disabled:opacity-70"
+                className="bg-[#DFBC94] text-white px-6 py-3 rounded-full font-medium hover:bg-[#A33D20] transition-colors disabled:opacity-70"
               >
                 {isSubmitting ? "Saving..." : "Save Reminder"}
               </button>
@@ -115,7 +115,7 @@ export function SmartReminders({ reminders }: { reminders: any[] }) {
           {!isAdding && (
             <button 
               onClick={() => setIsAdding(true)}
-              className="px-6 py-3 border border-[#C1502E] text-[#C1502E] rounded-full font-medium hover:bg-[#C1502E] hover:text-white transition-colors"
+              className="px-6 py-3 border border-[#DFBC94] text-[#DFBC94] rounded-full font-medium hover:bg-[#DFBC94] hover:text-white transition-colors"
             >
               Add First Reminder
             </button>

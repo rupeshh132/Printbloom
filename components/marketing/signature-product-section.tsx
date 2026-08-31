@@ -1,12 +1,12 @@
 import * as React from "react"
 import Image from "next/image"
 import { SectionHeading } from "@/components/ui/section-heading"
-import { Link } from "@/components/ui/link"
 import { PixelSwap } from "@/components/ui/pixel-swap"
+import { Link } from "@/components/ui/link"
 
 export function SignatureProductSection() {
   return (
-    <section className="py-24 px-4 md:px-8 bg-surface overflow-hidden">
+    <section className="py-24 px-4 md:px-8 bg-[#FBF6EE]">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
           
@@ -20,10 +20,10 @@ export function SignatureProductSection() {
               You send the photos and the story. We turn it into pages you can hold, read, and keep forever.
             </p>
             <div className="pt-4 flex flex-col gap-3">
-              <Link href="/products/custom-magazine" variant="accent" className="text-lg">
+              <Link href="/products/custom-magazine-a5" variant="accent" className="text-lg">
                 Explore the Magazine &rarr;
               </Link>
-              <p className="text-xs text-[#C1502E] font-mono tracking-widest uppercase mt-4 hidden md:block animate-pulse">
+              <p className="text-xs text-[#DFBC94] font-mono tracking-widest uppercase mt-4 hidden md:block animate-pulse">
                 &rarr; Hover image to peek inside
               </p>
             </div>
@@ -33,18 +33,20 @@ export function SignatureProductSection() {
             <PixelSwap
               firstContent={
                 <Image
-                  src="https://images.unsplash.com/photo-1621600411688-4be93cd68504?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                  src="/images/a4-1.jpg"
                   alt="Custom magazine cover"
                   fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 60vw"
                 />
               }
               secondContent={
                 <Image
-                  src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                  alt="Open custom magazine spread on a table"
+                  src="/images/a4-2.jpg"
+                  alt="Open custom magazine spread"
                   fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 60vw"
                 />
               }
               pixelSize={48}

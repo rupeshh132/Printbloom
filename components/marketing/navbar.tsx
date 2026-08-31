@@ -13,7 +13,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 const navLinks = [
   { href: "/products", label: "Products" },
   { href: "/how-it-works", label: "How It Works" },
-  { href: "/reminders", label: "Reminders" },
+  { href: "/reactions", label: "Reactions" },
   { href: "/journal", label: "Stories" },
   { href: "/reviews", label: "Reviews" },
   { href: "/faq", label: "FAQ" },
@@ -57,6 +57,13 @@ export function Navbar() {
     }
   }
 
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
+
   // Only show transparent navbar on the homepage (hero has dark bg behind it)
   const isHomepage = pathname === "/"
   const isTransparent = isHomepage && !scrolled
@@ -78,23 +85,12 @@ export function Navbar() {
     >
       <div className="container mx-auto max-w-7xl px-4 md:px-8 h-20 flex items-center justify-between">
         {/* Logo */}
-        <NextLink href="/" className="flex flex-col leading-none group">
-          <span
-            className={cn(
-              "font-serif text-2xl font-normal tracking-tight transition-colors",
-              isTransparent ? "text-white" : "text-[#221F1C]"
-            )}
-          >
-            PrintBloom
-          </span>
-          <span
-            className={cn(
-              "font-mono text-[9px] uppercase tracking-[0.2em] transition-colors",
-              isTransparent ? "text-white/70" : "text-[#9A8F85]"
-            )}
-          >
-            Memory Gifts
-          </span>
+        <NextLink 
+          href="/" 
+          onClick={handleLogoClick}
+          className="flex flex-col leading-none group"
+        >
+          <img src="/logo.png" alt="PrintBloom" className="h-10 md:h-12 w-auto aspect-square object-contain rounded-full shadow-sm transition-transform group-hover:scale-105" />
         </NextLink>
 
         {/* Desktop Nav */}
@@ -104,9 +100,9 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                "font-sans text-sm tracking-wide transition-colors hover:text-[#C1502E]",
+                "font-sans text-sm tracking-wide transition-colors hover:text-[#DFBC94]",
                 isTransparent ? "text-white/90" : "text-[#221F1C]",
-                pathname === link.href && "text-[#C1502E] font-medium"
+                pathname === link.href && "text-[#DFBC94] font-medium"
               )}
             >
               {link.label}
@@ -119,7 +115,7 @@ export function Navbar() {
           <button 
             onClick={openSearchModal}
             className={cn(
-              "transition-colors hover:text-[#C1502E]",
+              "transition-colors hover:text-[#DFBC94]",
               isTransparent ? "text-white" : "text-[#221F1C]"
             )}
           >
@@ -128,22 +124,26 @@ export function Navbar() {
           <button 
             onClick={handleUserClick}
             className={cn(
-              "transition-colors hover:text-[#C1502E]",
+              "transition-colors hover:text-[#DFBC94] flex items-center justify-center",
               isTransparent ? "text-white" : "text-[#221F1C]"
             )}
           >
-            <User className="w-5 h-5" />
+            {user?.user_metadata?.avatar_url ? (
+              <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full object-cover border border-[#E0D9CF]" />
+            ) : (
+              <User className="w-5 h-5" />
+            )}
           </button>
           <button 
             onClick={openCartDrawer}
             className={cn(
-              "relative transition-colors hover:text-[#C1502E]",
+              "relative transition-colors hover:text-[#DFBC94]",
               isTransparent ? "text-white" : "text-[#221F1C]"
             )}
           >
             <ShoppingCart className="w-5 h-5" />
             {isMounted && cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#C1502E] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+              <span className="absolute -top-2 -right-2 bg-[#DFBC94] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
                 {cartItems.length}
               </span>
             )}
@@ -183,11 +183,42 @@ export function Navbar() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden bg-[#FBF6EE] border-t border-[#E0D9CF] px-4 py-6 flex flex-col gap-5">
+          <div className="flex items-center justify-between pb-4 border-b border-[#E0D9CF]">
+            <button 
+              onClick={() => { setMenuOpen(false); openSearchModal(); }}
+              className="flex items-center gap-2 text-[#221F1C] hover:text-[#DFBC94]"
+            >
+              <Search className="w-5 h-5" /> Search
+            </button>
+            <button 
+              onClick={() => { setMenuOpen(false); handleUserClick(); }}
+              className="flex items-center gap-2 text-[#221F1C] hover:text-[#DFBC94]"
+            >
+              {user?.user_metadata?.avatar_url ? (
+                <img src={user.user_metadata.avatar_url} alt="Profile" className="w-5 h-5 rounded-full object-cover" />
+              ) : (
+                <User className="w-5 h-5" />
+              )}
+              Profile
+            </button>
+            <button 
+              onClick={() => { setMenuOpen(false); openCartDrawer(); }}
+              className="flex items-center gap-2 text-[#221F1C] hover:text-[#DFBC94] relative"
+            >
+              <ShoppingCart className="w-5 h-5" /> 
+              {isMounted && cartItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#DFBC94] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                  {cartItems.length}
+                </span>
+              )}
+              Cart
+            </button>
+          </div>
           {navLinks.map((link) => (
             <NextLink
               key={link.href}
               href={link.href}
-              className="font-sans text-base text-[#221F1C] hover:text-[#C1502E] transition-colors"
+              className="font-sans text-base text-[#221F1C] hover:text-[#DFBC94] transition-colors"
               onClick={() => setMenuOpen(false)}
             >
               {link.label}

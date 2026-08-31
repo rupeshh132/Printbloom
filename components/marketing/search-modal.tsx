@@ -72,7 +72,7 @@ export function SearchModal() {
             className="flex-1 h-14 bg-transparent border-none focus:outline-none px-4 text-lg text-[#221F1C]"
             autoFocus
           />
-          <button onClick={closeSearchModal} className="text-[#9A8F85] hover:text-[#C1502E]">
+          <button onClick={closeSearchModal} className="text-[#9A8F85] hover:text-[#DFBC94]">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -90,7 +90,7 @@ export function SearchModal() {
                       onClick={closeSearchModal}
                       className="flex items-center justify-between p-3 rounded-sm hover:bg-[#FBF6EE] transition-colors group"
                     >
-                      <span className="font-serif text-[#221F1C] group-hover:text-[#C1502E]">
+                      <span className="font-serif text-[#221F1C] group-hover:text-[#DFBC94]">
                         {product.name}
                       </span>
                       <span className="font-mono text-xs text-[#9A8F85]">
