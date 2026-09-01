@@ -36,12 +36,18 @@ export default async function PromoCodesPage() {
                 />
               </div>
               
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label className="text-xs font-medium text-[#221F1C]">Discount Type *</label>
-                <select name="discount_type" required className="w-full h-10 px-3 border border-[#E0D9CF] rounded-sm text-sm">
-                  <option value="percentage">Percentage (%)</option>
-                  <option value="fixed">Fixed Amount (₹)</option>
-                </select>
+                <div className="flex gap-6 items-center h-10 px-3 border border-[#E0D9CF] rounded-sm bg-[#FBF6EE]/30">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="discount_type" value="percentage" defaultChecked className="accent-[#DFBC94] w-4 h-4" />
+                    <span className="text-sm text-[#221F1C]">Percentage (%)</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="discount_type" value="fixed" className="accent-[#DFBC94] w-4 h-4" />
+                    <span className="text-sm text-[#221F1C]">Fixed Amount (₹)</span>
+                  </label>
+                </div>
               </div>
 
               <div className="space-y-1">
