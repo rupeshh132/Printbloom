@@ -2,6 +2,7 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { getJournals, deleteJournalEntry, toggleJournalPublished } from "@/app/actions/journal"
 import { JournalForm } from "@/components/admin/journal-form"
 import Image from "next/image"
+import NextLink from "next/link"
 import { Trash2, Eye, EyeOff } from "lucide-react"
 
 export const dynamic = "force-dynamic"
