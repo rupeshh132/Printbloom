@@ -2,7 +2,7 @@ import * as React from "react"
 import NextLink from "next/link"
 import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { redirect } from "next/navigation"
-import { logoutAction } from "@/app/admin/actions"
+import { AdminLogoutButton } from "@/components/admin/admin-logout-button"
 
 const adminNavLinks = [
   { href: "/admin", label: "Dashboard" },
@@ -68,14 +68,7 @@ export default async function AdminLayout({
         {/* User + Logout */}
         <div className="px-6 py-5 border-t border-white/10 pb-10">
           <p className="text-[#9A8F85] text-xs font-mono truncate mb-3">{user.email}</p>
-          <form action={logoutAction}>
-            <button
-              type="submit"
-              className="w-full text-left text-sm text-[#9A8F85] hover:text-red-400 transition-colors py-1"
-            >
-              → Logout
-            </button>
-          </form>
+          <AdminLogoutButton />
         </div>
       </aside>
 
