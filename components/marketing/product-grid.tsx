@@ -19,7 +19,12 @@ export function ProductGrid({ products }: { products: any[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
       {products.map((product) => {
-        const imageSrc = product.main_image_url || FALLBACK_IMAGES[product.slug] || FALLBACK_IMAGES["custom-magazine"]
+        let imageSrc = product.main_image_url || FALLBACK_IMAGES[product.slug] || FALLBACK_IMAGES["custom-magazine"]
+        
+        // Force override the A4 image, ignoring what's in the database
+        if (product.slug === 'custom-magazine-a4' || product.slug === 'custom-magazine') {
+          imageSrc = '/images/a4-product.png'
+        }
 
         return (
           <Link 
