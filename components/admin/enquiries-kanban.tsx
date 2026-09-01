@@ -8,10 +8,10 @@ import { WhatsAppButton } from "@/components/admin/whatsapp-button"
 import { Calendar, Tag } from "lucide-react"
 
 const COLUMNS = [
-  { id: "new", title: "New", color: "bg-yellow-100 border-yellow-200 text-yellow-800" },
-  { id: "contacted", title: "Contacted", color: "bg-blue-100 border-blue-200 text-blue-800" },
-  { id: "converted", title: "Converted", color: "bg-green-100 border-green-200 text-green-800" },
-  { id: "closed", title: "Closed", color: "bg-gray-100 border-gray-200 text-gray-600" }
+  { id: "new", title: "New", color: "bg-[#DFBC94]/20 border-[#DFBC94]/30 text-[#8B6B43]" },
+  { id: "contacted", title: "Contacted", color: "bg-[#E6E0D8] border-[#D0C6B8] text-[#6D635B]" },
+  { id: "converted", title: "Converted", color: "bg-[#E2E8DD] border-[#C3D4BA] text-[#4B6B4F]" },
+  { id: "closed", title: "Closed", color: "bg-[#F5F0E8] border-[#E0D9CF] text-[#9A8F85]" }
 ]
 
 export function EnquiriesKanban({ initialEnquiries }: { initialEnquiries: any[] }) {

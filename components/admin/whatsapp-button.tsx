@@ -44,9 +44,9 @@ export function WhatsAppButton({ phone, customerName, flipbookLink = "" }: { pho
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={isInvalid}
-        className="bg-[#25D366] text-white hover:bg-[#20bd5a] px-4 py-2 rounded-sm text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="bg-[#E6F4EA] text-[#25D366] hover:bg-[#D4EED9] border border-[#CDE5D2] px-2.5 py-1.5 rounded-sm text-xs font-medium transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <MessageCircle className="w-4 h-4" />
+        <MessageCircle className="w-3.5 h-3.5" />
         <span>WhatsApp</span>
       </button>
 

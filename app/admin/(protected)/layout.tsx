@@ -80,7 +80,7 @@ export default async function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-8 min-h-screen">
+      <main className="flex-1 ml-64 p-8 min-h-screen w-[calc(100%-16rem)]">
         {children}
       </main>
     </div>
