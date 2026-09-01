@@ -26,13 +26,19 @@ export async function saveFollowUpLead(customer_name: string, phone_number: stri
   }
 
   // Create new lead
-  await supabase.from("follow_ups").insert({
+  const { error: insertError } = await supabase.from("follow_ups").insert({
     customer_name,
     phone_number,
     cart_total,
     status: "pending"
   })
   
+  if (insertError) {
+    console.error("❌ Follow-up insert failed:", JSON.stringify(insertError))
+    return { success: false, error: insertError.message }
+  }
+  
+  console.log("✅ Follow-up lead saved:", customer_name, phone_number)
   return { success: true }
 }
 
