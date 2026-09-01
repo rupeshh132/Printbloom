@@ -2,14 +2,14 @@
 
 import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
-import { ADMIN_EMAILS } from "@/lib/admin-config"
+
 
 export async function getPromoCodes() {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   
-  // Public can query an active promo code, but we'll fetch all only for admin
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) {
+  const adminEmails = ["arhaan.s7045@gmail.com"]
+  if (!user || !adminEmails.includes(user.email?.toLowerCase() ?? "")) {
     return []
   }
 
@@ -30,7 +30,8 @@ export async function createPromoCode(formData: FormData) {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  const adminEmails = ["arhaan.s7045@gmail.com"]
+  if (!user || !adminEmails.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const code = formData.get("code") as string
   const discount_type = formData.get("discount_type") as string
@@ -58,7 +59,8 @@ export async function togglePromoCode(id: string, active: boolean) {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  const adminEmails = ["arhaan.s7045@gmail.com"]
+  if (!user || !adminEmails.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   await supabase.from("promo_codes").update({ active }).eq("id", id)
   revalidatePath("/admin/promo-codes")
@@ -68,7 +70,8 @@ export async function deletePromoCode(id: string) {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  const adminEmails = ["arhaan.s7045@gmail.com"]
+  if (!user || !adminEmails.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   await supabase.from("promo_codes").delete().eq("id", id)
   revalidatePath("/admin/promo-codes")
