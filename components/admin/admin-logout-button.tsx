@@ -2,6 +2,7 @@
 import * as React from "react"
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 import { useRouter } from "next/navigation"
+import { useCart } from "@/store/use-cart"
 
 export function AdminLogoutButton() {
   const supabase = createSupabaseBrowserClient()
@@ -10,6 +11,10 @@ export function AdminLogoutButton() {
   
   const handleSignOut = async () => {
     setIsLoggingOut(true)
+    
+    // Clear cart on logout
+    useCart.getState().clearCart()
+    
     await supabase.auth.signOut()
     router.push("/admin/login")
     router.refresh()
