@@ -13,8 +13,10 @@ async function handleSeed() {
 }
 
 export default async function AdminDashboard() {
-  const counts = await getDashboardCounts()
-  const { monthlyData, productData } = await getDashboardChartData()
+  const [counts, { monthlyData, productData }] = await Promise.all([
+    getDashboardCounts(),
+    getDashboardChartData()
+  ])
 
   return (
     <div>
