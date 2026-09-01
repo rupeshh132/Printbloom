@@ -55,8 +55,8 @@ export function WhyPrintBloomSection() {
           <FadeIn direction="left" className="order-1 md:order-2 relative aspect-[3/4] w-full max-w-md mx-auto overflow-hidden bg-[#2C2926] border border-[#E0D9CF] shadow-sm p-4">
             <div className="relative w-full h-full border border-white/20">
               <Image 
-                src="https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Close up of magazine pages"
+                src="/images/printbloom-difference.png"
+                alt="The Printbloom Difference"
                 fill
                 className="object-cover"
               />
