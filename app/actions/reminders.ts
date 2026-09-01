@@ -34,14 +34,20 @@ export async function saveReminder(formData: FormData) {
 }
 
 export async function getUpcomingReminders(daysAhead: number = 20) {
-  const allReminders = await getAllReminders()
+  const supabase = await createSupabaseServerClient()
+  
+  const { data, error } = await supabase.from("reminders").select("*")
+  
+  if (error || !data) {
+    return []
+  }
   
   const targetDate = new Date()
   targetDate.setDate(targetDate.getDate() + daysAhead)
   const targetMonth = targetDate.getMonth()
   const targetDay = targetDate.getDate()
   
-  const upcoming = allReminders.filter(reminder => {
+  const upcoming = data.filter(reminder => {
     if (!reminder.occasion_date) return false;
     const rDate = new Date(reminder.occasion_date)
     return rDate.getMonth() === targetMonth && rDate.getDate() === targetDay
@@ -52,33 +58,6 @@ export async function getUpcomingReminders(daysAhead: number = 20) {
 
 export async function getAllReminders() {
   const supabase = await createSupabaseServerClient()
-  
-  // Get public CRM reminders
-  const { data: publicReminders } = await supabase
-    .from("reminders")
-    .select("*")
-    .order("created_at", { ascending: false })
-    
-  // Get user profile reminders
-  const { data: userReminders } = await supabase
-    .from("user_reminders")
-    .select("*")
-    .order("created_at", { ascending: false })
-
-  // Format user_reminders to match the public ones
-  const mappedUserReminders = (userReminders || []).map(ur => ({
-    id: ur.id,
-    customer_name: ur.person_name,
-    phone_number: "Registered User", // Phone not stored directly in user_reminders row
-    occasion_name: ur.event_type,
-    occasion_date: ur.event_date,
-    created_at: ur.created_at
-  }))
-
-  const all = [...(publicReminders || []), ...mappedUserReminders]
-  
-  // Sort combined array by created_at descending
-  all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-
-  return all
+  const { data } = await supabase.from("reminders").select("*").order("created_at", { ascending: false })
+  return data || []
 }

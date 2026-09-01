@@ -17,6 +17,17 @@ export async function addUserReminder(formData: FormData) {
     event_date: formData.get("event_date") as string,
   })
   
+  // Also insert into the public CRM `reminders` table so Admins can see it without RLS blocking them
+  const customerName = user.user_metadata?.full_name || formData.get("person_name") as string
+  const phoneNumber = user.user_metadata?.phone || "Registered User"
+  
+  await supabase.from("reminders").insert({
+    customer_name: customerName,
+    phone_number: phoneNumber,
+    occasion_name: formData.get("event_type") as string,
+    occasion_date: formData.get("event_date") as string,
+  })
+
   if (error) {
     console.error("Error adding user reminder:", error)
     throw new Error("Failed to add reminder")
