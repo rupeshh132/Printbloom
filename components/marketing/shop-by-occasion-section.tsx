@@ -12,7 +12,7 @@ const occasions = [
   },
   {
     title: "Birthdays",
-    image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "/images/birthday.png",
     href: "/products?occasion=birthday"
   },
   {
