@@ -4,7 +4,8 @@ import { Link } from "@/components/ui/link"
 
 // Fallback images for now since media_assets aren't wired up yet
 const FALLBACK_IMAGES: Record<string, string> = {
-  "custom-magazine": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+  "custom-magazine": "/images/a4-product.png",
+  "custom-magazine-a4": "/images/a4-product.png",
   "polaroid-set": "https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
   "photo-frame": "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
 }

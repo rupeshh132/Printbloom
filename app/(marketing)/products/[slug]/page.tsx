@@ -39,7 +39,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   // Force override old unsplash images
   let imageSrc = product.main_image_url
   if (slug === 'custom-magazine-a4' || slug === 'custom-magazine') {
-    imageSrc = 'https://res.cloudinary.com/gnltrlq1/image/upload/v1788039384/y4gssqappbukqcn9k3xc.jpg'
+    imageSrc = '/images/a4-product.png'
   } else if (slug === 'custom-magazine-a5') {
     imageSrc = 'https://res.cloudinary.com/gnltrlq1/image/upload/v1788039390/va7ck2ohbi9uhktrzmcx.jpg'
   } else if (slug === 'photo-frames') {
