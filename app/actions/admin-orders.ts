@@ -54,10 +54,15 @@ export async function getAdminOrderById(id: string) {
 export async function updateOrderStatus(id: string, status: string) {
   const supabase = await createSupabaseServerClient()
   
-  await supabase
+  const { error } = await supabase
     .from("orders")
     .update({ status })
     .eq("id", id)
+
+  if (error) {
+    console.error("Failed to update order status:", error)
+    throw new Error(error.message)
+  }
 
   revalidatePath("/admin/orders")
   revalidatePath(`/admin/orders/${id}`)

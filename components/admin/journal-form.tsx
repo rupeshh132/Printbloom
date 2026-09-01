@@ -6,17 +6,18 @@ import { Button } from "@/components/ui/button"
 import { createJournalEntry } from "@/app/actions/journal"
 import { UploadCloud, Image as ImageIcon, Film } from "lucide-react"
 
-export function JournalForm() {
-  const [loading, setLoading] = useState(false)
+export function JournalForm({ initialData }: { initialData?: any }) {
+  const [isUploading, setIsUploading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [mediaUrl, setMediaUrl] = useState("")
-  const [mediaType, setMediaType] = useState<"image" | "video">("image")
+  const [mediaUrl, setMediaUrl] = useState(initialData?.media_url || "")
+  const [mediaType, setMediaType] = useState<"image" | "video">(initialData?.media_type || "image")
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    setLoading(true)
+    setIsUploading(true)
     setError(null)
     
     // Auto-detect type
@@ -27,14 +28,17 @@ export function JournalForm() {
     }
 
     try {
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "sz2wyygq"
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "Printbloom"
+      
       const formData = new FormData()
       formData.append("file", file)
-      formData.append("upload_preset", "Printbloom")
-      formData.append("cloud_name", "gnltrlq1")
+      formData.append("upload_preset", uploadPreset)
+      formData.append("cloud_name", cloudName)
       
       const resourceType = file.type.startsWith('video/') ? 'video' : 'image'
 
-      const res = await fetch(`https://api.cloudinary.com/v1_1/gnltrlq1/${resourceType}/upload`, {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
         method: "POST",
         body: formData
       })
@@ -48,13 +52,13 @@ export function JournalForm() {
     } catch (err: any) {
       setError(err.message || "Failed to upload media")
     } finally {
-      setLoading(false)
+      setIsUploading(false)
     }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoading(true)
+    setIsSaving(true)
     setError(null)
 
     try {
@@ -64,24 +68,29 @@ export function JournalForm() {
         formData.append("media_type", mediaType)
       }
 
+      if (initialData) {
+        formData.append("id", initialData.id)
+      }
+
       const result = await createJournalEntry(formData)
       if (result?.error) {
         throw new Error(result.error)
       }
       
-      // Reset form
-      e.currentTarget.reset()
-      setMediaUrl("")
+      if (!initialData) {
+        e.currentTarget.reset()
+        setMediaUrl("")
+      }
     } catch(err: any) {
       setError(err.message || "Failed to save story")
     } finally {
-      setLoading(false)
+      setIsSaving(false)
     }
   }
 
   return (
     <div className="bg-white p-6 border border-[#E0D9CF] rounded-sm shadow-sm">
-      <h3 className="font-serif text-xl text-[#221F1C] mb-4">Post a Story</h3>
+      <h3 className="font-serif text-xl text-[#221F1C] mb-4">{initialData ? "Edit Story" : "Post a Story"}</h3>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1">
@@ -90,6 +99,7 @@ export function JournalForm() {
             type="text" 
             name="title" 
             required 
+            defaultValue={initialData?.title}
             placeholder="e.g. Anniversary Surprise for Priya" 
             className="w-full h-10 px-3 border border-[#E0D9CF] rounded-sm text-sm focus:outline-none focus:border-[#221F1C]"
           />
@@ -101,6 +111,7 @@ export function JournalForm() {
             <input 
               type="text" 
               name="customer_name" 
+              defaultValue={initialData?.customer_name}
               placeholder="e.g. Rahul M." 
               className="w-full h-10 px-3 border border-[#E0D9CF] rounded-sm text-sm focus:outline-none focus:border-[#221F1C]"
             />
@@ -110,6 +121,7 @@ export function JournalForm() {
             <input 
               type="text" 
               name="product_name" 
+              defaultValue={initialData?.product_name}
               placeholder="e.g. Custom Magazine" 
               className="w-full h-10 px-3 border border-[#E0D9CF] rounded-sm text-sm focus:outline-none focus:border-[#221F1C]"
             />
@@ -122,6 +134,7 @@ export function JournalForm() {
             name="content" 
             required 
             rows={4}
+            defaultValue={initialData?.content}
             placeholder="Write the story here..." 
             className="w-full p-3 border border-[#E0D9CF] rounded-sm text-sm focus:outline-none focus:border-[#221F1C] resize-none"
           ></textarea>
@@ -136,12 +149,12 @@ export function JournalForm() {
                 type="file" 
                 accept="image/*,video/*"
                 onChange={handleFileUpload}
-                disabled={loading}
+                disabled={isUploading}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
               />
               <UploadCloud className="w-8 h-8 text-[#9A8F85] mx-auto mb-2" />
               <p className="text-sm text-[#6D635B] font-medium">
-                {loading ? "Uploading to Cloudinary..." : "Click or drag media here"}
+                {isUploading ? "Uploading to Cloudinary..." : "Click or drag media here"}
               </p>
             </div>
           ) : (
@@ -161,8 +174,8 @@ export function JournalForm() {
 
         {error && <p className="text-red-500 text-xs">{error}</p>}
 
-        <Button type="submit" disabled={loading || !mediaUrl} className="w-full">
-          {loading ? "Saving..." : "Publish Story"}
+        <Button type="submit" disabled={isSaving || isUploading || !mediaUrl} className="w-full bg-[#DFBC94] hover:bg-[#c9a67f] text-white">
+          {isSaving ? "Saving..." : initialData ? "Update Story" : "Publish Story"}
         </Button>
       </form>
     </div>

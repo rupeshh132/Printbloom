@@ -40,6 +40,7 @@ export async function createJournalEntry(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
 
+  const id = formData.get("id") as string
   const title = formData.get("title") as string
   const content = formData.get("content") as string
   const media_url = formData.get("media_url") as string
@@ -50,16 +51,32 @@ export async function createJournalEntry(formData: FormData) {
   // Simple slug generation
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.random().toString(36).substring(2, 6)
 
-  const { error } = await supabase.from("stories").insert({
-    title,
-    slug,
-    content,
-    media_url,
-    media_type,
-    customer_name,
-    product_name,
-    published: true
-  })
+  let error;
+  if (id) {
+    // Update existing story
+    const res = await supabase.from("stories").update({
+      title,
+      content,
+      media_url,
+      media_type,
+      customer_name,
+      product_name
+    }).eq("id", id)
+    error = res.error
+  } else {
+    // Insert new story
+    const res = await supabase.from("stories").insert({
+      title,
+      slug,
+      content,
+      media_url,
+      media_type,
+      customer_name,
+      product_name,
+      published: true
+    })
+    error = res.error
+  }
 
   if (error) {
     console.error("Failed to create journal entry:", error)
