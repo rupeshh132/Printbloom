@@ -35,7 +35,13 @@ export default function CartPage() {
     try {
       setIsProcessing(true);
       const deliveryFee = total > 999 ? 0 : 150;
-      const orderTotal = total + deliveryFee;
+      let discountAmount = 0;
+      if (appliedPromo) {
+        discountAmount = appliedPromo.type === 'percentage' 
+          ? (total * appliedPromo.value) / 100 
+          : appliedPromo.value;
+      }
+      const orderTotal = Math.max(0, total + deliveryFee - discountAmount);
 
       const orderRes = await fetch("/api/create-order", {
         method: "POST",
