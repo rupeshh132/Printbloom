@@ -94,7 +94,7 @@ export const allReviews: Review[] = [
     id: "r1",
     name: "Customer",
     quote: "Dudeee i loved it…!!!!! The quality is soo good and it justttt aahhh it looks soo beautiful 😭🤌",
-    image: "/reviews/1000241317.jpg",
+    image: "/images/review-1-new.png",
     type: "mixed",
     rating: 5
   },
