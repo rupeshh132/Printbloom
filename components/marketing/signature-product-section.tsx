@@ -33,7 +33,7 @@ export function SignatureProductSection() {
             <PixelSwap
               firstContent={
                 <Image
-                  src="/images/a4-1.jpg"
+                  src="/images/magazine-cover.png"
                   alt="Custom magazine cover"
                   fill
                   className="object-cover"
