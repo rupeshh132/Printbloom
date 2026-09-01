@@ -11,6 +11,7 @@ import { WalletRewards } from "@/components/profile/wallet-rewards"
 import { SmartReminders } from "@/components/profile/smart-reminders"
 import { WishlistTab } from "@/components/profile/wishlist-tab"
 import { EnquiryTab } from "@/components/profile/enquiry-tab"
+import { ProfileInfoTab } from "@/components/profile/profile-info-tab"
 
 export const dynamic = "force-dynamic"
 
@@ -147,35 +148,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
           <div className="flex-1 bg-white border border-[#E0D9CF] rounded-sm p-6 md:p-10 shadow-sm min-h-[500px]">
             
             {currentTab === "profile" && (
-              <>
-                <h2 className="text-xl font-medium text-[#221F1C] mb-6">Profile Information</h2>
-                <div className="space-y-6 max-w-lg">
-                  <div>
-                    <label className="text-xs font-medium text-[#9A8F85] uppercase tracking-wider mb-2 block">Full Name</label>
-                    <div className="border border-[#E0D9CF] bg-[#FBF6EE] px-4 py-3 rounded-sm text-[#221F1C]">
-                      {fullName}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-[#9A8F85] uppercase tracking-wider mb-2 block">Email Address</label>
-                    <div className="border border-[#E0D9CF] bg-[#FBF6EE] px-4 py-3 rounded-sm text-[#221F1C] flex items-center justify-between">
-                      <span>{user.email}</span>
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">Verified</span>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-[#9A8F85] uppercase tracking-wider mb-2 block">Phone Number</label>
-                    <div className="border border-[#E0D9CF] bg-white px-4 py-3 rounded-sm text-[#9A8F85] italic">
-                      Not provided yet. You can add it during checkout.
-                    </div>
-                  </div>
-                  <div className="pt-6 border-t border-[#E0D9CF]">
-                    <button className="bg-[#221F1C] text-white px-6 py-3 rounded-full font-medium hover:bg-black transition-colors">
-                      Edit Profile
-                    </button>
-                  </div>
-                </div>
-              </>
+              <ProfileInfoTab user={user} />
             )}
 
             {currentTab === "orders" && (

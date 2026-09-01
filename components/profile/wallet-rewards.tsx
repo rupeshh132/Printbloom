@@ -4,6 +4,7 @@ import { Coins, Gift, Copy, CheckCircle2, ArrowRight } from "lucide-react"
 
 export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[], userId: string }) {
   const [copied, setCopied] = React.useState(false)
+  const [showRedeemModal, setShowRedeemModal] = React.useState(false)
 
   // Calculate current balance
   const balance = pointsHistory.reduce((acc, curr) => {
@@ -43,7 +44,10 @@ export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[],
         </div>
         
         <div className="relative z-10 w-full md:w-auto">
-          <button className="w-full md:w-auto bg-white text-[#221F1C] px-8 py-4 rounded-full font-medium hover:bg-[#FBF6EE] transition-colors flex items-center justify-center gap-2 shadow-sm">
+          <button 
+            onClick={() => setShowRedeemModal(true)}
+            className="w-full md:w-auto bg-white text-[#221F1C] px-8 py-4 rounded-full font-medium hover:bg-[#FBF6EE] transition-colors flex items-center justify-center gap-2 shadow-sm"
+          >
             Redeem Now <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -116,6 +120,41 @@ export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[],
           </div>
         )}
       </div>
+
+      {/* Redeem Modal */}
+      {showRedeemModal && (
+        <>
+          <div className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm" onClick={() => setShowRedeemModal(false)} />
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FBF6EE] w-11/12 max-w-md p-8 rounded-sm shadow-2xl z-50 border border-[#E0D9CF]">
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-[#221F1C] rounded-full flex items-center justify-center shadow-lg">
+                <Gift className="w-8 h-8 text-[#DFBC94]" />
+              </div>
+            </div>
+            
+            <h3 className="font-serif text-2xl text-[#221F1C] text-center mb-2">Redeem Your Points!</h3>
+            <p className="text-[#6D635B] text-center text-sm mb-8 leading-relaxed">
+              You currently have <strong className="text-[#DFBC94]">{balance} points</strong> (worth ₹{balance}). 
+              These points will be <span className="font-medium text-[#221F1C]">automatically applied as a discount</span> on the checkout page during your next purchase. No codes needed!
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <a 
+                href="/products" 
+                className="w-full bg-[#221F1C] text-white py-3.5 rounded-sm font-medium hover:bg-black transition-colors text-center shadow-sm"
+              >
+                Browse Products
+              </a>
+              <button 
+                onClick={() => setShowRedeemModal(false)}
+                className="w-full bg-transparent border border-[#E0D9CF] text-[#9A8F85] py-3.5 rounded-sm font-medium hover:bg-white transition-colors text-center"
+              >
+                Maybe Later
+              </button>
+            </div>
+          </div>
+        </>
+      )}
       
     </div>
   )
