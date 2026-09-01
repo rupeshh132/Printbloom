@@ -110,7 +110,7 @@ export const allReviews: Review[] = [
     id: "r3",
     name: "Customer",
     quote: "Received the magazine and absolutely fell in love the moment I had a glance at it!! Beautifully designed and printed, could not have been done any better 🎀 absolutely gorgeous and even prettier than what I expected",
-    image: "/reviews/1000247871.jpg",
+    image: "/images/review-3-new.png",
     type: "chat",
     rating: 5
   },
