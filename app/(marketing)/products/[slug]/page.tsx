@@ -4,7 +4,6 @@ import { notFound } from "next/navigation"
 import { getProductBySlug } from "@/app/actions/products"
 import { checkWishlistStatus } from "@/app/actions/wishlist"
 import { ProductCustomizer } from "@/components/products/product-customizer"
-import { PincodeChecker } from "@/components/products/pincode-checker"
 import { ProductMiniReviews } from "@/components/products/product-mini-reviews"
 import { HowItWorksSteps } from "@/components/products/how-it-works-steps"
 import { ShieldCheck, Award, Map, Clock, Plus } from "lucide-react"
@@ -77,15 +76,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               {product.name}
             </h1>
 
-            {/* Product Customization & Actions (Client Component) */}
             <ProductCustomizer 
               product={product} 
               slug={slug} 
               isWishlisted={isWishlisted} 
             />
-
-            {/* Pincode Checker */}
-            <PincodeChecker />
 
             {/* Accordions */}
             <div className="mt-10 border-t border-[#E0D9CF] divide-y divide-[#E0D9CF]">
