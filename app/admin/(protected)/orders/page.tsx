@@ -46,6 +46,8 @@ export default async function AdminOrdersList() {
                   <td className="p-4">
                     <span className={`px-2 py-1 text-xs rounded-sm font-medium 
                       ${order.status === 'processing' ? 'bg-amber-100 text-amber-800' : 
+                        order.status === 'designing' ? 'bg-purple-100 text-purple-800' : 
+                        order.status === 'printing' ? 'bg-pink-100 text-pink-800' : 
                         order.status === 'shipped' ? 'bg-blue-100 text-blue-800' : 
                         order.status === 'delivered' ? 'bg-green-100 text-green-800' : 
                         'bg-gray-100 text-gray-800'}`}>

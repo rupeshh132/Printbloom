@@ -40,6 +40,8 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
           >
             <option value="pending">Pending</option>
             <option value="processing">Processing</option>
+            <option value="designing">Designing</option>
+            <option value="printing">Printing</option>
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
             <option value="cancelled">Cancelled</option>
