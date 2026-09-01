@@ -24,7 +24,8 @@ export async function POST(request: Request) {
       let insertData: any = {
         user_id: orderDetails.userId,
         total_amount: orderDetails.amount,
-        status: 'processing'
+        status: 'processing',
+        payment_status: 'paid'
       };
       if (orderDetails.addressId) {
         insertData.shipping_address_id = orderDetails.addressId;
