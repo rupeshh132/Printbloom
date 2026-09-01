@@ -37,11 +37,11 @@ export function OrderCustomizationClient({ customizations }: { customizations: a
   }
 
   // Calculate grid columns based on number of photos. 
-  // If many photos, make it denser.
+  // We use a minimum of 4 columns on large screens to keep cards neat.
   const isDense = customizations.length > 10
 
   return (
-    <div className={`grid gap-4 ${isDense ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5' : 'grid-cols-2 sm:grid-cols-3'}`}>
+    <div className={`grid gap-4 ${isDense ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'}`}>
       {customizations.map((photo: any, index: number) => (
         <div key={index} className="border border-[#E0D9CF] rounded-sm overflow-hidden flex flex-col group bg-white shadow-sm hover:shadow-md transition-shadow">
           
