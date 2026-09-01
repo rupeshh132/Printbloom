@@ -34,25 +34,15 @@ export async function saveReminder(formData: FormData) {
 }
 
 export async function getUpcomingReminders(daysAhead: number = 20) {
-  const supabase = await createSupabaseServerClient()
-  
-  // Find dates that match today + daysAhead (Ignoring year for birthdays/anniversaries)
-  // Since Postgres doesn't easily let us query "Day/Month matches" dynamically without raw SQL or RPC in standard supabase-js,
-  // we will fetch all active reminders and filter them in JavaScript for this demo.
-  // In production, an RPC function or edge function is better.
-  
-  const { data, error } = await supabase.from("reminders").select("*")
-  
-  if (error || !data) {
-    return []
-  }
+  const allReminders = await getAllReminders()
   
   const targetDate = new Date()
   targetDate.setDate(targetDate.getDate() + daysAhead)
   const targetMonth = targetDate.getMonth()
   const targetDay = targetDate.getDate()
   
-  const upcoming = data.filter(reminder => {
+  const upcoming = allReminders.filter(reminder => {
+    if (!reminder.occasion_date) return false;
     const rDate = new Date(reminder.occasion_date)
     return rDate.getMonth() === targetMonth && rDate.getDate() === targetDay
   })
@@ -62,6 +52,33 @@ export async function getUpcomingReminders(daysAhead: number = 20) {
 
 export async function getAllReminders() {
   const supabase = await createSupabaseServerClient()
-  const { data } = await supabase.from("reminders").select("*").order("created_at", { ascending: false })
-  return data || []
+  
+  // Get public CRM reminders
+  const { data: publicReminders } = await supabase
+    .from("reminders")
+    .select("*")
+    .order("created_at", { ascending: false })
+    
+  // Get user profile reminders
+  const { data: userReminders } = await supabase
+    .from("user_reminders")
+    .select("*")
+    .order("created_at", { ascending: false })
+
+  // Format user_reminders to match the public ones
+  const mappedUserReminders = (userReminders || []).map(ur => ({
+    id: ur.id,
+    customer_name: ur.person_name,
+    phone_number: "Registered User", // Phone not stored directly in user_reminders row
+    occasion_name: ur.event_type,
+    occasion_date: ur.event_date,
+    created_at: ur.created_at
+  }))
+
+  const all = [...(publicReminders || []), ...mappedUserReminders]
+  
+  // Sort combined array by created_at descending
+  all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+  return all
 }

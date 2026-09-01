@@ -23,6 +23,7 @@ export async function addUserReminder(formData: FormData) {
   }
 
   revalidatePath("/profile")
+  revalidatePath("/admin/reminders")
 }
 
 export async function deleteUserReminder(id: string) {
@@ -43,4 +44,5 @@ export async function deleteUserReminder(id: string) {
   }
 
   revalidatePath("/profile")
+  revalidatePath("/admin/reminders")
 }
