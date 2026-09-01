@@ -2,7 +2,7 @@ import * as React from "react"
 import Image from "next/image"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/fade-in"
-import { homepageTrustCards } from "@/lib/reviews-data"
+import { allReviews } from "@/lib/reviews-data"
 
 export function ReviewsSection() {
   return (
@@ -19,7 +19,7 @@ export function ReviewsSection() {
         </FadeIn>
 
         <FadeInStagger className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {homepageTrustCards.map((review) => (
+          {allReviews.slice(0, 3).map((review) => (
             <FadeInStaggerItem key={review.id} className="flex flex-col">
               {/* Screenshot preview */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F4ECDD] border border-[#E0D9CF] mb-6 group">
