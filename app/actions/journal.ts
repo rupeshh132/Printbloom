@@ -35,6 +35,22 @@ export async function getPublishedJournals() {
   return data ?? []
 }
 
+export async function getJournalBySlug(slug: string) {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase
+    .from("stories")
+    .select("*")
+    .eq("slug", slug)
+    .single()
+
+  if (error) {
+    console.error("Fetch journal by slug error:", error)
+    return null
+  }
+
+  return data
+}
+
 export async function createJournalEntry(formData: FormData) {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
