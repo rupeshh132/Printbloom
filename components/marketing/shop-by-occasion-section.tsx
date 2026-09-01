@@ -17,7 +17,7 @@ const occasions = [
   },
   {
     title: "Long Distance",
-    image: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "/images/long-distance.png",
     href: "/products?occasion=long-distance"
   },
   {
