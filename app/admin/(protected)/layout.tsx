@@ -30,7 +30,7 @@ export default async function AdminLayout({
   }
 
   // CRITICAL SECURITY FIX: Only allow whitelisted admin emails
-  const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(",").map(e => e.trim().toLowerCase()) : []
+  const adminEmails = ["arhaan.s7045@gmail.com"]
   const userEmail = user.email?.toLowerCase() || ""
 
   if (!adminEmails.includes(userEmail)) {
