@@ -7,7 +7,7 @@ import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/ui/fade-i
 const occasions = [
   {
     title: "Anniversary",
-    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "/images/anniversary.png",
     href: "/products?occasion=anniversary"
   },
   {
