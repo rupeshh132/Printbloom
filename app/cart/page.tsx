@@ -487,7 +487,7 @@ export default function CartPage() {
                 )}
               </div>
 
-              {!appliedPromo && currentStep === "cart" && (
+              {!appliedPromo && (
                 <div className="mb-6 pt-4 border-t border-gray-100">
                   <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
                     Have a Promo Code?
