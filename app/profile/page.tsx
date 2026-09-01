@@ -12,6 +12,7 @@ import { SmartReminders } from "@/components/profile/smart-reminders"
 import { WishlistTab } from "@/components/profile/wishlist-tab"
 import { EnquiryTab } from "@/components/profile/enquiry-tab"
 import { ProfileInfoTab } from "@/components/profile/profile-info-tab"
+import { AvatarUpload } from "@/components/profile/avatar-upload"
 
 export const dynamic = "force-dynamic"
 
@@ -78,13 +79,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
             <div className="bg-white border border-[#E0D9CF] rounded-sm overflow-hidden flex flex-col">
               
               <div className="p-6 border-b border-[#E0D9CF] flex items-center gap-4 bg-[#FBF6EE]">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#221F1C] border border-[#E0D9CF] overflow-hidden">
-                  {user.user_metadata?.avatar_url ? (
-                    <img src={user.user_metadata.avatar_url} alt={fullName} className="w-full h-full object-cover" />
-                  ) : (
-                    <User className="w-6 h-6" />
-                  )}
-                </div>
+                <AvatarUpload currentAvatar={user.user_metadata?.avatar_url} fullName={fullName} />
                 <div>
                   <h3 className="font-medium text-[#221F1C] truncate max-w-[150px]">{fullName}</h3>
                   <p className="text-xs text-[#9A8F85] truncate max-w-[150px]">{user.email}</p>
