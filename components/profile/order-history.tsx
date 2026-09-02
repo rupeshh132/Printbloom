@@ -100,8 +100,8 @@ export function OrderHistory({ orders }: { orders: any[] }) {
                   return (
                   <div key={index} className="flex items-center gap-4 py-2">
                     <div className="w-16 h-16 bg-[#F5F0E8] rounded-sm overflow-hidden flex-shrink-0 relative border border-[#E0D9CF]">
-                      {item.image ? (
-                        <img src={item.image} alt={productName} className="w-full h-full object-cover" />
+                      {(item.image_url || item.image) ? (
+                        <img src={item.image_url || item.image} alt={productName} className="w-full h-full object-cover" />
                       ) : (
                         <Package className="w-6 h-6 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#9A8F85]" />
                       )}

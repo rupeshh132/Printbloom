@@ -36,6 +36,17 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
 
+  const { getProducts } = await import("@/app/actions/products");
+  const products = await getProducts();
+  
+  const enrichedOrders = orders?.map(order => ({
+    ...order,
+    order_items: order.order_items?.map((item: any) => ({
+      ...item,
+      image_url: products.find((p: any) => p.id === item.product_id || p.slug === item.product_id)?.main_image_url || null
+    }))
+  }))
+
   // Fetch addresses
   const { data: addresses } = await supabase
     .from("addresses")
@@ -147,7 +158,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
             )}
 
             {currentTab === "orders" && (
-              <OrderHistory orders={orders || []} />
+              <OrderHistory orders={enrichedOrders || []} />
             )}
 
             {currentTab === "addresses" && (
