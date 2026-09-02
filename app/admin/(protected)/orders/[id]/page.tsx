@@ -77,7 +77,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
                 {!item.customization_data || item.customization_data.length === 0 ? (
                   <p className="text-sm text-[#9A8F85]">No photos uploaded for this item.</p>
                 ) : (
-                  <OrderCustomizationClient customizations={item.customization_data} />
+                  <OrderCustomizationClient customizations={item.customization_data} orderItemId={item.id} orderId={order.id} />
                 )}
               </div>
             </div>
