@@ -57,7 +57,7 @@ export async function POST(request: Request) {
         let orderItems = orderDetails.items.map((item: any) => ({
           order_id: data.id,
           product_id: item.productId.split('-')[0], // Extract actual ID
-          product_name: item.name,
+          product_name: item.variant && item.variant !== 'Default' ? `${item.name} — ${item.variant}` : item.name,
           quantity: item.quantity,
           price: item.price,
           customization_data: item.customization_data || []

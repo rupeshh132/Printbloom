@@ -1,13 +1,19 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { InvoiceActions } from "@/components/profile/invoice-actions"
+import Link from "next/link"
 
 export default async function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createSupabaseServerClient()
 
-  // Fetch the order, items, and address
-  // Note: we fetch addresses(*) here. It will either join if there's a shipping_address_id or fetch user addresses
+  // 1. Security Check: Explicit getUser() check
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    redirect("/admin/login")
+  }
+
+  // Fetch the order
   const { data: order, error } = await supabase
     .from("orders")
     .select(`
@@ -21,7 +27,17 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
   if (error || !order) {
     return (
       <div className="p-8 text-center font-mono">
-        <h1>Error: Invoice not found or access denied.</h1>
+        <h1>Error: Invoice not found.</h1>
+      </div>
+    )
+  }
+
+  // Authorization check: Must be owner OR admin
+  const isAdmin = user.email?.toLowerCase() === "arhaan.s7045@gmail.com"
+  if (order.user_id !== user.id && !isAdmin) {
+    return (
+      <div className="p-8 text-center font-mono">
+        <h1>Error: Access denied.</h1>
       </div>
     )
   }
@@ -36,7 +52,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
 
   // Calculate totals
   const subtotal = order.order_items?.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0) || order.total_amount
-  const shipping = order.total_amount - subtotal
+  const shipping = order.total_amount - subtotal + (order.discount_amount || 0)
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 font-sans">
@@ -45,32 +61,31 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         {/* Header */}
         <div className="flex justify-between items-start mb-12">
           <div>
-            <h1 className="font-serif text-4xl text-[#221F1C] tracking-tight mb-2">PrintBloom</h1>
-            <p className="text-sm text-[#6B6259]">Memories, beautifully printed.</p>
+            <h1 className="font-serif text-4xl text-[#221F1C] tracking-tight mb-2 uppercase">PrintBloom</h1>
+            <p className="text-sm text-[#6B6259]">Email: printbloom.in@gmail.com</p>
+            <p className="text-sm text-[#6B6259]">WhatsApp: +91 8691094045</p>
+            <p className="text-sm text-[#6B6259]">Instagram: @printbloom.in</p>
+            {/* <p className="text-sm text-[#6B6259]">Website: printbloom.in</p> */}
           </div>
           <div className="text-right">
             <h2 className="text-2xl font-semibold text-[#221F1C] mb-1">INVOICE</h2>
-            <p className="font-mono text-sm text-[#6B6259]">#{order.id.split('-')[0].toUpperCase()}</p>
-            <p className="text-sm text-[#6B6259] mt-2">Date: {orderDate}</p>
+            <p className="font-mono text-sm text-[#6B6259]">Invoice No.: {order.invoice_no || `PB-${order.id.split('-')[0].toUpperCase()}`}</p>
+            <p className="text-sm text-[#6B6259] mt-1">Order Date: {orderDate}</p>
+            <p className="text-sm text-[#6B6259] mt-1">Payment Status: {order.payment_status?.toUpperCase() || 'PAID'}</p>
+            <p className="text-sm text-[#6B6259]">Payment Method: UPI</p>
           </div>
         </div>
 
         {/* Addresses */}
         <div className="flex justify-between mb-12 border-t border-[#E0D9CF] pt-8">
           <div>
-            <h3 className="text-xs font-semibold text-[#9A8F85] uppercase tracking-wider mb-3">Billed To / Shipped To</h3>
-            <p className="font-medium text-[#221F1C]">{addr?.full_name || "Customer"}</p>
+            <h3 className="text-xs font-semibold text-[#9A8F85] uppercase tracking-wider mb-3">Customer / Shipped To</h3>
+            <p className="font-medium text-[#221F1C]">{addr?.full_name || order.customer_name || "Customer"}</p>
             <p className="text-sm text-[#6B6259]">{addr?.address_line_1 || "Address pending"}</p>
             {addr?.address_line_2 && <p className="text-sm text-[#6B6259]">{addr.address_line_2}</p>}
             <p className="text-sm text-[#6B6259]">{addr?.city ? `${addr.city}, ${addr.state} ${addr.pincode}` : ""}</p>
-            <p className="text-sm text-[#6B6259] mt-1">{addr?.phone_number ? `Phone: ${addr.phone_number}` : ""}</p>
-          </div>
-          <div className="text-right">
-            <h3 className="text-xs font-semibold text-[#9A8F85] uppercase tracking-wider mb-3">From</h3>
-            <p className="font-medium text-[#221F1C]">PrintBloom India</p>
-            <p className="text-sm text-[#6B6259]">Studio 4A, Creative Park</p>
-            <p className="text-sm text-[#6B6259]">Mumbai, Maharashtra 400001</p>
-            <p className="text-sm text-[#6B6259] mt-1">support@printbloom.com</p>
+            <p className="text-sm text-[#6B6259] mt-1">{addr?.phone_number ? `Phone: ${addr.phone_number}` : (order.customer_phone ? `Phone: ${order.customer_phone}` : "")}</p>
+            {order.user_email && <p className="text-sm text-[#6B6259]">Email: {order.user_email}</p>}
           </div>
         </div>
 
@@ -79,21 +94,28 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-[#E0D9CF]">
-                <th className="py-3 text-sm font-semibold text-[#221F1C]">Description</th>
-                <th className="py-3 text-sm font-semibold text-[#221F1C] text-center">Qty</th>
-                <th className="py-3 text-sm font-semibold text-[#221F1C] text-right">Price</th>
-                <th className="py-3 text-sm font-semibold text-[#221F1C] text-right">Total</th>
+                <th className="py-3 text-sm font-semibold text-[#221F1C]">ITEM</th>
+                <th className="py-3 text-sm font-semibold text-[#221F1C] text-center">QTY</th>
+                <th className="py-3 text-sm font-semibold text-[#221F1C] text-right">UNIT PRICE</th>
+                <th className="py-3 text-sm font-semibold text-[#221F1C] text-right">TOTAL</th>
               </tr>
             </thead>
             <tbody>
-              {order.order_items?.map((item: any, i: number) => (
-                <tr key={i} className="border-b border-gray-100">
-                  <td className="py-4 text-sm text-[#221F1C]">{item.product_name || item.product_id}</td>
-                  <td className="py-4 text-sm text-[#6B6259] text-center">{item.quantity}</td>
-                  <td className="py-4 text-sm text-[#6B6259] text-right">₹{item.price || 0}</td>
-                  <td className="py-4 text-sm text-[#221F1C] text-right">₹{(item.price || 0) * item.quantity}</td>
-                </tr>
-              ))}
+              {order.order_items?.map((item: any, i: number) => {
+                // Parse variant from product_name (e.g. "Custom Magazine — A5, 8 Pages")
+                const [baseName, variant] = item.product_name ? item.product_name.split(' — ') : [item.product_id, null];
+                return (
+                  <tr key={i} className="border-b border-gray-100">
+                    <td className="py-4 text-sm text-[#221F1C]">
+                      {baseName}
+                      {variant && <span className="block text-xs text-[#6B6259] mt-0.5">{variant}</span>}
+                    </td>
+                    <td className="py-4 text-sm text-[#6B6259] text-center">{item.quantity}</td>
+                    <td className="py-4 text-sm text-[#6B6259] text-right">₹{item.price || 0}</td>
+                    <td className="py-4 text-sm text-[#221F1C] text-right">₹{(item.price || 0) * item.quantity}</td>
+                  </tr>
+                )
+              })}
               {(!order.order_items || order.order_items.length === 0) && (
                 <tr className="border-b border-gray-100">
                   <td className="py-4 text-sm text-[#221F1C]" colSpan={4}>Order items processing...</td>
@@ -104,27 +126,48 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* Totals */}
-        <div className="flex justify-end">
+        <div className="flex justify-end border-b border-[#E0D9CF] pb-6 mb-6">
           <div className="w-1/2">
             <div className="flex justify-between py-2 text-sm text-[#6B6259]">
               <span>Subtotal</span>
               <span>₹{subtotal}</span>
             </div>
-            <div className="flex justify-between py-2 text-sm text-[#6B6259] border-b border-[#E0D9CF]">
+            
+            {(order.discount_amount && order.discount_amount > 0) ? (
+              <div className="flex justify-between py-2 text-sm text-[#6B6259]">
+                <span>Discount</span>
+                <span>-₹{order.discount_amount}</span>
+              </div>
+            ) : null}
+
+            <div className="flex justify-between py-2 text-sm text-[#6B6259]">
               <span>Shipping</span>
               <span>{shipping > 0 ? `₹${shipping}` : 'Free'}</span>
             </div>
-            <div className="flex justify-between py-4 text-lg font-medium text-[#221F1C]">
-              <span>Total Amount</span>
+            <div className="flex justify-between pt-4 mt-2 border-t border-dashed border-[#E0D9CF] text-base font-semibold text-[#221F1C]">
+              <span>TOTAL PAID</span>
               <span>₹{order.total_amount}</span>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="mt-16 pt-8 border-t border-[#E0D9CF] text-center text-xs text-[#9A8F85]">
-          <p>Thank you for choosing PrintBloom to preserve your memories.</p>
-          <p className="mt-1">This is a computer generated invoice and does not require a physical signature.</p>
+        <div className="text-center text-sm text-[#221F1C] space-y-4">
+          <div>
+            <p>Thank you for choosing PrintBloom 🤍</p>
+            <p>Your memories mean a lot to us.</p>
+          </div>
+          
+          <div className="text-[#6B6259] text-xs">
+            <p className="font-medium text-[#221F1C] mb-1">Questions about your order?</p>
+            <p>WhatsApp: +91 8691094045 | Email: printbloom.in@gmail.com</p>
+          </div>
+
+          <p className="text-xs text-[#9A8F85] mt-8 pt-4">
+            <Link href="/policies/cancellation" className="hover:underline">
+              *Personalised products are subject to PrintBloom's shipping, cancellation and refund policies.
+            </Link>
+          </p>
         </div>
 
       </div>
