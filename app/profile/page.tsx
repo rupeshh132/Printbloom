@@ -43,7 +43,13 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
     ...order,
     order_items: order.order_items?.map((item: any) => ({
       ...item,
-      image_url: products.find((p: any) => p.id === item.product_id || p.slug === item.product_id)?.main_image_url || null
+      image_url: products.find((p: any) => 
+        p.id === item.product_id || 
+        p.slug === item.product_id || 
+        (item.product_id && p.id && p.id.startsWith(item.product_id)) ||
+        (item.product_id && p.id && item.product_id.startsWith(p.id)) ||
+        (item.product_id && p.slug && item.product_id.startsWith(p.slug))
+      )?.main_image_url || null
     }))
   }))
 
