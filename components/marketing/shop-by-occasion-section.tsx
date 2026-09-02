@@ -12,8 +12,9 @@ const occasions = [
   },
   {
     title: "Birthdays",
-    image: "/images/birthday.png",
-    href: "/products?occasion=birthday"
+    image: "/images/birthday.jpg",
+    href: "/products?occasion=birthday",
+    objectFit: "object-contain bg-[#1a1816]" // Use a dark background to blend nicely with the gradient if there's letterboxing
   },
   {
     title: "Long Distance",
@@ -55,7 +56,7 @@ export function ShopByOccasionSection() {
                   alt={occasion.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className={`${occasion.objectFit || 'object-cover'} transition-transform duration-700 ease-out group-hover:scale-105`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
                 
