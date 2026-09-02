@@ -13,8 +13,7 @@ const occasions = [
   {
     title: "Birthdays",
     image: "/images/birthday.jpg",
-    href: "/products?occasion=birthday",
-    objectFit: "object-contain bg-[#1a1816]" // Use a dark background to blend nicely with the gradient if there's letterboxing
+    href: "/products?occasion=birthday"
   },
   {
     title: "Long Distance",
