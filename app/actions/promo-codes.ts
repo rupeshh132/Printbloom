@@ -37,12 +37,15 @@ export async function createPromoCode(formData: FormData) {
   const discount_type = formData.get("discount_type") as string
   const discount_value = parseFloat(formData.get("discount_value") as string)
   const expiry_date = formData.get("expiry_date") as string
+  const max_uses_str = formData.get("max_uses") as string
+  const max_uses = max_uses_str ? parseInt(max_uses_str, 10) : null
 
   const { error } = await supabase.from("promo_codes").insert({
     code: code.toUpperCase(),
     discount_type,
     discount_value,
     expiry_date: expiry_date || null,
+    max_uses,
     active: true
   })
 
@@ -83,7 +86,7 @@ export async function validatePromoCode(code: string) {
 
   const { data, error } = await supabase
     .from("promo_codes")
-    .select("discount_type, discount_value, active, expiry_date")
+    .select("discount_type, discount_value, active, expiry_date, max_uses, used_count")
     .eq("code", code.toUpperCase())
     .single()
 
@@ -97,6 +100,10 @@ export async function validatePromoCode(code: string) {
 
   if (data.expiry_date && new Date(data.expiry_date) < new Date()) {
     return { error: "This discount code has expired" }
+  }
+
+  if (data.max_uses !== null && data.used_count >= data.max_uses) {
+    return { error: "This discount code usage limit has been reached" }
   }
 
   return { discount_type: data.discount_type, discount_value: data.discount_value }

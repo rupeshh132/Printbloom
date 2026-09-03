@@ -126,6 +126,9 @@ export async function POST(request: Request) {
     if (addressId) {
       insertData.shipping_address_id = addressId;
     }
+    if (activePromo) {
+      insertData.applied_promo = activePromo;
+    }
 
     const { data: dbOrder, error: orderError } = await supabase
       .from('orders')

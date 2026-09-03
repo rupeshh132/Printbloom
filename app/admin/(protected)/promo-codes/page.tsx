@@ -71,6 +71,16 @@ export default async function PromoCodesPage() {
                 />
               </div>
 
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-[#221F1C]">Max Uses (Optional)</label>
+                <input 
+                  type="number" 
+                  name="max_uses" 
+                  placeholder="Leave empty for unlimited"
+                  className="w-full h-10 px-3 border border-[#E0D9CF] rounded-sm text-sm"
+                />
+              </div>
+
               <Button type="submit" className="w-full">Create Code</Button>
             </form>
           </div>
@@ -89,6 +99,7 @@ export default async function PromoCodesPage() {
                   <tr>
                     <th className="p-4 font-normal">Code</th>
                     <th className="p-4 font-normal">Discount</th>
+                    <th className="p-4 font-normal">Usage</th>
                     <th className="p-4 font-normal">Expiry</th>
                     <th className="p-4 font-normal">Status</th>
                     <th className="p-4 font-normal text-right">Actions</th>
@@ -100,6 +111,9 @@ export default async function PromoCodesPage() {
                       <td className="p-4 font-mono text-[#221F1C] font-semibold">{code.code}</td>
                       <td className="p-4 text-sm text-[#6D635B]">
                         {code.discount_type === 'percentage' ? `${code.discount_value}%` : `₹${code.discount_value}`}
+                      </td>
+                      <td className="p-4 text-sm text-[#6D635B]">
+                        {code.used_count || 0} / {code.max_uses !== null ? code.max_uses : '∞'}
                       </td>
                       <td className="p-4 text-sm text-[#9A8F85]">
                         {code.expiry_date ? new Date(code.expiry_date).toLocaleDateString() : 'Never'}

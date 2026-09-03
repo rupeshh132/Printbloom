@@ -112,6 +112,15 @@ export async function POST(request: Request) {
             
           if (deductError) console.error("Failed to deduct redeemed points:", deductError);
         }
+
+        // 5. Promo Code Usage Tracking
+        if (existingOrder.applied_promo) {
+          const { error: promoError } = await supabaseAdmin.rpc('increment_promo_usage', {
+            promo_code_param: existingOrder.applied_promo
+          });
+          
+          if (promoError) console.error("Failed to increment promo usage:", promoError);
+        }
       } catch (err) {
         console.error("Error in points/referral/redemption logic:", err);
       }
