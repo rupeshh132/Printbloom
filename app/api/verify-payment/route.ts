@@ -70,28 +70,31 @@ export async function POST(request: Request) {
             
           if (pointsError) console.error("Failed to award buyer points:", pointsError);
 
-          // B. Referral logic (100 points to referrer)
-          // Check if this is the user's FIRST paid order (excluding the current one)
-          const { count, error: countError } = await supabaseAdmin
-            .from('orders')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', existingOrder.user_id)
-            .eq('payment_status', 'paid')
-            .neq('id', existingOrder.id);
-            
-          if (!countError && count === 0) {
-            // First paid order! Find if they were referred
-            const { data: profile } = await supabaseAdmin
-              .from('profiles')
-              .select('referred_by')
-              .eq('id', existingOrder.user_id)
-              .single();
+          // B. Referral logic (40 points to referrer)
+          // Minimum order value threshold for referral bonus: ₹250
+          if (existingOrder.total_amount >= 250) {
+            // Check if this is the user's FIRST paid order (excluding the current one)
+            const { count, error: countError } = await supabaseAdmin
+              .from('orders')
+              .select('*', { count: 'exact', head: true })
+              .eq('user_id', existingOrder.user_id)
+              .eq('payment_status', 'paid')
+              .neq('id', existingOrder.id);
               
-            if (profile && profile.referred_by) {
-              const { error: rpcError } = await supabaseAdmin.rpc('grant_referral_bonus', {
-                referrer_uuid: profile.referred_by
-              });
-              if (rpcError) console.error("Failed to award referral points via RPC:", rpcError);
+            if (!countError && count === 0) {
+              // First paid order! Find if they were referred
+              const { data: profile } = await supabaseAdmin
+                .from('profiles')
+                .select('referred_by')
+                .eq('id', existingOrder.user_id)
+                .single();
+                
+              if (profile && profile.referred_by) {
+                const { error: rpcError } = await supabaseAdmin.rpc('grant_referral_bonus', {
+                  referrer_uuid: profile.referred_by
+                });
+                if (rpcError) console.error("Failed to award referral points via RPC:", rpcError);
+              }
             }
           }
         }
