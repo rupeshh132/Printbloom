@@ -20,7 +20,8 @@ export default async function AdminOrdersList() {
           <p className="text-sm text-[#9A8F85]">When customers place an order, it will appear here.</p>
         </div>
       ) : (
-        <div className="bg-white shadow-sm border border-[#E0D9CF] rounded-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <div className="bg-white shadow-sm border border-[#E0D9CF] rounded-sm overflow-hidden">
           <table className="w-full text-left">
             <thead className="bg-[#F5F0E8] border-b border-[#E0D9CF] text-xs font-mono text-[#9A8F85] uppercase tracking-wider">
               <tr>
@@ -63,6 +64,7 @@ export default async function AdminOrdersList() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

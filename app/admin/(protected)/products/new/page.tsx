@@ -50,31 +50,31 @@ export default function NewProductPage() {
     slug: "",
     tagline: "",
     description: "",
-    price: ""
+    starting_price_label: ""
   })
 
   const productTemplates: Record<string, any> = {
-    "blank": { name: "", slug: "", tagline: "", description: "", price: "" },
+    "blank": { name: "", slug: "", tagline: "", description: "", starting_price_label: "" },
     "magazine-a4": {
       name: "Custom Magazine — A4",
       slug: "custom-magazine-a4",
       tagline: "Large-format editorial for your biggest moments.",
       description: "A stunning A4 large-format magazine. Ideal for wedding albums, big anniversaries, and grand gestures.",
-      price: "₹499"
+      starting_price_label: "₹499"
     },
     "magazine-a5": {
       name: "Custom Magazine — A5",
       slug: "custom-magazine-a5",
       tagline: "A compact, beautiful editorial of your memories.",
       description: "Our signature A5 custom magazine. Perfectly sized to hold in your hands. You provide the photos, we craft the story.",
-      price: "₹399"
+      starting_price_label: "₹399"
     },
     "polaroids": {
       name: "Vintage Polaroids",
       slug: "polaroids",
       tagline: "Your digital memories, printed with a classic retro feel.",
       description: "Authentic Polaroid-style prints on premium matte paper. Perfect for your wall or as a small surprise.",
-      price: "₹249"
+      starting_price_label: "₹249"
     }
   }
 
@@ -244,7 +244,7 @@ export default function NewProductPage() {
               type="text"
               id="starting_price_label"
               name="starting_price_label"
-              value={formDataState.price}
+              value={formDataState.starting_price_label}
               onChange={handleChange}
               required
               className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"

@@ -88,6 +88,7 @@ export default async function PromoCodesPage() {
 
         {/* Codes List */}
         <div className="lg:col-span-2">
+          <div className="overflow-x-auto">
           <div className="bg-white border border-[#E0D9CF] rounded-sm shadow-sm overflow-hidden">
             {codes.length === 0 ? (
               <div className="p-8 text-center text-[#9A8F85]">
@@ -144,6 +145,7 @@ export default async function PromoCodesPage() {
                 </tbody>
               </table>
             )}
+          </div>
           </div>
         </div>
       </div>

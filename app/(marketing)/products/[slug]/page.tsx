@@ -111,7 +111,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
 
             {/* Trust Badges */}
-            <div className="mt-10 grid grid-cols-4 gap-4 text-center border-t border-[#E0D9CF] pt-8">
+            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 text-center border-t border-[#E0D9CF] pt-8">
               <div className="flex flex-col items-center gap-2">
                 <ShieldCheck className="w-6 h-6 text-[#4B6B4F]" />
                 <span className="text-[10px] text-[#9A8F85] uppercase tracking-wider">Secure Payments</span>

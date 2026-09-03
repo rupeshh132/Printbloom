@@ -29,7 +29,8 @@ export default async function AdminProducts() {
           <p className="text-sm text-[#9A8F85] mb-6">Click "Seed Default Products" to add PrintBloom's catalogue.</p>
         </div>
       ) : (
-        <div className="bg-white shadow-sm border border-[#E0D9CF] rounded-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <div className="bg-white shadow-sm border border-[#E0D9CF] rounded-sm overflow-hidden">
           <table className="w-full text-left">
             <thead className="bg-[#F5F0E8] border-b border-[#E0D9CF] text-xs font-mono text-[#9A8F85] uppercase tracking-wider">
               <tr>
@@ -99,6 +100,7 @@ export default async function AdminProducts() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>
