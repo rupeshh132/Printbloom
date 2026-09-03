@@ -61,11 +61,18 @@ export async function POST(request: Request) {
     // Flat Delivery Fee
     const deliveryFee = 90;
 
+    // Mutually Exclusive Fallback Logic
+    // If client bypassed UI and sent both, prioritize points and ignore promo
+    let activePromo = appliedPromo;
+    if (pointsToRedeem > 0 && appliedPromo) {
+      activePromo = null;
+    }
+
     // Promo Logic
     let discountAmount = 0;
-    if (appliedPromo) {
+    if (activePromo) {
       const { validatePromoCode } = await import("@/app/actions/promo-codes");
-      const res = await validatePromoCode(appliedPromo);
+      const res = await validatePromoCode(activePromo);
       if (!res.error) {
         if (res.discount_type === 'percentage') {
           discountAmount = (total * res.discount_value) / 100;

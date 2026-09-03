@@ -537,23 +537,31 @@ export default function CartPage() {
                   <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
                     Have a Promo Code?
                   </label>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text"
-                      placeholder="e.g. SAVE20"
-                      value={promoCodeInput}
-                      onChange={(e) => setPromoCodeInput(e.target.value)}
-                      className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#DFBC94]"
-                    />
-                    <button 
-                      onClick={handleApplyPromo}
-                      disabled={isApplyingPromo || !promoCodeInput.trim()}
-                      className="bg-[#221F1C] text-white px-4 py-2 rounded-sm text-xs font-medium disabled:opacity-50 hover:bg-black transition-colors"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                  {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
+                  {pointsToRedeem > 0 ? (
+                    <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded-sm border border-gray-200 italic">
+                      Promo codes cannot be combined with reward points.
+                    </p>
+                  ) : (
+                    <>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text"
+                          placeholder="e.g. SAVE20"
+                          value={promoCodeInput}
+                          onChange={(e) => setPromoCodeInput(e.target.value)}
+                          className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#DFBC94]"
+                        />
+                        <button 
+                          onClick={handleApplyPromo}
+                          disabled={isApplyingPromo || !promoCodeInput.trim()}
+                          className="bg-[#221F1C] text-white px-4 py-2 rounded-sm text-xs font-medium disabled:opacity-50 hover:bg-black transition-colors"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                      {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
+                    </>
+                  )}
                 </div>
               )}
 
@@ -562,22 +570,28 @@ export default function CartPage() {
                   <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
                     PrintBloom Wallet
                   </label>
-                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-sm border border-gray-200">
-                    <div>
-                      <div className="text-sm font-medium">Available Balance</div>
-                      <div className="text-xs text-[#DFBC94] font-bold">{availablePoints} Points (₹{availablePoints})</div>
+                  {appliedPromo ? (
+                    <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded-sm border border-gray-200 italic">
+                      Reward points cannot be combined with promo codes.
+                    </p>
+                  ) : (
+                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-sm border border-gray-200">
+                      <div>
+                        <div className="text-sm font-medium">Available Balance</div>
+                        <div className="text-xs text-[#DFBC94] font-bold">{availablePoints} Points (₹{availablePoints})</div>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          const orderTotalBeforePoints = Math.max(0, total + deliveryFee - discountAmount);
+                          const maxRedeemable = Math.min(availablePoints, orderTotalBeforePoints);
+                          setPointsToRedeem(maxRedeemable);
+                        }}
+                        className="text-xs font-medium bg-[#DFBC94] text-white px-3 py-1.5 rounded-sm hover:bg-[#c9a781] transition-colors"
+                      >
+                        Use Points
+                      </button>
                     </div>
-                    <button 
-                      onClick={() => {
-                        const orderTotalBeforePoints = Math.max(0, total + deliveryFee - discountAmount);
-                        const maxRedeemable = Math.min(availablePoints, orderTotalBeforePoints);
-                        setPointsToRedeem(maxRedeemable);
-                      }}
-                      className="text-xs font-medium bg-[#DFBC94] text-white px-3 py-1.5 rounded-sm hover:bg-[#c9a781] transition-colors"
-                    >
-                      Use Points
-                    </button>
-                  </div>
+                  )}
                 </div>
               )}
               
