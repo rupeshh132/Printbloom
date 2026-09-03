@@ -6,7 +6,7 @@ export async function getAdminOrders() {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const { data, error } = await supabase
     .from("orders")
@@ -29,7 +29,7 @@ export async function getAdminOrderById(id: string) {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const { data, error } = await supabase
     .from("orders")
@@ -59,7 +59,7 @@ export async function updateOrderStatus(id: string, status: string) {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
   
   const { error } = await supabase
     .from("orders")
