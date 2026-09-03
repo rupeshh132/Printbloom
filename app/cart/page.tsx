@@ -39,6 +39,15 @@ export default function CartPage() {
 
     try {
       setIsProcessing(true);
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
+      if (!user) {
+        alert("Please login first");
+        setIsProcessing(false);
+        return;
+      }
+
       const deliveryFee = 90;
       // Maximum Discount Ceiling
       let maxAllowedDiscount = 50;
@@ -81,14 +90,6 @@ export default function CartPage() {
       const orderData = await orderRes.json();
       
       if (!orderData.id) throw new Error("Could not create Razorpay order");
-
-      const { data: { session } } = await supabase.auth.getSession();
-      const user = session?.user;
-      if (!user) {
-        alert("Please login first");
-        setIsProcessing(false);
-        return;
-      }
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
