@@ -58,12 +58,12 @@ export async function POST(request: Request) {
       // 3. Reward Points & Referral Logic
       try {
         if (existingOrder.total_amount > 0) {
-          // A. Buyer points (40 points)
+          // A. Buyer points (20 points)
           const { error: pointsError } = await supabaseAdmin
             .from('reward_points')
             .insert({
               user_id: existingOrder.user_id,
-              points: 40,
+              points: 20,
               transaction_type: 'earned',
               description: `Order Placed (Order #${existingOrder.id.split('-')[0]})`
             });

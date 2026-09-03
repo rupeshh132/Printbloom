@@ -62,7 +62,7 @@ export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[],
         <div className="flex-1 text-center md:text-left">
           <h3 className="font-serif text-2xl text-[#221F1C] mb-2">Refer & Earn Points</h3>
           <p className="text-[#6B6259]">
-            Give your friends ₹100 off on their first custom gift, and get <span className="font-medium text-[#DFBC94]">100 Points</span> when they place an order!
+            Invite your friends to PrintBloom, and get <span className="font-medium text-[#DFBC94]">40 Points</span> when they place their first order!
           </p>
         </div>
         
