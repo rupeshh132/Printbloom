@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useCart } from "@/store/use-cart"
 import { Navbar } from "@/components/marketing/navbar"
 import NextLink from "next/link"
+import Script from "next/script"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Trash2, CheckCircle2, Circle, MapPin, Plus, Tag } from "lucide-react"
@@ -24,6 +25,10 @@ export default function CartPage() {
 
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
+  
+  // Points Redemption State
+  const [availablePoints, setAvailablePoints] = useState(0)
+  const [pointsToRedeem, setPointsToRedeem] = useState(0)
 
   const handlePayment = async () => {
     if (!selectedAddressId) {
@@ -34,19 +39,35 @@ export default function CartPage() {
 
     try {
       setIsProcessing(true);
-      const deliveryFee = total > 999 ? 0 : 150;
+      const deliveryFee = 90;
       let discountAmount = 0;
       if (appliedPromo) {
         discountAmount = appliedPromo.type === 'percentage' 
           ? (total * appliedPromo.value) / 100 
           : appliedPromo.value;
       }
-      const orderTotal = Math.max(0, total + deliveryFee - discountAmount);
+      const orderTotalBeforePoints = Math.max(0, total + deliveryFee - discountAmount);
+      // Ensure we don't redeem more points than the order total or available points
+      const maxRedeemable = Math.min(availablePoints, orderTotalBeforePoints);
+      const finalPointsToRedeem = pointsToRedeem > maxRedeemable ? maxRedeemable : pointsToRedeem;
+      
+      const orderTotal = Math.max(0, orderTotalBeforePoints - finalPointsToRedeem);
 
       const orderRes = await fetch("/api/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: orderTotal })
+        body: JSON.stringify({ 
+          items: items.map(item => ({
+            productId: item.productId,
+            name: item.name,
+            variant: item.variant,
+            quantity: item.quantity,
+            customization_data: item.customization_data || []
+          })),
+          addressId: selectedAddressId,
+          appliedPromo: appliedPromo ? appliedPromo.code : null,
+          pointsToRedeem: finalPointsToRedeem
+        })
       });
       const orderData = await orderRes.json();
       
@@ -77,12 +98,9 @@ export default function CartPage() {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
-                orderDetails: {
-                  userId: user.id,
-                  amount: orderTotal,
-                  items: items,
-                  addressId: selectedAddressId
-                }
+                items: items,
+                amount: orderTotal,
+                addressId: selectedAddressId
               })
             });
             const verifyData = await verifyRes.json();
@@ -119,40 +137,48 @@ export default function CartPage() {
     setIsMounted(true)
     
     // Fetch saved addresses if logged in
-    async function fetchAddresses() {
+    async function fetchUserData() {
       const { data: { session } } = await supabase.auth.getSession()
       if (session?.user) {
-        const { data } = await supabase
+        // Fetch addresses
+        const { data: addrData } = await supabase
           .from("addresses")
           .select("*")
           .eq("user_id", session.user.id)
           .order("created_at", { ascending: false })
           
-        if (data && data.length > 0) {
-          setSavedAddresses(data)
-          setSelectedAddressId(data[0].id) // auto-select first
+        if (addrData && addrData.length > 0) {
+          setSavedAddresses(addrData)
+          setSelectedAddressId(addrData[0].id)
         } else {
-          setShowNewAddressForm(true) // force show form if no addresses
+          setShowNewAddressForm(true)
+        }
+
+        // Fetch points balance
+        const { data: pointsData } = await supabase
+          .from("reward_points")
+          .select("*")
+          .eq("user_id", session.user.id)
+          
+        if (pointsData) {
+          const balance = pointsData.reduce((acc, curr) => {
+            if (curr.transaction_type === 'earned' || curr.transaction_type === 'refunded') return acc + curr.points;
+            if (curr.transaction_type === 'redeemed') return acc - curr.points;
+            return acc;
+          }, 0);
+          setAvailablePoints(balance);
         }
       } else {
         setShowNewAddressForm(true)
       }
     }
-    fetchAddresses()
+    fetchUserData()
   }, [])
   
   const total = getCartTotal()
   
-  // Dynamic Delivery Logic
-  const selectedAddress = savedAddresses.find(a => a.id === selectedAddressId)
-  let deliveryFee = 0
-  if (currentStep !== "cart") {
-    if (selectedAddress?.pincode?.startsWith("4")) {
-      deliveryFee = 100 // Example: Cheaper shipping for Maharashtra
-    } else {
-      deliveryFee = 150 // Standard PAN India
-    }
-  }
+  // Flat Delivery Fee
+  const deliveryFee = 90;
   
   // Promo Code State
   const [promoCodeInput, setPromoCodeInput] = useState("")
@@ -215,6 +241,8 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-[#FBF6EE] pt-28 pb-20">
       <Navbar />
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+
 
       <div className="container mx-auto max-w-5xl px-4 md:px-8 mt-4">
         
@@ -478,7 +506,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Delivery Fee</span>
-                  <span>{currentStep === "cart" ? "Calculated at next step" : `₹${deliveryFee}`}</span>
+                  <span>₹{deliveryFee}</span>
                 </div>
                 
                 {appliedPromo && (
@@ -489,6 +517,17 @@ export default function CartPage() {
                       <button onClick={handleRemovePromo} className="text-[10px] text-red-500 underline ml-2">Remove</button>
                     </div>
                     <span>-₹{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
+                
+                {pointsToRedeem > 0 && (
+                  <div className="flex justify-between text-[#DFBC94]">
+                    <div className="flex items-center gap-1">
+                      <Circle className="w-3 h-3 fill-current" />
+                      <span>Points Used</span>
+                      <button onClick={() => setPointsToRedeem(0)} className="text-[10px] text-red-500 underline ml-2">Remove</button>
+                    </div>
+                    <span>-₹{pointsToRedeem.toFixed(2)}</span>
                   </div>
                 )}
               </div>
@@ -517,10 +556,34 @@ export default function CartPage() {
                   {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
                 </div>
               )}
+
+              {availablePoints > 0 && pointsToRedeem === 0 && (
+                <div className="mb-6 pt-4 border-t border-gray-100">
+                  <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
+                    PrintBloom Wallet
+                  </label>
+                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-sm border border-gray-200">
+                    <div>
+                      <div className="text-sm font-medium">Available Balance</div>
+                      <div className="text-xs text-[#DFBC94] font-bold">{availablePoints} Points (₹{availablePoints})</div>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        const orderTotalBeforePoints = Math.max(0, total + deliveryFee - discountAmount);
+                        const maxRedeemable = Math.min(availablePoints, orderTotalBeforePoints);
+                        setPointsToRedeem(maxRedeemable);
+                      }}
+                      className="text-xs font-medium bg-[#DFBC94] text-white px-3 py-1.5 rounded-sm hover:bg-[#c9a781] transition-colors"
+                    >
+                      Use Points
+                    </button>
+                  </div>
+                </div>
+              )}
               
-              <div className="flex justify-between font-medium mb-8">
-                <span>Order Total:</span>
-                <span>₹{orderTotal.toFixed(2)}</span>
+              <div className="flex justify-between font-serif text-xl border-t border-gray-200 pt-6 mb-8 text-[#221F1C]">
+                <span>Total Amount</span>
+                <span>₹{Math.max(0, total + deliveryFee - discountAmount - pointsToRedeem).toFixed(2)}</span>
               </div>
 
               {currentStep === "cart" && (

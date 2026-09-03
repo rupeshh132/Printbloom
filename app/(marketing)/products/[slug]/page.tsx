@@ -6,6 +6,7 @@ import { checkWishlistStatus } from "@/app/actions/wishlist"
 import { ProductCustomizer } from "@/components/products/product-customizer"
 import { ProductMiniReviews } from "@/components/products/product-mini-reviews"
 import { HowItWorksSteps } from "@/components/products/how-it-works-steps"
+import { ProductCarousel } from "@/components/ui/product-carousel"
 import { ShieldCheck, Award, Map, Clock, Plus } from "lucide-react"
 
 export const revalidate = 3600
@@ -46,6 +47,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     imageSrc = 'https://res.cloudinary.com/gnltrlq1/image/upload/v1788039394/bo2fkgkljfrywzvr2wdl.jpg'
   }
 
+  // Construct images array
+  let productImages: string[] = []
+  if (product.image_urls && product.image_urls.length > 0) {
+    productImages = product.image_urls
+  } else if (imageSrc) {
+    productImages = [imageSrc]
+  }
+
   return (
     <main className="flex flex-col min-h-screen pt-32 pb-24 px-4 md:px-8">
       <div className="container mx-auto max-w-6xl">
@@ -57,17 +66,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
         <div className="flex flex-col md:flex-row gap-12 lg:gap-20">
           
-          {/* Left: Product Image */}
+          {/* Left: Product Images */}
           <div className="w-full md:w-1/2">
-            <div className="relative aspect-[4/5] bg-[#FBF6EE] border border-[#E0D9CF] overflow-hidden">
-              <Image 
-                src={imageSrc} 
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
+            <ProductCarousel images={productImages} productName={product.name} />
           </div>
 
           {/* Right: Product Details */}

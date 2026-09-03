@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { Button } from "@/components/ui/button"
 import { createProduct } from "@/app/actions/products"
 import { useRouter } from "next/navigation"
+import imageCompression from "browser-image-compression"
 import { createClient } from "@supabase/supabase-js"
 
 // Client-side supabase instance for uploading files
@@ -18,15 +19,27 @@ export default function NewProductPage() {
   const [error, setError] = React.useState<string | null>(null)
   
   // Image states
-  const [file, setFile] = React.useState<File | null>(null)
-  const [preview, setPreview] = React.useState<string | null>(null)
+  const [files, setFiles] = React.useState<File[]>([])
+  const [previews, setPreviews] = React.useState<string[]>([])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0]
-      setFile(selectedFile)
-      setPreview(URL.createObjectURL(selectedFile))
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files)
+      if (files.length + selectedFiles.length > 6) {
+        alert("Maximum 6 images allowed per product.")
+        return
+      }
+      const newFiles = [...files, ...selectedFiles].slice(0, 6)
+      setFiles(newFiles)
+      setPreviews(newFiles.map(f => URL.createObjectURL(f)))
     }
+  }
+
+  const removeImage = (index: number) => {
+    const newFiles = [...files]
+    newFiles.splice(index, 1)
+    setFiles(newFiles)
+    setPreviews(newFiles.map(f => URL.createObjectURL(f)))
   }
 
   const [category, setCategory] = React.useState("blank")
@@ -92,23 +105,36 @@ export default function NewProductPage() {
     }
 
     try {
-      // 1. Upload image if provided
-      if (file) {
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${slug}-${Date.now()}.${fileExt}`
-        
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("images")
-          .upload(`products/${fileName}`, file)
-
-        if (uploadError) throw new Error("Image upload failed: " + uploadError.message)
-
-        // Get public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from("images")
-          .getPublicUrl(`products/${fileName}`)
+      // 1. Upload images if provided
+      let uploadedUrls: string[] = []
+      
+      if (files.length > 0) {
+        for (const currentFile of files) {
+          // Compress Image
+          const options = {
+            maxSizeMB: 0.5,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          }
+          const compressedFile = await imageCompression(currentFile, options)
           
-        formData.append("main_image_url", publicUrl)
+          const fileExt = compressedFile.name.split(".").pop()
+          const fileName = `${Math.random()}.${fileExt}`
+          
+          const { error: uploadError } = await supabase.storage
+            .from("images")
+            .upload(`products/${fileName}`, compressedFile)
+
+          if (uploadError) throw new Error("Image upload failed: " + uploadError.message)
+
+          const { data: { publicUrl } } = supabase.storage
+            .from("images")
+            .getPublicUrl(`products/${fileName}`)
+            
+          uploadedUrls.push(publicUrl)
+        }
+        
+        formData.append("image_urls", JSON.stringify(uploadedUrls))
       }
 
       // 2. Save product data
@@ -227,25 +253,47 @@ export default function NewProductPage() {
           </div>
 
           <div className="space-y-4 pt-2 border-t border-[#E0D9CF]">
-            <h3 className="text-sm font-medium text-[#221F1C]">Product Image</h3>
+            <div className="flex justify-between items-center">
+              <h3 className="text-sm font-medium text-[#221F1C]">Product Images (Max 6)</h3>
+              <span className="text-xs text-[#9A8F85]">{files.length}/6 uploaded</span>
+            </div>
             
-            {preview && (
-              <div className="relative w-48 h-48 border border-[#E0D9CF] rounded-sm overflow-hidden mb-4">
-                <img src={preview} alt="Preview" className="object-cover w-full h-full" />
+            {previews.length > 0 && (
+              <div className="flex flex-wrap gap-4 mb-4">
+                {previews.map((previewUrl, idx) => (
+                  <div key={idx} className="relative w-24 h-24 border border-[#E0D9CF] rounded-sm overflow-hidden group">
+                    <img src={previewUrl} alt={`Preview ${idx + 1}`} className="object-cover w-full h-full" />
+                    {idx === 0 && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] text-center py-0.5">
+                        Main Image
+                      </div>
+                    )}
+                    <button 
+                      type="button" 
+                      onClick={() => removeImage(idx)}
+                      className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
             
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="block w-full text-sm text-[#9A8F85]
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-sm file:border-0
-                file:text-sm file:font-medium
-                file:bg-[#F5F0E8] file:text-[#221F1C]
-                hover:file:bg-[#E0D9CF] transition-colors cursor-pointer"
-            />
+            {files.length < 6 && (
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageChange}
+                className="block w-full text-sm text-[#9A8F85]
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-sm file:border-0
+                  file:text-sm file:font-medium
+                  file:bg-[#F5F0E8] file:text-[#221F1C]
+                  hover:file:bg-[#E0D9CF] transition-colors cursor-pointer"
+              />
+            )}
           </div>
 
           <div className="flex items-center space-x-2 pt-4 border-t border-[#E0D9CF]">

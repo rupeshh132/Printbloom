@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { createSupabaseServerClient, createSupabaseAdminClient } from '@/lib/supabase-server';
 
 export async function POST(request: Request) {
+  console.log("=== VERIFY PAYMENT TRIGGERED ===");
+  console.log("Service key loaded:", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+  console.log("Key prefix:", process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 5));
+  
   try {
     const { 
       razorpay_order_id, 
       razorpay_payment_id, 
-      razorpay_signature,
-      orderDetails
+      razorpay_signature
     } = await request.json();
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
@@ -18,59 +21,99 @@ export async function POST(request: Request) {
       .digest("hex");
 
     if (razorpay_signature === expectedSign) {
-      // Create an admin client to bypass RLS for inserting orders securely
-      const supabaseAdmin = await createSupabaseServerClient();
+      // Create an admin client to bypass RLS for updating securely
+      const supabaseAdmin = await createSupabaseAdminClient();
       
-      let insertData: any = {
-        user_id: orderDetails.userId,
-        total_amount: orderDetails.amount,
-        status: 'processing',
-        payment_status: 'paid'
-      };
-      if (orderDetails.addressId) {
-        insertData.shipping_address_id = orderDetails.addressId;
-      }
-      
-      // Try with payment_id first
-      let { data, error } = await supabaseAdmin
+      // 1. Fetch the existing pending order using the razorpay_order_id
+      const { data: existingOrder, error: fetchError } = await supabaseAdmin
         .from('orders')
-        .insert({ ...insertData, payment_id: razorpay_payment_id })
-        .select()
+        .select('*')
+        .eq('razorpay_order_id', razorpay_order_id)
         .single();
         
-      if (error) {
-        // If error is about payment_id column not existing, try without it
-        if (error.message.includes('payment_id')) {
-           const res = await supabaseAdmin.from('orders').insert(insertData).select().single();
-           data = res.data;
-           error = res.error;
+      if (fetchError || !existingOrder) {
+        console.error("Order not found for verification:", fetchError);
+        return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
+      }
+
+      // Check if it's already paid (Idempotency)
+      if (existingOrder.payment_status === 'paid') {
+        return NextResponse.json({ success: true, message: "Payment already verified", orderId: existingOrder.id });
+      }
+
+      // 2. Update the order to 'paid' and store the payment ID
+      const { error: updateError } = await supabaseAdmin
+        .from('orders')
+        .update({ 
+          payment_status: 'paid',
+          razorpay_payment_id: razorpay_payment_id
+        })
+        .eq('id', existingOrder.id);
+
+      if (updateError) {
+        console.error("Supabase update order error:", updateError);
+        return NextResponse.json({ success: false, message: "DB Error: " + updateError.message }, { status: 500 });
+      }
+
+      // 3. Reward Points & Referral Logic
+      try {
+        if (existingOrder.total_amount > 0) {
+          // A. Buyer points (40 points)
+          const { error: pointsError } = await supabaseAdmin
+            .from('reward_points')
+            .insert({
+              user_id: existingOrder.user_id,
+              points: 40,
+              transaction_type: 'earned',
+              description: `Order Placed (Order #${existingOrder.id.split('-')[0]})`
+            });
+            
+          if (pointsError) console.error("Failed to award buyer points:", pointsError);
+
+          // B. Referral logic (100 points to referrer)
+          // Check if this is the user's FIRST paid order (excluding the current one)
+          const { count, error: countError } = await supabaseAdmin
+            .from('orders')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', existingOrder.user_id)
+            .eq('payment_status', 'paid')
+            .neq('id', existingOrder.id);
+            
+          if (!countError && count === 0) {
+            // First paid order! Find if they were referred
+            const { data: profile } = await supabaseAdmin
+              .from('profiles')
+              .select('referred_by')
+              .eq('id', existingOrder.user_id)
+              .single();
+              
+            if (profile && profile.referred_by) {
+              const { error: rpcError } = await supabaseAdmin.rpc('grant_referral_bonus', {
+                referrer_uuid: profile.referred_by
+              });
+              if (rpcError) console.error("Failed to award referral points via RPC:", rpcError);
+            }
+          }
         }
-      }
 
-      if (error) {
-        console.error("Supabase insert order error:", error);
-        return NextResponse.json({ success: false, message: "DB Error: " + error.message }, { status: 500 });
-      }
-
-      // Insert order items
-      if (orderDetails.items && orderDetails.items.length > 0) {
-        let orderItems = orderDetails.items.map((item: any) => ({
-          order_id: data.id,
-          product_id: item.productId.split('-')[0], // Extract actual ID
-          product_name: item.variant && item.variant !== 'Default' ? `${item.name} — ${item.variant}` : item.name,
-          quantity: item.quantity,
-          price: item.price,
-          customization_data: item.customization_data || []
-        }));
-
-        let res = await supabaseAdmin.from('order_items').insert(orderItems);
-        
-        if (res.error) {
-          console.error("Critical error inserting order items:", res.error);
+        // 4. Points Redemption Deduction
+        if (existingOrder.points_used && existingOrder.points_used > 0) {
+          const { error: deductError } = await supabaseAdmin
+            .from('reward_points')
+            .insert({
+              user_id: existingOrder.user_id,
+              points: existingOrder.points_used,
+              transaction_type: 'redeemed',
+              description: `Used on Order #${existingOrder.id.split('-')[0]}`
+            });
+            
+          if (deductError) console.error("Failed to deduct redeemed points:", deductError);
         }
+      } catch (err) {
+        console.error("Error in points/referral/redemption logic:", err);
       }
 
-      return NextResponse.json({ success: true, message: "Payment verified successfully", orderId: data.id });
+      return NextResponse.json({ success: true, message: "Payment verified successfully", orderId: existingOrder.id });
     } else {
       return NextResponse.json({ success: false, message: "Invalid signature" }, { status: 400 });
     }

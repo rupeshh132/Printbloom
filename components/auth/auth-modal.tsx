@@ -4,10 +4,13 @@ import { useState } from "react"
 import { useUIStore } from "@/store/use-ui-store"
 import { X, Mail, Lock, User as UserIcon } from "lucide-react"
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
+import { useSearchParams } from "next/navigation"
 
 export function AuthModal() {
   const supabase = createSupabaseBrowserClient()
   const { isAuthModalOpen, closeAuthModal } = useUIStore()
+  const searchParams = useSearchParams()
+  const refCode = searchParams?.get('ref')
   
   const [mode, setMode] = useState<"login" | "signup">("login")
   const [name, setName] = useState("")
@@ -54,6 +57,28 @@ export function AuthModal() {
       } else if (data.user?.identities?.length === 0) {
         setError("User already exists with this email address.")
       } else {
+        // Referral capture limitation: Only captures if they sign up immediately with the ref link
+        if (refCode && data.user) {
+          try {
+            // Find referrer by code
+            const { data: referrerData } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('referral_code', refCode.toUpperCase())
+              .single();
+              
+            if (referrerData && referrerData.id !== data.user.id) {
+              // Update new user's profile with referred_by
+              await supabase
+                .from('profiles')
+                .update({ referred_by: referrerData.id })
+                .eq('id', data.user.id);
+            }
+          } catch (err) {
+            console.error("Failed to process referral", err);
+          }
+        }
+        
         setSuccess("Account created successfully! You can now log in.")
         setMode("login")
       }

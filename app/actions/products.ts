@@ -212,13 +212,26 @@ export async function createProduct(formData: FormData) {
   const mainImageUrl = formData.get("main_image_url") as string
   const isHero = formData.get("is_hero") === "on"
   
+  const imageUrlsString = formData.get("image_urls") as string
+  let imageUrls: string[] = []
+  if (imageUrlsString) {
+    try {
+      imageUrls = JSON.parse(imageUrlsString)
+    } catch (e) {
+      console.error("Invalid image_urls format")
+    }
+  }
+
+  const finalMainImageUrl = (imageUrls.length > 0) ? imageUrls[0] : (mainImageUrl || null)
+
   const { error } = await supabase.from("products").insert({
     name,
     slug,
     tagline,
     description,
     starting_price_label: price,
-    main_image_url: mainImageUrl || null,
+    main_image_url: finalMainImageUrl,
+    image_urls: imageUrls,
     is_hero: isHero,
     status: "draft"
   })
@@ -265,11 +278,27 @@ export async function updateProduct(id: string, formData: FormData) {
   const tagline = formData.get("tagline") as string
   const description = formData.get("description") as string
   const price = formData.get("price") as string
-  const main_image_url = formData.get("main_image_url") as string
+  const mainImageUrl = formData.get("main_image_url") as string
+  const imageUrlsString = formData.get("image_urls") as string
+  
+  const updateData: any = { name, slug, tagline, description, starting_price_label: price }
+
+  if (imageUrlsString) {
+    try {
+      const imageUrls = JSON.parse(imageUrlsString)
+      updateData.image_urls = imageUrls
+      updateData.main_image_url = (imageUrls.length > 0) ? imageUrls[0] : (mainImageUrl || null)
+    } catch (e) {
+      console.error("Invalid image_urls format")
+      updateData.main_image_url = mainImageUrl
+    }
+  } else {
+    updateData.main_image_url = mainImageUrl
+  }
 
   const { error } = await supabase
     .from("products")
-    .update({ name, slug, tagline, description, price, main_image_url })
+    .update(updateData)
     .eq("id", id)
 
   if (error) return { error: error.message }

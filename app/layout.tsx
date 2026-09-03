@@ -59,7 +59,6 @@ export default function RootLayout({
         className={`${fraunces.variable} ${publicSans.variable} ${ibmPlexMono.variable} antialiased bg-[#FBF6EE] text-[#221F1C] font-sans selection:bg-[#DFBC94] selection:text-white`}
         suppressHydrationWarning
       >
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
         {children}
         <GlobalModals />
         <WhatsAppFloat />

@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { Button } from "@/components/ui/button"
 import { updateProduct, getProductById } from "@/app/actions/products"
 import { useRouter } from "next/navigation"
+import imageCompression from "browser-image-compression"
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
@@ -14,16 +15,34 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [productId, setProductId] = React.useState<string | null>(null)
 
   // Image states
-  const [file, setFile] = React.useState<File | null>(null)
-  const [preview, setPreview] = React.useState<string | null>(null)
-  const [existingImage, setExistingImage] = React.useState<string | null>(null)
+  const [files, setFiles] = React.useState<File[]>([])
+  const [previews, setPreviews] = React.useState<string[]>([])
+  const [existingImages, setExistingImages] = React.useState<string[]>([])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0]
-      setFile(selectedFile)
-      setPreview(URL.createObjectURL(selectedFile))
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files)
+      if (files.length + existingImages.length + selectedFiles.length > 6) {
+        alert(`Maximum 6 images allowed per product. You currently have ${existingImages.length} saved.`)
+        return
+      }
+      const newFiles = [...files, ...selectedFiles].slice(0, 6 - existingImages.length)
+      setFiles(newFiles)
+      setPreviews(newFiles.map(f => URL.createObjectURL(f)))
     }
+  }
+
+  const removeNewImage = (index: number) => {
+    const newFiles = [...files]
+    newFiles.splice(index, 1)
+    setFiles(newFiles)
+    setPreviews(newFiles.map(f => URL.createObjectURL(f)))
+  }
+
+  const removeExistingImage = (index: number) => {
+    const newExisting = [...existingImages]
+    newExisting.splice(index, 1)
+    setExistingImages(newExisting)
   }
 
   // Form states to allow auto-filling
@@ -50,7 +69,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             description: product.description || "",
             price: product.price || ""
           })
-          setExistingImage(product.main_image_url || null)
+          
+          if (product.image_urls && product.image_urls.length > 0) {
+            setExistingImages(product.image_urls)
+          } else if (product.main_image_url) {
+            setExistingImages([product.main_image_url])
+          }
         }
       } catch (err) {
         console.error("Failed to fetch product", err)
@@ -78,27 +102,51 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     try {
       const formData = new FormData(e.currentTarget)
       
-      let imageUrl = existingImage
+      let allImageUrls = [...existingImages]
 
-      if (file) {
-        // Upload new image to Cloudinary
-        const uploadData = new FormData()
-        uploadData.append("file", file)
-        uploadData.append("upload_preset", "Printbloom")
-        uploadData.append("cloud_name", "gnltrlq1")
+      if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          const currentFile = files[i]
+          
+          // Compress Image
+          const options = {
+            maxSizeMB: 0.5,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          }
+          const compressedFile = await imageCompression(currentFile, options)
+          
+          const uploadData = new FormData()
+          uploadData.append("file", compressedFile)
+          uploadData.append("upload_preset", "Printbloom")
+          uploadData.append("cloud_name", "gnltrlq1")
 
-        const res = await fetch(`https://api.cloudinary.com/v1_1/gnltrlq1/image/upload`, {
-          method: "POST",
-          body: uploadData
-        })
-        const data = await res.json()
-        if (data.secure_url) {
-          imageUrl = data.secure_url
+          const res = await fetch(`https://api.cloudinary.com/v1_1/gnltrlq1/image/upload`, {
+            method: "POST",
+            body: uploadData
+          })
+          
+          if (!res.ok) {
+             const errorData = await res.json().catch(() => ({}))
+             throw new Error(`Upload failed for image ${i + 1}: ${errorData.error?.message || res.statusText}`)
+          }
+          
+          const data = await res.json()
+          if (data.error) {
+             throw new Error(`Upload failed for image ${i + 1}: ${data.error.message}`)
+          }
+
+          if (data.secure_url) {
+            allImageUrls.push(data.secure_url)
+          } else {
+             throw new Error(`Upload failed for image ${i + 1}: No URL returned from provider`)
+          }
         }
       }
 
-      if (imageUrl) {
-        formData.append("main_image_url", imageUrl)
+      if (allImageUrls.length > 0) {
+        formData.append("image_urls", JSON.stringify(allImageUrls))
+        // main_image_url is automatically handled in actions/products.ts
       }
 
       const result = await updateProduct(productId, formData)
@@ -191,29 +239,56 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             ></textarea>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[#221F1C]">Product Image</label>
+          <div className="space-y-4 pt-2 border-t border-[#E0D9CF]">
+            <div className="flex justify-between items-center">
+              <h3 className="text-sm font-medium text-[#221F1C]">Product Images (Max 6)</h3>
+              <span className="text-xs text-[#9A8F85]">{existingImages.length + files.length}/6 uploaded</span>
+            </div>
             
-            <div className="mt-2 flex items-center gap-6">
-              <div className="w-24 h-24 bg-[#F5F0E8] border border-[#E0D9CF] rounded-sm overflow-hidden relative flex-shrink-0">
-                {preview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={preview} alt="Preview" className="w-full h-full object-cover" />
-                ) : existingImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={existingImage} alt="Current" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-xs text-[#9A8F85]">
-                    No Image
-                  </div>
-                )}
-              </div>
+            <div className="flex flex-wrap gap-4 mb-4">
+              {existingImages.map((url, idx) => (
+                <div key={`existing-${idx}`} className="relative w-24 h-24 border border-[#E0D9CF] rounded-sm overflow-hidden group bg-gray-100">
+                  <img src={url} alt={`Saved ${idx + 1}`} className="object-cover w-full h-full" />
+                  {idx === 0 && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] text-center py-0.5">
+                      Main Image
+                    </div>
+                  )}
+                  <button 
+                    type="button" 
+                    onClick={() => removeExistingImage(idx)}
+                    className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs"
+                    title="Remove saved image"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
               
-              <div className="flex-1">
+              {previews.map((previewUrl, idx) => (
+                <div key={`new-${idx}`} className="relative w-24 h-24 border border-green-500 rounded-sm overflow-hidden group">
+                  <img src={previewUrl} alt={`New ${idx + 1}`} className="object-cover w-full h-full" />
+                  <div className="absolute top-1 left-1 bg-green-500 text-white text-[9px] px-1 rounded-sm shadow-sm">
+                    New
+                  </div>
+                  <button 
+                    type="button" 
+                    onClick={() => removeNewImage(idx)}
+                    className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+            
+            {existingImages.length + files.length < 6 && (
+              <div className="mt-4">
                 <input
                   type="file"
                   id="image"
                   accept="image/*"
+                  multiple
                   onChange={handleImageChange}
                   className="hidden"
                 />
@@ -221,11 +296,11 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                   htmlFor="image"
                   className="inline-block px-4 py-2 border border-[#E0D9CF] bg-[#FBF6EE] text-sm text-[#221F1C] cursor-pointer hover:bg-[#F5F0E8] rounded-sm transition-colors"
                 >
-                  Change Image
+                  Add More Images
                 </label>
                 <p className="text-xs text-[#9A8F85] mt-2">Recommended: Square format (1:1), max 2MB.</p>
               </div>
-            </div>
+            )}
           </div>
 
           {error && (
