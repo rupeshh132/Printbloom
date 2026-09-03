@@ -40,15 +40,24 @@ export default function CartPage() {
     try {
       setIsProcessing(true);
       const deliveryFee = 90;
+      // Maximum Discount Ceiling
+      let maxAllowedDiscount = 50;
+      if (total >= 1000) {
+        maxAllowedDiscount = 150;
+      } else if (total >= 500) {
+        maxAllowedDiscount = 100;
+      }
+
       let discountAmount = 0;
       if (appliedPromo) {
-        discountAmount = appliedPromo.type === 'percentage' 
+        let rawDiscount = appliedPromo.type === 'percentage' 
           ? (total * appliedPromo.value) / 100 
           : appliedPromo.value;
+        discountAmount = Math.min(rawDiscount, maxAllowedDiscount);
       }
       const orderTotalBeforePoints = Math.max(0, total + deliveryFee - discountAmount);
-      // Ensure we don't redeem more points than the order total or available points
-      const maxRedeemable = Math.min(availablePoints, orderTotalBeforePoints);
+      
+      const maxRedeemable = Math.min(availablePoints, maxAllowedDiscount);
       const finalPointsToRedeem = pointsToRedeem > maxRedeemable ? maxRedeemable : pointsToRedeem;
       
       const orderTotal = Math.max(0, orderTotalBeforePoints - finalPointsToRedeem);
@@ -186,16 +195,28 @@ export default function CartPage() {
   const [promoError, setPromoError] = useState<string | null>(null)
   const [isApplyingPromo, setIsApplyingPromo] = useState(false)
   
+  // Maximum Discount Ceiling
+  let maxAllowedDiscount = 50;
+  if (total >= 1000) {
+    maxAllowedDiscount = 150;
+  } else if (total >= 500) {
+    maxAllowedDiscount = 100;
+  }
+
+  let rawDiscountAmount = 0
   let discountAmount = 0
   if (appliedPromo) {
     if (appliedPromo.type === 'percentage') {
-      discountAmount = (total * appliedPromo.value) / 100
+      rawDiscountAmount = (total * appliedPromo.value) / 100
     } else {
-      discountAmount = appliedPromo.value
+      rawDiscountAmount = appliedPromo.value
     }
+    discountAmount = Math.min(rawDiscountAmount, maxAllowedDiscount)
   }
   
-  const orderTotal = Math.max(0, total + deliveryFee - discountAmount)
+  const isPromoCapped = appliedPromo && rawDiscountAmount > discountAmount;
+  
+  const orderTotal = Math.max(0, total + deliveryFee - discountAmount - pointsToRedeem)
 
   const handleApplyPromo = async () => {
     if (!promoCodeInput.trim()) return
@@ -510,7 +531,8 @@ export default function CartPage() {
                 </div>
                 
                 {appliedPromo && (
-                  <div className="flex justify-between text-green-700">
+                  <>
+                    <div className="flex justify-between text-green-700">
                     <div className="flex items-center gap-1">
                       <Tag className="w-3 h-3" />
                       <span>{appliedPromo.code}</span>
@@ -518,10 +540,17 @@ export default function CartPage() {
                     </div>
                     <span>-₹{discountAmount.toFixed(2)}</span>
                   </div>
+                  {isPromoCapped && (
+                    <div className="text-[10px] text-amber-600 mt-1 flex justify-between bg-amber-50 p-1.5 rounded-sm">
+                      <span>Max discount limit reached</span>
+                    </div>
+                  )}
+                </>
                 )}
                 
                 {pointsToRedeem > 0 && (
-                  <div className="flex justify-between text-[#DFBC94]">
+                  <>
+                    <div className="flex justify-between text-[#DFBC94]">
                     <div className="flex items-center gap-1">
                       <Circle className="w-3 h-3 fill-current" />
                       <span>Points Used</span>
@@ -529,6 +558,12 @@ export default function CartPage() {
                     </div>
                     <span>-₹{pointsToRedeem.toFixed(2)}</span>
                   </div>
+                  {pointsToRedeem === maxAllowedDiscount && pointsToRedeem < availablePoints && (
+                    <div className="text-[10px] text-amber-600 mt-1 flex justify-between bg-amber-50 p-1.5 rounded-sm">
+                      <span>Max discount limit reached</span>
+                    </div>
+                  )}
+                </>
                 )}
               </div>
 
@@ -582,8 +617,7 @@ export default function CartPage() {
                       </div>
                       <button 
                         onClick={() => {
-                          const orderTotalBeforePoints = Math.max(0, total + deliveryFee - discountAmount);
-                          const maxRedeemable = Math.min(availablePoints, orderTotalBeforePoints);
+                          const maxRedeemable = Math.min(availablePoints, maxAllowedDiscount);
                           setPointsToRedeem(maxRedeemable);
                         }}
                         className="text-xs font-medium bg-[#DFBC94] text-white px-3 py-1.5 rounded-sm hover:bg-[#c9a781] transition-colors"
