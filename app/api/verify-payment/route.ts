@@ -3,10 +3,6 @@ import crypto from 'crypto';
 import { createSupabaseServerClient, createSupabaseAdminClient } from '@/lib/supabase-server';
 
 export async function POST(request: Request) {
-  console.log("=== VERIFY PAYMENT TRIGGERED ===");
-  console.log("Service key loaded:", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
-  console.log("Key prefix:", process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 5));
-  
   try {
     const { 
       razorpay_order_id, 

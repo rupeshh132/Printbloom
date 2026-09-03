@@ -61,6 +61,14 @@ export async function POST(request: Request) {
     // Flat Delivery Fee
     const deliveryFee = 90;
 
+    // Maximum Discount Ceiling (based purely on product subtotal)
+    let maxAllowedDiscount = 50;
+    if (total >= 1000) {
+      maxAllowedDiscount = 150;
+    } else if (total >= 500) {
+      maxAllowedDiscount = 100;
+    }
+
     // Mutually Exclusive Fallback Logic
     // If client bypassed UI and sent both, prioritize points and ignore promo
     let activePromo = appliedPromo;
@@ -79,6 +87,8 @@ export async function POST(request: Request) {
         } else {
           discountAmount = res.discount_value;
         }
+        // Apply ceiling to promo code
+        discountAmount = Math.min(discountAmount, maxAllowedDiscount);
       }
     }
 
@@ -96,9 +106,8 @@ export async function POST(request: Request) {
           if (curr.transaction_type === 'redeemed') return acc - curr.points;
           return acc;
         }, 0);
-        
-        const orderTotalBeforePoints = Math.max(0, total + deliveryFee - discountAmount);
-        const maxRedeemable = Math.min(availableBalance, orderTotalBeforePoints);
+        // Apply ceiling to reward points (instead of allowing it to consume delivery fee)
+        const maxRedeemable = Math.min(availableBalance, maxAllowedDiscount);
         validatedPointsToRedeem = pointsToRedeem > maxRedeemable ? maxRedeemable : pointsToRedeem;
       }
     }

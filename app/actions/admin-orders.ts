@@ -4,6 +4,9 @@ import { revalidatePath } from "next/cache"
 
 export async function getAdminOrders() {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
+  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
 
   const { data, error } = await supabase
     .from("orders")
@@ -24,6 +27,9 @@ export async function getAdminOrders() {
 
 export async function getAdminOrderById(id: string) {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
+  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
 
   const { data, error } = await supabase
     .from("orders")
@@ -39,8 +45,6 @@ export async function getAdminOrderById(id: string) {
     console.error("Error fetching order details (likely RLS blocked):", error.message || error)
     return null
   }
-  
-  console.log("DEBUG - Fetched Order Data:", JSON.stringify(data, null, 2))
 
   // Extract customer info from address if possible
   const customerEmail = "Provided at checkout"
@@ -53,6 +57,9 @@ export async function getAdminOrderById(id: string) {
 
 export async function updateOrderStatus(id: string, status: string) {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
+  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
   
   const { error } = await supabase
     .from("orders")
