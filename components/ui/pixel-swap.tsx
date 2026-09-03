@@ -184,8 +184,11 @@ export function PixelSwap({
   const config = { duration, pixelDuration, pixelSpin, pixelScale, pixelRadius, fade, easing, onComplete };
   const configRef = useRef(config);
   const gridRef = useRef(grid);
-  configRef.current = config;
-  gridRef.current = grid;
+
+  useEffect(() => {
+    configRef.current = config;
+    gridRef.current = grid;
+  }, [config, grid]);
 
   useEffect(() => {
     const container = containerRef.current;

@@ -116,8 +116,10 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
         alert("Upload successful, but failed to notify admin. Please contact support.")
       }
       setIsComplete(true);
-
-    } catch(e) {}
+    } catch(e) {
+      console.error("Upload process failed:", e);
+      alert("An unexpected error occurred during upload. Please try again.");
+    }
 
     setIsUploading(false)
   }
