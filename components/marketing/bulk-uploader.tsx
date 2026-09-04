@@ -29,7 +29,17 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
   
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
-    const newFiles = Array.from(e.target.files).map(file => ({
+    
+    const validFiles = Array.from(e.target.files).filter(file => {
+      const MAX_SIZE = 15 * 1024 * 1024; // 15MB
+      if (file.size > MAX_SIZE) {
+        alert(`File ${file.name} is too large. Maximum allowed size is 15MB.`);
+        return false;
+      }
+      return true;
+    });
+
+    const newFiles = validFiles.map(file => ({
       file,
       id: Math.random().toString(36).substring(7),
       status: "pending" as const,

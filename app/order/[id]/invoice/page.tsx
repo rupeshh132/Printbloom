@@ -33,7 +33,8 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
   }
 
   // Authorization check: Must be owner OR admin
-  const isAdmin = user.email?.toLowerCase() === "arhaan.s7045@gmail.com"
+  const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(",").map(e => e.trim().toLowerCase()) : [];
+  const isAdmin = adminEmails.includes(user.email?.toLowerCase() || "")
   if (order.user_id !== user.id && !isAdmin) {
     return (
       <div className="p-8 text-center font-mono">
