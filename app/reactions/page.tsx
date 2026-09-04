@@ -6,12 +6,12 @@ import { Navbar } from "@/components/marketing/navbar"
 import { Footer } from "@/components/marketing/footer"
 
 const reactionVideos = [
-  { id: 1, src: "/videos/reactions/1.mp4" },
-  { id: 2, src: "/videos/reactions/2.mp4" },
-  { id: 3, src: "/videos/reactions/3.mp4" },
-  { id: 4, src: "/videos/reactions/4.mp4" },
-  { id: 5, src: "/videos/reactions/5.mp4" },
-  { id: 6, src: "/videos/reactions/6.mp4" },
+  { id: 1, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551248/printbloom/reactions/1.mp4" },
+  { id: 2, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551316/printbloom/reactions/2.mp4" },
+  { id: 3, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551342/printbloom/reactions/3.mp4" },
+  { id: 4, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551373/printbloom/reactions/4.mp4" },
+  { id: 5, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551409/printbloom/reactions/5.mp4" },
+  { id: 6, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551466/printbloom/reactions/6.mp4" },
 ]
 
 export default function ReactionsPage() {

@@ -7,9 +7,9 @@ import { Volume2, VolumeX } from "lucide-react"
 
 // ONLY 3 VIDEOS AS REQUESTED
 const reactions = [
-  { id: 1, src: "/videos/reactions/1.mp4", label: "Her 25th Birthday" },
-  { id: 2, src: "/videos/reactions/2.mp4", label: "Their Anniversary" },
-  { id: 3, src: "/videos/reactions/3.mp4", label: "Mother's Day Surprise" },
+  { id: 1, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551248/printbloom/reactions/1.mp4", label: "Her 25th Birthday" },
+  { id: 2, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551316/printbloom/reactions/2.mp4", label: "Their Anniversary" },
+  { id: 3, src: "https://res.cloudinary.com/sz2wyygq/video/upload/v1788551342/printbloom/reactions/3.mp4", label: "Mother's Day Surprise" },
 ]
 
 function ReactionVideoCard({ reaction }: { reaction: typeof reactions[0] }) {

@@ -42,11 +42,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-Reactions videos/
-reels videos/
-public/videos/
-* image/
-* images/
-*.mp4
-*.mov
-*.heic
+# Media ignores removed to allow public UI videos to be tracked by Vercel
