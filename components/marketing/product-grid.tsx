@@ -30,9 +30,9 @@ export function ProductGrid({ products }: { products: any[] }) {
           <NextLink 
             key={product.slug} 
             href={`/products/${product.slug}`}
-            className={`group flex flex-col ${product.is_hero ? 'md:col-span-2 lg:col-span-2' : 'col-span-1'}`}
+            className={`group flex flex-col h-full ${product.is_hero ? 'md:col-span-2 lg:col-span-2' : 'col-span-1'}`}
           >
-            <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-[500px] overflow-hidden bg-surface mb-6">
+            <div className="relative w-full aspect-[4/5] overflow-hidden bg-surface mb-6 shrink-0">
               <Image
                 src={imageSrc}
                 alt={product.name}
@@ -41,14 +41,14 @@ export function ProductGrid({ products }: { products: any[] }) {
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
               />
             </div>
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col flex-1 space-y-2">
               <h3 className="font-serif text-2xl text-ink group-hover:text-accent transition-colors">
                 {product.name}
               </h3>
               <p className="text-text-muted">
                 {product.tagline}
               </p>
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between pt-2 mt-auto">
                 <span className="font-mono text-sm tracking-wide">
                   {product.starting_price_label?.toLowerCase().includes('from') 
                     ? product.starting_price_label 
