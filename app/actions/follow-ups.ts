@@ -38,7 +38,6 @@ export async function saveFollowUpLead(customer_name: string, phone_number: stri
     return { success: false, error: insertError.message }
   }
   
-  console.log("✅ Follow-up lead saved:", customer_name, phone_number)
   return { success: true }
 }
 

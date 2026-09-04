@@ -31,11 +31,7 @@ export async function POST(request: Request) {
         (p.slug && item.productId.startsWith(p.slug))
       );
       if (!dbProduct) {
-        console.error("PRODUCT MATCH FAILED!", {
-          itemProductId: item.productId,
-          availableIds: products.map((p: any) => p.id),
-          availableSlugs: products.map((p: any) => p.slug)
-        });
+        console.error("Product match failed for ID:", item.productId);
         return NextResponse.json({ error: `Product not found: ${item.name}` }, { status: 400 });
       }
       
