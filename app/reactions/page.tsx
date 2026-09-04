@@ -87,6 +87,9 @@ function VideoCard({ src }: { src: string }) {
       <video
         ref={videoRef}
         src={src}
+        poster={src.replace('.mp4', '.jpg')}
+        preload="metadata"
+        crossOrigin="anonymous"
         className="w-full h-auto opacity-90 group-hover:opacity-100 transition-all duration-500"
         loop
         muted

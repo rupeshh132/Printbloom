@@ -67,15 +67,18 @@ function ReactionVideoCard({ reaction }: { reaction: typeof reactions[0] }) {
       className="relative group cursor-pointer overflow-hidden bg-[#2C2926] border border-white/10 rounded-sm aspect-[9/16] md:aspect-[3/4]"
       onClick={handleClick}
     >
-      <video
-        ref={videoRef}
-        src={reaction.src}
-        muted={muted}
-        playsInline
-        loop
-        className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-        onEnded={() => setPlaying(false)}
-      />
+        <video
+          ref={videoRef}
+          src={reaction.src}
+          poster={reaction.src.replace('.mp4', '.jpg')}
+          preload="metadata"
+          crossOrigin="anonymous"
+          muted={muted}
+          playsInline
+          loop
+          className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+          onEnded={() => setPlaying(false)}
+        />
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
