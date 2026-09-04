@@ -32,7 +32,9 @@ export function ProductGrid({ products }: { products: any[] }) {
             href={`/products/${product.slug}`}
             className={`group flex flex-col h-full ${product.is_hero ? 'md:col-span-2 lg:col-span-2' : 'col-span-1'}`}
           >
-            <div className="relative w-full aspect-[4/5] overflow-hidden bg-surface mb-6 shrink-0">
+            <div className={`relative w-full overflow-hidden bg-surface mb-6 shrink-0 ${
+              product.is_hero ? 'aspect-[4/3] md:aspect-auto md:h-[450px]' : 'aspect-[4/5] md:aspect-auto md:h-[450px]'
+            }`}>
               <Image
                 src={imageSrc}
                 alt={product.name}
