@@ -18,7 +18,7 @@ export function FinalCTASection() {
           <Button asChild size="lg" className="bg-[#221F1C] text-[#FBF6EE] hover:bg-[#1A1815] border-none text-base h-14 px-8 rounded-sm">
             <a href="/order">Start Your Order</a>
           </Button>
-          <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent text-base h-14 px-8 rounded-sm">
+          <Button asChild size="lg" variant="outline" className="border-white border-2 text-white hover:bg-white hover:text-[#221F1C] bg-transparent text-base h-14 px-8 rounded-sm font-medium">
             <a href="/how-it-works">See How It Works</a>
           </Button>
         </div>

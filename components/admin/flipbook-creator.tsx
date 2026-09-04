@@ -11,7 +11,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-export function FlipbookCreator({ token }: { token: string }) {
+export function FlipbookCreator({ token, returnUrl }: { token: string, returnUrl?: string }) {
   const [title, setTitle] = useState("")
   const [files, setFiles] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
@@ -64,7 +64,7 @@ export function FlipbookCreator({ token }: { token: string }) {
       
       if (res.success) {
         alert("Flipbook created successfully! You can now share the link.")
-        router.push(`/admin/enquiries/${token}`)
+        router.push(returnUrl || `/admin/enquiries/${token}`)
       } else {
         alert(`Failed to save flipbook: ${res.error}`)
       }
@@ -143,13 +143,22 @@ export function FlipbookCreator({ token }: { token: string }) {
           <p className="text-center text-xs text-[#9A8F85]">Generating Flipbook... {progress}%</p>
         </div>
       ) : (
-        <button
-          type="submit"
-          disabled={files.length === 0 || !title.trim()}
-          className="w-full bg-[#221F1C] text-white py-3 rounded-sm hover:bg-black transition-colors font-medium disabled:opacity-50"
-        >
-          Generate 3D Flipbook Link
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => router.push(returnUrl || `/admin/enquiries/${token}`)}
+            className="px-6 py-3 border border-[#E0D9CF] text-[#9A8F85] rounded-sm font-medium hover:bg-[#FBF6EE] transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={files.length === 0 || !title.trim()}
+            className="flex-1 bg-[#221F1C] text-white py-3 rounded-sm hover:bg-black transition-colors font-medium disabled:opacity-50"
+          >
+            Generate 3D Flipbook Link
+          </button>
+        </div>
       )}
     </form>
   )

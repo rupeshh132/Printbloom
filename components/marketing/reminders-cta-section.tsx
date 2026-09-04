@@ -14,7 +14,7 @@ export function RemindersCTASection() {
 
       <div className="container mx-auto max-w-4xl px-4 md:px-8 relative z-10 text-center">
         <FadeIn>
-          <span className="text-[#DFBC94] font-mono text-[10px] tracking-widest uppercase mb-4 block">
+          <span className="text-[#9A8F85] font-mono text-[10px] tracking-widest uppercase mb-4 block font-semibold">
             Plan Ahead
           </span>
           <SectionHeading as="h2" className="text-[#221F1C] mb-6">

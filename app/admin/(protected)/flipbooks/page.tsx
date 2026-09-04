@@ -20,7 +20,7 @@ export default async function FlipbooksManagerPage() {
       <div className="bg-white border border-[#E0D9CF] rounded-sm shadow-sm overflow-hidden">
         {flipbooks.length === 0 ? (
           <div className="p-12 text-center text-[#9A8F85]">
-            <p className="text-4xl mb-4">ðŸ“–</p>
+            <p className="text-4xl mb-4">📖</p>
             <p className="font-serif text-xl text-[#221F1C] mb-2">No Flipbooks Generated Yet</p>
             <p className="text-sm">You can generate flipbooks from within individual customer enquiries.</p>
           </div>

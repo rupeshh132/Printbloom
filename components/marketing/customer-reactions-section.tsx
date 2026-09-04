@@ -21,31 +21,17 @@ function ReactionVideoCard({ reaction }: { reaction: typeof reactions[0] }) {
     const video = videoRef.current
     if (!video) return
 
-    let playPromise: Promise<void> | undefined
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            playPromise = video.play()
-            if (playPromise !== undefined) {
-              playPromise
-                .then(() => setPlaying(true))
-                .catch(() => {
-                  // Ignore abort errors from fast scrolling
-                })
+            const p = video.play()
+            if (p !== undefined) {
+              p.then(() => setPlaying(true)).catch(() => {})
             }
           } else {
-            // Safely pause after play promise is resolved to prevent AbortError
-            if (playPromise !== undefined) {
-              playPromise.then(() => {
-                video.pause()
-                setPlaying(false)
-              }).catch(() => {})
-            } else {
-              video.pause()
-              setPlaying(false)
-            }
+            video.pause()
+            setPlaying(false)
           }
         })
       },
@@ -62,8 +48,10 @@ function ReactionVideoCard({ reaction }: { reaction: typeof reactions[0] }) {
       videoRef.current.pause()
       setPlaying(false)
     } else {
-      videoRef.current.play()
-      setPlaying(true)
+      const p = videoRef.current.play()
+      if (p !== undefined) {
+        p.then(() => setPlaying(true)).catch(() => {})
+      }
     }
   }
 

@@ -30,8 +30,9 @@ const footerLinks = {
   ],
   Contact: [
     { href: "/order", label: "Start an Order" },
-    { href: "https://wa.me/918090683207", label: "WhatsApp Us" },
-    { href: "mailto:hello@printbloom.in", label: "hello@printbloom.in" },
+    { href: "https://wa.me/918691094045", label: "WhatsApp Us" },
+    { href: "mailto:printbloom.in@gmail.com", label: "printbloom.in@gmail.com" },
+    { href: "https://instagram.com/printbloom.in", label: "@printbloom.in" },
   ],
 }
 
@@ -49,7 +50,7 @@ export function Footer() {
     <footer className="bg-[#221F1C] text-[#FBF6EE] pt-16 pb-8">
       <div className="container mx-auto max-w-7xl px-4 md:px-8">
         {/* Top section */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-12 pb-12 border-b border-white/10">
           {/* Brand */}
           <div className="md:col-span-2 flex flex-col gap-4">
             <NextLink 
@@ -64,7 +65,7 @@ export function Footer() {
               Custom magazines, polaroids, frames and more.
             </p>
             <a
-              href="https://wa.me/918090683207"
+              href="https://wa.me/918691094045"
               target="_blank"
               rel="noreferrer"
               className="mt-2 inline-flex items-center gap-2 bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] px-4 py-2.5 text-sm w-fit hover:bg-[#25D366]/20 transition-colors"

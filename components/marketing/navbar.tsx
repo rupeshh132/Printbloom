@@ -74,6 +74,18 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
+  // Scroll lock: prevent background page from scrolling when mobile menu is open
+  React.useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [menuOpen])
+
   return (
     <header
       className={cn(
@@ -182,7 +194,7 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[#FBF6EE] border-t border-[#E0D9CF] px-4 py-6 flex flex-col gap-5">
+        <div className="md:hidden bg-[#FBF6EE] border-t border-[#E0D9CF] px-4 py-6 flex flex-col gap-5 overflow-y-auto" style={{ maxHeight: 'calc(100dvh - 80px)' }}>
           <div className="flex items-center justify-between pb-4 border-b border-[#E0D9CF]">
             <button 
               onClick={() => { setMenuOpen(false); openSearchModal(); }}

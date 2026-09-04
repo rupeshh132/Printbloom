@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Trash2, CheckCircle2, Circle, MapPin, Plus, Tag } from "lucide-react"
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
+import { useUIStore } from "@/store/use-ui-store"
 
 type Step = "cart" | "address" | "payment"
 
@@ -25,6 +26,7 @@ export default function CartPage() {
 
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
+  const { openAuthModal } = useUIStore()
   
   // Points Redemption State
   const [availablePoints, setAvailablePoints] = useState(0)
@@ -43,8 +45,8 @@ export default function CartPage() {
       const { data: { session } } = await supabase.auth.getSession();
       const user = session?.user;
       if (!user) {
-        alert("Please login first");
         setIsProcessing(false);
+        openAuthModal();
         return;
       }
 
@@ -116,7 +118,7 @@ export default function CartPage() {
             const verifyData = await verifyRes.json();
             if (verifyData.success) {
               useCart.getState().clearCart();
-              router.push("/profile?tab=orders");
+              router.push("/profile?tab=orders&order_success=true");
             } else {
               alert("Payment verification failed: " + (verifyData.message || "Unknown DB error"));
             }
@@ -530,6 +532,9 @@ export default function CartPage() {
                   <span className="text-gray-500">Delivery Fee</span>
                   <span>₹{deliveryFee}</span>
                 </div>
+                <p className="text-[10px] text-[#9A8F85] italic leading-relaxed -mt-2">
+                  📦 Note: Shipping charges may vary depending on the parcel's weight and size. If the actual shipping cost is higher than the estimated amount, an additional ₹30–₹50 may be applicable. We'll share the shipping receipt with you for transparency.
+                </p>
                 
                 {appliedPromo && (
                   <>

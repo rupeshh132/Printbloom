@@ -13,6 +13,8 @@ import { WishlistTab } from "@/components/profile/wishlist-tab"
 import { EnquiryTab } from "@/components/profile/enquiry-tab"
 import { ProfileInfoTab } from "@/components/profile/profile-info-tab"
 import { AvatarUpload } from "@/components/profile/avatar-upload"
+import { OrderSuccessPopup } from "@/components/profile/order-success-popup"
+import { Suspense } from "react"
 
 export const dynamic = "force-dynamic"
 
@@ -84,6 +86,9 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
   return (
     <div className="min-h-screen bg-[#FBF6EE] pt-28 pb-20">
       <Navbar />
+      <Suspense fallback={null}>
+        <OrderSuccessPopup />
+      </Suspense>
       
       <div className="container mx-auto max-w-6xl px-4 md:px-8">
         

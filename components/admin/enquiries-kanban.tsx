@@ -14,7 +14,7 @@ const COLUMNS = [
   { id: "closed", title: "Closed", color: "bg-[#F5F0E8] border-[#E0D9CF] text-[#9A8F85]" }
 ]
 
-export function EnquiriesKanban({ initialEnquiries }: { initialEnquiries: any[] }) {
+export function EnquiriesKanban({ initialEnquiries, flipbooks = [] }: { initialEnquiries: any[], flipbooks?: any[] }) {
   const [data, setData] = React.useState<{ [key: string]: any[] }>({
     new: [],
     contacted: [],
@@ -116,7 +116,7 @@ export function EnquiriesKanban({ initialEnquiries }: { initialEnquiries: any[] 
                             <WhatsAppButton 
                               phone={enq.whatsapp || enq.phone || ""} 
                               customerName={enq.name} 
-                              flipbookLink={enq.upload_token ? `https://printbloom.in/flipbook/${enq.upload_token}` : ""} 
+                              flipbookLink={flipbooks?.find(fb => fb.enquiry_token === enq.upload_token)?.id ? `https://printbloom.in/flipbook/${flipbooks.find(fb => fb.enquiry_token === enq.upload_token)!.id}` : ""} 
                             />
                           </div>
 

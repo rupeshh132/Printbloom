@@ -1,4 +1,5 @@
 import { getAdminOrderById, updateOrderStatus } from "@/app/actions/admin-orders"
+import { getFlipbooksByEnquiry } from "@/app/actions/flipbooks"
 import { notFound } from "next/navigation"
 import NextLink from "next/link"
 import { ArrowLeft, Download, Copy } from "lucide-react"
@@ -6,7 +7,10 @@ import { OrderCustomizationClient } from "@/components/admin/order-customization
 
 export default async function AdminOrderDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const order = await getAdminOrderById(id)
+  const [order, flipbooks] = await Promise.all([
+    getAdminOrderById(id),
+    getFlipbooksByEnquiry(id)
+  ])
 
   if (!order) {
     return notFound()
@@ -23,6 +27,27 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
       <NextLink href="/admin/orders" className="inline-flex items-center gap-2 text-sm font-medium text-[#9A8F85] hover:text-[#DFBC94] transition-colors mb-8">
         <ArrowLeft className="w-4 h-4" /> Back to Orders
       </NextLink>
+
+      {/* Flipbooks Section */}
+      {flipbooks.length > 0 && (
+        <div className="mb-8 p-4 bg-[#FBF6EE] border border-[#E0D9CF] rounded-sm">
+          <h3 className="text-sm font-serif text-[#221F1C] mb-3">Digital Flipbooks Generated</h3>
+          <div className="flex flex-col gap-2">
+            {flipbooks.map((fb) => (
+              <div key={fb.id} className="flex justify-between items-center bg-white p-3 border border-[#E0D9CF] rounded-sm">
+                <span className="font-medium text-sm text-[#221F1C]">{fb.title}</span>
+                <a 
+                  href={`/flipbook/${fb.id}`} 
+                  target="_blank" 
+                  className="text-xs text-white bg-[#DFBC94] px-3 py-1.5 rounded-sm hover:bg-[#A5411F]"
+                >
+                  View Flipbook ↗
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-between items-start mb-8">
         <div>
@@ -72,7 +97,15 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
 
               {/* Customization Grid */}
               <div className="p-6">
-                <h4 className="text-sm font-semibold uppercase tracking-wider text-[#221F1C] mb-4">Customer's Uploaded Photos</h4>
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="text-sm font-semibold uppercase tracking-wider text-[#221F1C]">Customer's Uploaded Photos</h4>
+                  <NextLink 
+                    href={`/admin/orders/${order.id}/create-flipbook`}
+                    className="bg-[#221F1C] text-white hover:bg-black px-3 py-1.5 rounded-sm text-xs font-medium transition-colors flex items-center gap-2"
+                  >
+                    <span>📕</span> Create Flipbook
+                  </NextLink>
+                </div>
                 
                 {!item.customization_data || item.customization_data.length === 0 ? (
                   <p className="text-sm text-[#9A8F85]">No photos uploaded for this item.</p>

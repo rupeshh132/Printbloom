@@ -1,6 +1,6 @@
 import * as React from "react"
 import Image from "next/image"
-import { Link } from "@/components/ui/link"
+import NextLink from "next/link"
 
 // Fallback images for now since media_assets aren't wired up yet
 const FALLBACK_IMAGES: Record<string, string> = {
@@ -27,7 +27,7 @@ export function ProductGrid({ products }: { products: any[] }) {
         }
 
         return (
-          <Link 
+          <NextLink 
             key={product.slug} 
             href={`/products/${product.slug}`}
             className={`group flex flex-col ${product.is_hero ? 'md:col-span-2 lg:col-span-2' : 'col-span-1'}`}
@@ -57,7 +57,7 @@ export function ProductGrid({ products }: { products: any[] }) {
                 <span className="text-accent font-medium text-sm group-hover:underline underline-offset-4">View Details &rarr;</span>
               </div>
             </div>
-          </Link>
+          </NextLink>
         )
       })}
     </div>
