@@ -44,18 +44,29 @@ export function FlipbookCreator({ token, returnUrl }: { token: string, returnUrl
       
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${Date.now()}_page_${i}.${fileExt}`
-        const filePath = `${token}/${fileName}`
+        
+        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+        const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+        
+        if (!cloudName || !uploadPreset) throw new Error("Cloudinary config missing")
 
-        const { error } = await supabase.storage
-          .from("flipbook_pages")
-          .upload(filePath, file, { cacheControl: '3600', upsert: false })
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", uploadPreset);
+        formData.append("folder", `flipbooks/${token}`);
+        
+        const resUpload = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: "POST",
+          body: formData,
+        });
 
-        if (error) throw error
-
-        const { data: urlData } = supabase.storage.from("flipbook_pages").getPublicUrl(filePath)
-        uploadedUrls.push(urlData.publicUrl)
+        if (!resUpload.ok) {
+          const errData = await resUpload.json()
+          throw new Error(errData.error?.message || "Upload failed")
+        }
+        
+        const data = await resUpload.json();
+        uploadedUrls.push(data.secure_url)
         
         setProgress(Math.round(((i + 1) / files.length) * 100))
       }

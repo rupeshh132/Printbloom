@@ -72,20 +72,26 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
         setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "uploading" } : pf))
         
         try {
-          const fileExt = f.file.name.split('.').pop()
-          const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
-          const filePath = `customer_uploads/${token}/${fileName}`
+          const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+          const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+          
+          if (!cloudName || !uploadPreset) throw new Error("Cloudinary config missing")
 
-          const { error } = await supabase.storage
-            .from("images")
-            .upload(filePath, f.file, {
-              cacheControl: '3600',
-              upsert: false
-            })
+          const formData = new FormData();
+          formData.append("file", f.file);
+          formData.append("upload_preset", uploadPreset);
+          formData.append("folder", `customer_uploads/${token}`);
 
-          if (error) throw error
+          const resUpload = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: "POST",
+            body: formData,
+          });
 
-          setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "success", progress: 100, finalPath: filePath } : pf))
+          if (!resUpload.ok) throw new Error("Upload failed")
+          
+          const data = await resUpload.json();
+
+          setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "success", progress: 100, finalPath: data.secure_url } : pf))
         } catch (err) {
           console.error("Upload error for file", f.file.name, err)
           setFiles(prev => prev.map(pf => pf.id === f.id ? { ...pf, status: "error" } : pf))
