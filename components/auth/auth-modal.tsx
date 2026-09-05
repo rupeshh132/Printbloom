@@ -12,7 +12,7 @@ export function AuthModal() {
   const searchParams = useSearchParams()
   const refCode = searchParams?.get('ref')
   
-  const [mode, setMode] = useState<"login" | "signup">("login")
+  const [mode, setMode] = useState<"login" | "signup">(refCode ? "signup" : "login")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
