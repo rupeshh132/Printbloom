@@ -45,7 +45,7 @@ export function BloomJournalSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {stories.map((story) => (
             <div key={story.id} className="group cursor-pointer">
-              <a href={`/journal/${story.slug}`} className="block">
+              <a href="/journal" className="block">
                 <div className="relative aspect-square md:aspect-[3/4] w-full overflow-hidden bg-surface mb-4 border border-border">
                   <Image 
                     src={story.image}
