@@ -5,27 +5,32 @@ const steps = [
   {
     num: "01",
     title: "Choose Your Gift",
-    desc: "Select a product and fill out the simple enquiry form. We'll instantly connect with you on WhatsApp to discuss your requirement."
+    desc: "Choose the personalised gift you'd like to create and place your order through our website."
   },
   {
     num: "02",
-    title: "Share Your Memories",
-    desc: "We'll send you a secure link to upload your photos and share the little stories, quotes, or inside jokes that make your gift special."
+    title: "Upload Your Memories",
+    desc: "Upload the photos you'd like us to use in your gift. You don't need to prepare all your customisation details yet."
   },
   {
     num: "03",
-    title: "We Design It",
-    desc: "Our expert team manually curates, color-corrects, and designs your product. No automated templates cutting off faces—everything is placed with care."
+    title: "We'll Contact You",
+    desc: "Once your order is confirmed, the PrintBloom team will contact you on WhatsApp to collect your customisation details, including messages, captions, names, dates, song details and any specific requests."
   },
   {
     num: "04",
-    title: "Review & Approve",
-    desc: "You'll receive a digital preview of your gift. We'll make sure you absolutely love it before it goes into production."
+    title: "We Design It",
+    desc: "Once we have everything we need, we'll carefully arrange your photos, text and memories into your chosen design."
   },
   {
     num: "05",
-    title: "Print & Hand Packaging",
-    desc: "We print using archival-grade paper and industry-leading printers. Then, it's hand-wrapped in butter paper and twine, ready to be gifted."
+    title: "Review & Approve",
+    desc: "We'll share a digital preview with you so you can check the photos, text and other details. Once you approve the final design, we'll move it into production."
+  },
+  {
+    num: "06",
+    title: "Print & Carefully Pack",
+    desc: "Your personalised gift is then printed and carefully packed for delivery, ready to be gifted."
   }
 ]
 
