@@ -14,7 +14,7 @@ type SearchResult = {
   id: string
   name: string
   slug: string
-  price: number
+  starting_price: number
 }
 
 export function SearchModal() {
@@ -39,7 +39,7 @@ export function SearchModal() {
       setLoading(true)
       const { data } = await supabase
         .from("products")
-        .select("id, name, slug, price")
+        .select("id, name, slug, starting_price")
         .ilike("name", `%${query}%`)
         .eq("status", "published")
         .limit(5)
@@ -94,7 +94,7 @@ export function SearchModal() {
                         {product.name}
                       </span>
                       <span className="font-mono text-xs text-[#9A8F85]">
-                        ₹{product.price}
+                        ₹{product.starting_price}
                       </span>
                     </NextLink>
                   </li>
