@@ -20,7 +20,7 @@ export function SignatureProductSection() {
               You send the photos and the story. We turn it into pages you can hold, read, and keep forever.
             </p>
             <div className="pt-4 flex flex-col gap-3">
-              <Link href="/products/custom-magazine-a5" variant="accent" className="text-lg">
+              <Link href="/products/custom-magazine-a4" variant="accent" className="text-lg">
                 Explore the Magazine &rarr;
               </Link>
               <p className="text-xs text-[#DFBC94] font-mono tracking-widest uppercase mt-4 hidden md:block animate-pulse">
