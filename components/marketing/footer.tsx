@@ -29,7 +29,6 @@ const footerLinks = {
     { href: "/policies/terms", label: "Terms & Conditions" },
   ],
   Contact: [
-    { href: "/order", label: "Start an Order" },
     { href: "https://wa.me/918691094045", label: "WhatsApp Us" },
     { href: "mailto:printbloom.in@gmail.com", label: "printbloom.in@gmail.com" },
     { href: "https://instagram.com/printbloom.in", label: "@printbloom.in" },
