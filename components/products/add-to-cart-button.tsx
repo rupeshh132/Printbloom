@@ -10,6 +10,7 @@ type AddToCartProps = {
     price: number
     image: string
     variant?: string
+    is_digital?: boolean
   }
   customizationData?: any[]
 }
