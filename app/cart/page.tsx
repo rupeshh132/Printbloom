@@ -528,14 +528,6 @@ export default function CartPage() {
                   <span className="text-gray-500">Item Total</span>
                   <span>₹{total}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Delivery Fee</span>
-                  <span>₹{deliveryFee}</span>
-                </div>
-                <p className="text-[10px] text-[#9A8F85] italic leading-relaxed -mt-2">
-                  📦 Note: Shipping charges may vary depending on the parcel's weight and size. If the actual shipping cost is higher than the estimated amount, an additional ₹30–₹50 may be applicable. We'll share the shipping receipt with you for transparency.
-                </p>
-                
                 {appliedPromo && (
                   <>
                     <div className="flex justify-between text-green-700">
@@ -548,10 +540,10 @@ export default function CartPage() {
                   </div>
                   {isPromoCapped && (
                     <div className="text-[10px] text-amber-600 mt-1 flex justify-between bg-amber-50 p-1.5 rounded-sm">
-                      <span>Max discount limit reached</span>
+                      <span>Maximum discount applied</span>
                     </div>
                   )}
-                </>
+                  </>
                 )}
                 
                 {pointsToRedeem > 0 && (
@@ -571,6 +563,14 @@ export default function CartPage() {
                   )}
                 </>
                 )}
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Delivery Fee</span>
+                  <span>₹{deliveryFee}</span>
+                </div>
+                <p className="text-[10px] text-[#9A8F85] italic leading-relaxed -mt-2">
+                  📦 Note: Shipping charges may vary depending on the parcel's weight and size. If the actual shipping cost is higher than the estimated amount, an additional ₹30–₹50 may be applicable. We'll share the shipping receipt with you for transparency.
+                </p>
               </div>
 
               {!appliedPromo && (
