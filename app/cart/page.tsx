@@ -189,7 +189,7 @@ export default function CartPage() {
   const total = getCartTotal()
   
   // Dynamic Delivery Fee
-  const hasOnlyDigitalItems = items.length > 0 && items.every(item => item.is_digital === true || item.name === "Softcopy Magazine");
+  const hasOnlyDigitalItems = items.length > 0 && items.every(item => item.is_digital === true || item.name?.includes("Softcopy Magazine"));
   const deliveryFee = hasOnlyDigitalItems ? 0 : 90;
   
   // Promo Code State
