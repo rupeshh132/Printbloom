@@ -1,4 +1,6 @@
 import { SectionHeading } from "@/components/ui/section-heading"
+import { ProductStatusBadge } from "@/components/admin/product-status-badge"
+import { DeleteSubmitButton } from "@/components/admin/delete-submit-button"
 import { getProductsAdmin, toggleProductStatus, seedProducts } from "@/app/actions/products"
 import { Button } from "@/components/ui/button"
 
@@ -81,18 +83,10 @@ export default async function AdminProducts() {
                       {/* Delete Product */}
                       <form action={async () => {
                         "use server"
-                        // Import deleteProduct dynamically here if needed or at top.
-                        // Wait, let's just make sure deleteProduct is imported at the top.
                         const { deleteProduct } = await import("@/app/actions/products")
                         await deleteProduct(product.id)
                       }}>
-                        <button 
-                          type="submit" 
-                          className="text-xs text-red-600 hover:underline"
-                          title="Delete Product"
-                        >
-                          Delete
-                        </button>
+                        <DeleteSubmitButton itemName="this product" />
                       </form>
                     </div>
                   </td>

@@ -1,5 +1,6 @@
 import { SectionHeading } from "@/components/ui/section-heading"
 import { getJournals, deleteJournalEntry, toggleJournalPublished } from "@/app/actions/journal"
+import { DeleteSubmitButton } from "@/components/admin/delete-submit-button"
 import { JournalForm } from "@/components/admin/journal-form"
 import Image from "next/image"
 import NextLink from "next/link"
@@ -84,9 +85,9 @@ export default async function AdminJournalPage() {
                             "use server"
                             await deleteJournalEntry(story.id)
                           }}>
-                            <button type="submit" className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors" title="Delete Story">
+                            <DeleteSubmitButton itemName="this story" className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors flex items-center justify-center">
                               <Trash2 className="w-4 h-4" />
-                            </button>
+                            </DeleteSubmitButton>
                           </form>
                         </div>
                       </td>

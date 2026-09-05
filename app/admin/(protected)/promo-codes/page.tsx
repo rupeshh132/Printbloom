@@ -1,5 +1,6 @@
 import { SectionHeading } from "@/components/ui/section-heading"
 import { getPromoCodes, createPromoCode, togglePromoCode, deletePromoCode } from "@/app/actions/promo-codes"
+import { DeleteSubmitButton } from "@/components/admin/delete-submit-button"
 import { Button } from "@/components/ui/button"
 
 export const dynamic = "force-dynamic"
@@ -137,7 +138,7 @@ export default async function PromoCodesPage() {
                           "use server"
                           await deletePromoCode(code.id)
                         }}>
-                          <button type="submit" className="text-xs text-red-500 hover:text-red-700">Delete</button>
+                          <DeleteSubmitButton itemName="this promo code" className="text-xs text-red-500 hover:text-red-700" />
                         </form>
                       </td>
                     </tr>

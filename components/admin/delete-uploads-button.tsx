@@ -15,11 +15,9 @@ export function DeleteUploadsButton({ token, count }: DeleteUploadsButtonProps) 
   const router = useRouter()
 
   const handleDelete = async () => {
-    const confirmed = window.confirm(
-      `Are you sure you want to permanently delete all ${count} photos for this order?\n\nThis will free up Supabase storage space. This action CANNOT be undone.`
-    )
-    
-    if (!confirmed) return
+    if (!window.confirm(`Are you sure you want to delete all uploads? This action cannot be undone and files will be permanently removed from Cloudinary.`)) {
+      return;
+    }
 
     setIsDeleting(true)
     
