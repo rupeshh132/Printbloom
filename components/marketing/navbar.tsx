@@ -237,7 +237,7 @@ export function Navbar() {
             </NextLink>
           ))}
           <Button asChild size="sm" className="w-full mt-2">
-            <NextLink href="/order">Order Now</NextLink>
+            <NextLink href="/products" onClick={() => setMenuOpen(false)}>Order Now</NextLink>
           </Button>
         </div>
       )}
