@@ -48,6 +48,7 @@ export function AddToCartButton({ product, customizationData = [] }: AddToCartPr
       price: product.price,
       quantity: 1,
       image: product.image,
+      is_digital: product.is_digital,
       variant: product.variant,
       customization_data: cleanedCustomization
     })

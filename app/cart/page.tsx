@@ -50,7 +50,6 @@ export default function CartPage() {
         return;
       }
 
-      const deliveryFee = 90;
       // Maximum Discount Ceiling
       let maxAllowedDiscount = 50;
       if (total >= 1000) {
@@ -189,8 +188,9 @@ export default function CartPage() {
   
   const total = getCartTotal()
   
-  // Flat Delivery Fee
-  const deliveryFee = 90;
+  // Dynamic Delivery Fee
+  const hasOnlyDigitalItems = items.length > 0 && items.every(item => item.is_digital === true);
+  const deliveryFee = hasOnlyDigitalItems ? 0 : 90;
   
   // Promo Code State
   const [promoCodeInput, setPromoCodeInput] = useState("")
@@ -564,13 +564,17 @@ export default function CartPage() {
                 </>
                 )}
                 
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Delivery Fee</span>
-                  <span>₹{deliveryFee}</span>
-                </div>
-                <p className="text-[10px] text-[#9A8F85] italic leading-relaxed -mt-2">
-                  📦 Note: Shipping charges may vary depending on the parcel's weight and size. If the actual shipping cost is higher than the estimated amount, an additional ₹30–₹50 may be applicable. We'll share the shipping receipt with you for transparency.
-                </p>
+                {!hasOnlyDigitalItems && (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Delivery Fee</span>
+                      <span>₹{deliveryFee}</span>
+                    </div>
+                    <p className="text-[10px] text-[#9A8F85] italic leading-relaxed -mt-2">
+                      📦 Note: Shipping charges may vary depending on the parcel's weight and size. If the actual shipping cost is higher than the estimated amount, an additional ₹30–₹50 may be applicable. We'll share the shipping receipt with you for transparency.
+                    </p>
+                  </>
+                )}
               </div>
 
               {!appliedPromo && (

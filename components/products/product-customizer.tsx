@@ -43,6 +43,7 @@ export function ProductCustomizer({ product, slug, isWishlisted }: { product: an
       price: selectedVariant.price,
       quantity: 1,
       image: product.main_image_url,
+      is_digital: product.is_digital,
       variant: selectedVariant.label,
       customization_data: cleanedCustomization
     })

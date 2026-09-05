@@ -10,6 +10,7 @@ export type CartItem = {
   image: string;
   variant?: string;
   customization_data?: any[];
+  is_digital?: boolean;
 }
 
 interface CartState {

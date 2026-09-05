@@ -54,8 +54,17 @@ export async function POST(request: Request) {
       total += parsedPrice * item.quantity;
     }
 
-    // Flat Delivery Fee
-    const deliveryFee = 90;
+    // Dynamic Delivery Fee
+    const hasOnlyDigitalItems = items.length > 0 && items.every((item: any) => {
+      const dbProduct = products.find((p: any) => 
+        p.id === item.productId || 
+        p.slug === item.productId ||
+        (p.id && item.productId.startsWith(p.id)) ||
+        (p.slug && item.productId.startsWith(p.slug))
+      );
+      return dbProduct?.is_digital === true;
+    });
+    const deliveryFee = hasOnlyDigitalItems ? 0 : 90;
 
     // Maximum Discount Ceiling (based purely on product subtotal)
     let maxAllowedDiscount = 50;

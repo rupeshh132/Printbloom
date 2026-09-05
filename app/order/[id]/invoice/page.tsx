@@ -18,7 +18,10 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
     .from("orders")
     .select(`
       *,
-      order_items (*),
+      order_items (
+        *,
+        products (is_digital)
+      ),
       addresses (*)
     `)
     .eq("id", id)
@@ -53,7 +56,8 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
 
   // Calculate totals
   const subtotal = order.order_items?.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0) || order.total_amount
-  const shipping = 90
+  const hasOnlyDigitalItems = order.order_items?.length > 0 && order.order_items.every((item: any) => item.products?.is_digital === true)
+  const shipping = hasOnlyDigitalItems ? 0 : 90
   const discountAmount = Math.max(0, subtotal + shipping - order.total_amount)
 
   return (
@@ -143,7 +147,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
 
             <div className="flex justify-between py-2 text-sm text-[#6B6259]">
               <span>Shipping</span>
-              <span>₹90</span>
+              <span>{shipping > 0 ? `₹${shipping}` : 'Free'}</span>
             </div>
             <div className="flex justify-between pt-4 mt-2 border-t border-dashed border-[#E0D9CF] text-base font-semibold text-[#221F1C]">
               <span>TOTAL PAID</span>
