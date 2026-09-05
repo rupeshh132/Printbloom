@@ -116,7 +116,7 @@ export function EnquiriesKanban({ initialEnquiries, flipbooks = [] }: { initialE
                             <WhatsAppButton 
                               phone={enq.whatsapp || enq.phone || ""} 
                               customerName={enq.name} 
-                              flipbookLink={flipbooks?.find(fb => fb.enquiry_token === enq.upload_token)?.id ? `https://printbloom.in/flipbook/${flipbooks.find(fb => fb.enquiry_token === enq.upload_token)!.id}` : ""} 
+                              flipbookLink={flipbooks?.find(fb => fb.enquiry_token === enq.upload_token)?.id ? `${process.env.NEXT_PUBLIC_SITE_URL || 'https://printbloom.vercel.app'}/flipbook/${flipbooks.find(fb => fb.enquiry_token === enq.upload_token)!.id}` : ""}
                             />
                           </div>
 

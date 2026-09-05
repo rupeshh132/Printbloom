@@ -15,14 +15,15 @@ export function WhatsAppButton({ phone, customerName, flipbookLink = "" }: { pho
   // Consider valid if has 10+ digits
   const isValidPhone = cleanPhone.length >= 10
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://printbloom.vercel.app'
   const templates: WhatsAppTemplate[] = [
     {
       label: "🛒 Abandoned Cart Follow-up",
-      text: `Hi ${customerName}! 👋 \n\nHumne notice kiya ki aapne PrintBloom par kuch items cart mein add kiye the lekin order complete nahi kiya.\n\nKya aapko koi help chahiye? Hum aapki poori madad kar sakte hain! 😊\n\nAapka order complete karne ke liye yahan click karein: https://printbloom.in`
+      text: `Hi ${customerName}! 👋 \n\nHumne notice kiya ki aapne PrintBloom par kuch items cart mein add kiye the lekin order complete nahi kiya.\n\nKya aapko koi help chahiye? Hum aapki poori madad kar sakte hain! 😊\n\nAapka order complete karne ke liye yahan click karein: ${siteUrl}`
     },
     {
       label: "✨ Special Offer",
-      text: `Hi ${customerName}! ✨ \n\nAapke liye special offer! Aaj hi order karein aur paayein exclusive discount. 🎁\n\nOffer limited time ke liye hai, jaldi karo! 🏃‍♂️\n\nhttps://printbloom.in`
+      text: `Hi ${customerName}! ✨ \n\nAapke liye special offer! Aaj hi order karein aur paayein exclusive discount. 🎁\n\nOffer limited time ke liye hai, jaldi karo! 🏃‍♂️\n\n${siteUrl}`
     },
     {
       label: "📦 Send Flipbook Link",

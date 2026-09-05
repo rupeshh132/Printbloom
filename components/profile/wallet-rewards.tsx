@@ -15,7 +15,8 @@ export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[],
 
   // Generate a mock referral code based on User ID
   const refCode = userId.split('-')[0].toUpperCase()
-  const referralLink = `https://printbloom.in/signup?ref=${refCode}`
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://printbloom.vercel.app'
+  const referralLink = `${siteUrl}/signup?ref=${refCode}`
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(referralLink)
