@@ -62,7 +62,7 @@ export async function POST(request: Request) {
         (p.id && item.productId.startsWith(p.id)) ||
         (p.slug && item.productId.startsWith(p.slug))
       );
-      return dbProduct?.is_digital === true;
+      return dbProduct?.slug === 'softcopy-magazine';
     });
     const deliveryFee = hasOnlyDigitalItems ? 0 : 90;
 

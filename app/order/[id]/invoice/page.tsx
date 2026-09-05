@@ -20,7 +20,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
       *,
       order_items (
         *,
-        products (is_digital)
+        products (slug)
       ),
       addresses (*)
     `)
@@ -56,7 +56,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
 
   // Calculate totals
   const subtotal = order.order_items?.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0) || order.total_amount
-  const hasOnlyDigitalItems = order.order_items?.length > 0 && order.order_items.every((item: any) => item.products?.is_digital === true)
+  const hasOnlyDigitalItems = order.order_items?.length > 0 && order.order_items.every((item: any) => item.products?.slug === 'softcopy-magazine')
   const shipping = hasOnlyDigitalItems ? 0 : 90
   const discountAmount = Math.max(0, subtotal + shipping - order.total_amount)
 
