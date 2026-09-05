@@ -27,6 +27,8 @@ export function DashboardCharts({ monthlyData, productData }: { monthlyData: any
               <Tooltip 
                 cursor={{ fill: '#FBF6EE' }}
                 contentStyle={{ backgroundColor: '#221F1C', color: '#FBF6EE', borderRadius: '2px', border: 'none' }} 
+                itemStyle={{ color: '#FBF6EE' }}
+                labelStyle={{ color: '#DFBC94' }}
               />
               <Bar dataKey="Enquiries" fill="#E0D9CF" radius={[2, 2, 0, 0]} />
               <Bar dataKey="Converted" fill="#DFBC94" radius={[2, 2, 0, 0]} />
@@ -55,6 +57,8 @@ export function DashboardCharts({ monthlyData, productData }: { monthlyData: any
               </Pie>
               <Tooltip 
                 contentStyle={{ backgroundColor: '#221F1C', color: '#FBF6EE', borderRadius: '2px', border: 'none' }} 
+                itemStyle={{ color: '#FBF6EE' }}
+                labelStyle={{ color: '#DFBC94' }}
               />
             </PieChart>
           </ResponsiveContainer>
