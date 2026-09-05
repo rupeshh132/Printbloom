@@ -17,7 +17,7 @@ const steps = [
   {
     title: "Hand Packaged",
     description: "Wrapped in butter paper, tied with twine, and sealed carefully. Unboxing it feels just as special as reading it.",
-    image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "/images/hand-packaged.jpg",
   }
 ]
 
