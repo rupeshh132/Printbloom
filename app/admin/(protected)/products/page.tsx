@@ -1,5 +1,4 @@
 import { SectionHeading } from "@/components/ui/section-heading"
-import { ProductStatusBadge } from "@/components/admin/product-status-badge"
 import { DeleteSubmitButton } from "@/components/admin/delete-submit-button"
 import { getProductsAdmin, toggleProductStatus, seedProducts } from "@/app/actions/products"
 import { Button } from "@/components/ui/button"
