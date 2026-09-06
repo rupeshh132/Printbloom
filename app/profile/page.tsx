@@ -94,7 +94,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
         
         <h1 className="font-serif text-3xl md:text-4xl text-[#221F1C] mb-8">My Account</h1>
         
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8">
           
           {/* Sidebar */}
           <div className="w-full md:w-64 flex-shrink-0">
@@ -108,54 +108,55 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
                 </div>
               </div>
 
-              <NextLink 
-                href="/profile?tab=profile" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "profile" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
-              >
-                <User className="w-5 h-5" /> Profile Info
-              </NextLink>
-              <NextLink 
-                href="/profile?tab=orders" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "orders" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
-              >
-                <Package className="w-5 h-5" /> My Orders
-              </NextLink>
-              <NextLink 
-                href="/profile?tab=addresses" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "addresses" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
-              >
-                <MapPin className="w-5 h-5" /> Saved Addresses
-              </NextLink>
-              <NextLink 
-                href="/profile?tab=rewards" 
-                className={`flex items-center justify-between p-4 transition-colors ${currentTab === "rewards" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
-              >
-                <div className="flex items-center gap-3">
-                  <Wallet className="w-5 h-5" /> Wallet & Rewards
+              <div className="flex md:flex-col overflow-x-auto md:overflow-visible hide-scrollbar bg-white">
+                <NextLink 
+                  href="/profile?tab=profile" 
+                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "profile" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                >
+                  <User className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Profile Info</span>
+                </NextLink>
+                <NextLink 
+                  href="/profile?tab=orders" 
+                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "orders" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                >
+                  <Package className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">My Orders</span>
+                </NextLink>
+                <NextLink 
+                  href="/profile?tab=addresses" 
+                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "addresses" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                >
+                  <MapPin className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Saved Addresses</span>
+                </NextLink>
+                <NextLink 
+                  href="/profile?tab=rewards" 
+                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "rewards" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                >
+                  <Wallet className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Wallet & Rewards</span>
+                </NextLink>
+                <NextLink 
+                  href="/profile?tab=reminders" 
+                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "reminders" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                >
+                  <CalendarDays className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Smart Reminders</span>
+                </NextLink>
+                <NextLink 
+                  href="/profile?tab=wishlist" 
+                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "wishlist" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                >
+                  <Heart className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Wishlist</span>
+                </NextLink>
+                <NextLink 
+                  href="/profile?tab=enquiry" 
+                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "enquiry" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                >
+                  <MessageSquare className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Custom Request</span>
+                </NextLink>
+                <div className="flex-shrink-0 md:hidden flex items-center px-3 border-l border-[#E0D9CF] my-2 ml-2">
+                  <SignOutButton />
                 </div>
-              </NextLink>
-              <NextLink 
-                href="/profile?tab=reminders" 
-                className={`flex items-center justify-between p-4 transition-colors ${currentTab === "reminders" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
-              >
-                <div className="flex items-center gap-3">
-                  <CalendarDays className="w-5 h-5" /> Smart Reminders
-                </div>
-              </NextLink>
-              <NextLink 
-                href="/profile?tab=wishlist" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "wishlist" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
-              >
-                <Heart className="w-5 h-5" /> Wishlist
-              </NextLink>
-              <NextLink 
-                href="/profile?tab=enquiry" 
-                className={`flex items-center gap-3 p-4 transition-colors ${currentTab === "enquiry" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-l-4 border-transparent"}`}
-              >
-                <MessageSquare className="w-5 h-5" /> Custom Request
-              </NextLink>
+              </div>
               
-              <div className="p-2 border-t border-[#E0D9CF] mt-2">
+              <div className="p-2 border-t border-[#E0D9CF] mt-0 md:mt-2 hidden md:block">
                 <SignOutButton />
               </div>
             </div>
