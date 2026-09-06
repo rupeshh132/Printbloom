@@ -25,13 +25,22 @@ export function OrderCustomizationClient({ customizations, orderItemId, orderId 
   const handleDownload = async (url: string, index: number) => {
     try {
       // Fetch the image as a blob to force download instead of opening in new tab
-      const response = await fetch(url)
+      // Bypass cache to avoid CORS missing header issues from img tags
+      const fetchUrl = new URL(url)
+      fetchUrl.searchParams.set("t", Date.now().toString())
+      
+      const response = await fetch(fetchUrl.toString())
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
       const blob = await response.blob()
+      
+      let ext = "jpg"
+      const match = url.match(/\.([a-zA-Z0-9]+)(?:[\?#]|$)/)
+      if (match) ext = match[1]
       
       const blobUrl = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = blobUrl
-      a.download = `printbloom_photo_${index + 1}.jpg` // Better default names
+      a.download = `printbloom_photo_${index + 1}.${ext}`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -51,12 +60,29 @@ export function OrderCustomizationClient({ customizations, orderItemId, orderId 
       const folder = zip.folder("PrintBloom_Photos")
       
       const fetchPromises = customizations.map(async (photo, index) => {
+        if (!photo.cloudinaryUrl) return // Skip if user didn't upload a photo for this slot
+        
         try {
-          const res = await fetch(photo.cloudinaryUrl)
+          // Bypassing browser cache is CRITICAL here. 
+          // If the image was loaded in an <img> tag without crossOrigin="anonymous", 
+          // the browser caches it without CORS headers. Fetching it again throws a CORS error.
+          // Adding a unique query param forces a fresh fetch with proper CORS headers.
+          const url = new URL(photo.cloudinaryUrl)
+          url.searchParams.set("t", Date.now().toString())
+          
+          const res = await fetch(url.toString())
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+          
           const blob = await res.blob()
-          folder?.file(`photo_${index + 1}.jpg`, blob)
+          
+          // Extract original extension or fallback to jpg
+          let ext = "jpg"
+          const match = photo.cloudinaryUrl.match(/\.([a-zA-Z0-9]+)(?:[\?#]|$)/)
+          if (match) ext = match[1]
+            
+          folder?.file(`photo_${index + 1}.${ext}`, blob)
         } catch (err) {
-          console.error(`Failed to fetch photo ${index + 1}`, err)
+          console.error(`Failed to fetch photo ${index + 1}:`, err)
         }
       })
       
