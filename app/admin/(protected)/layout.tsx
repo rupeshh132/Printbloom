@@ -55,13 +55,13 @@ export default async function AdminLayout({
         {/* Nav */}
         <nav className="flex-1 px-4 py-6 flex flex-col gap-1">
           {adminNavLinks.map((link) => (
-            <NextLink
+            <a
               key={link.href}
               href={link.href}
-              className="px-4 py-3 text-sm text-[#FBF6EE]/70 hover:text-[#FBF6EE] hover:bg-white/5 rounded-sm transition-colors"
+              className="px-4 py-3 text-sm font-medium rounded-sm text-[#E0D9CF] hover:bg-white/10 transition-colors"
             >
               {link.label}
-            </NextLink>
+            </a>
           ))}
         </nav>
 

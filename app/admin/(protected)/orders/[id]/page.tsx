@@ -24,9 +24,9 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
 
   return (
     <div className="max-w-5xl mx-auto pb-20">
-      <NextLink href="/admin/orders" className="inline-flex items-center gap-2 text-sm font-medium text-[#9A8F85] hover:text-[#DFBC94] transition-colors mb-8">
+      <a href="/admin/orders" className="inline-flex items-center gap-2 text-sm font-medium text-[#9A8F85] hover:text-[#DFBC94] transition-colors mb-8">
         <ArrowLeft className="w-4 h-4" /> Back to Orders
-      </NextLink>
+      </a>
 
       {/* Flipbooks Section */}
       {flipbooks.length > 0 && (

@@ -2,6 +2,9 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { getAdminOrders } from "@/app/actions/admin-orders"
 import NextLink from "next/link"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function AdminOrdersList() {
   const orders = await getAdminOrders()
 
@@ -56,9 +59,9 @@ export default async function AdminOrdersList() {
                     </span>
                   </td>
                   <td className="p-4">
-                    <NextLink href={`/admin/orders/${order.id}`} className="text-xs text-[#DFBC94] hover:underline font-medium">
+                    <a href={`/admin/orders/${order.id}`} className="text-xs text-[#DFBC94] hover:underline font-medium">
                       View Details & Photos &rarr;
-                    </NextLink>
+                    </a>
                   </td>
                 </tr>
               ))}

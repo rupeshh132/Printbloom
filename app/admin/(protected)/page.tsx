@@ -1,11 +1,11 @@
 import { SectionHeading } from "@/components/ui/section-heading"
-import { getDashboardCounts } from "@/app/actions/enquiries"
-import { seedProducts } from "@/app/actions/products"
-import { getDashboardChartData } from "@/app/actions/dashboard"
-import { Button } from "@/components/ui/button"
+import { getAdminDashboardStats, getDashboardMonthlyData, getDashboardProductData } from "@/app/actions/admin-dashboard"
 import { DashboardCharts } from "@/components/admin/dashboard-charts"
+import { Button } from "@/components/ui/button"
+import { seedProducts } from "@/app/actions/products"
 
 export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 async function handleSeed() {
   "use server"
