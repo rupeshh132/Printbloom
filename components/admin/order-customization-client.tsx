@@ -53,46 +53,82 @@ export function OrderCustomizationClient({ customizations, orderItemId, orderId 
   }
 
   const handleDownloadAll = async () => {
-    if (customizations.length === 0) return
+    if (customizations.length === 0) {
+      console.warn("DownloadAll: customizations array is empty");
+      return;
+    }
+    
+    console.log("DownloadAll: Starting process with", customizations.length, "photos.");
     setIsZipping(true)
+    
     try {
       const zip = new JSZip()
       const folder = zip.folder("PrintBloom_Photos")
+      let successCount = 0;
+      let failCount = 0;
       
       const fetchPromises = customizations.map(async (photo, index) => {
-        if (!photo.cloudinaryUrl) return // Skip if user didn't upload a photo for this slot
+        console.log(`[Photo ${index + 1}] Processing. URL:`, photo.cloudinaryUrl);
+        if (!photo.cloudinaryUrl) {
+          console.warn(`[Photo ${index + 1}] Skipped - No cloudinaryUrl`);
+          return; 
+        }
         
         try {
-          // Bypassing browser cache is CRITICAL here. 
-          // If the image was loaded in an <img> tag without crossOrigin="anonymous", 
-          // the browser caches it without CORS headers. Fetching it again throws a CORS error.
-          // Adding a unique query param forces a fresh fetch with proper CORS headers.
           const url = new URL(photo.cloudinaryUrl)
           url.searchParams.set("t", Date.now().toString())
+          console.log(`[Photo ${index + 1}] Fetching URL:`, url.toString());
           
-          const res = await fetch(url.toString())
-          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+          // Explicitly ask for CORS
+          const res = await fetch(url.toString(), { mode: 'cors' })
+          console.log(`[Photo ${index + 1}] Fetch response status:`, res.status, res.statusText);
+          
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status} ${res.statusText}`);
+          }
           
           const blob = await res.blob()
+          console.log(`[Photo ${index + 1}] Blob created successfully. Size:`, blob.size, "bytes, Type:", blob.type);
           
-          // Extract original extension or fallback to jpg
+          if (blob.size === 0) {
+            console.error(`[Photo ${index + 1}] ERROR: Blob size is 0 bytes!`);
+            failCount++;
+            return;
+          }
+          
           let ext = "jpg"
           const match = photo.cloudinaryUrl.match(/\.([a-zA-Z0-9]+)(?:[\?#]|$)/)
           if (match) ext = match[1]
             
           folder?.file(`photo_${index + 1}.${ext}`, blob)
+          successCount++;
+          console.log(`[Photo ${index + 1}] Added to ZIP folder as photo_${index + 1}.${ext}`);
         } catch (err) {
-          console.error(`Failed to fetch photo ${index + 1}:`, err)
+          console.error(`[Photo ${index + 1}] Fetch/Blob ERROR:`, err)
+          failCount++;
         }
       })
       
+      console.log("DownloadAll: Waiting for all fetches to complete...");
       await Promise.all(fetchPromises)
+      console.log(`DownloadAll: Fetches complete. Success: ${successCount}, Failed: ${failCount}`);
       
+      if (successCount === 0) {
+        console.error("DownloadAll: No photos were successfully fetched. Aborting ZIP generation.");
+        alert("Failed to fetch any photos. Check console for exact errors.");
+        setIsZipping(false);
+        return;
+      }
+      
+      console.log("DownloadAll: Generating ZIP blob...");
       const content = await zip.generateAsync({ type: "blob" })
+      console.log("DownloadAll: ZIP generated successfully. Total ZIP size:", content.size, "bytes");
+      
       saveAs(content, `Order_${orderId.split('-')[0]}_Photos.zip`)
+      console.log("DownloadAll: saveAs triggered.");
     } catch (err) {
-      console.error("Failed to create ZIP", err)
-      alert("Failed to create zip file.")
+      console.error("DownloadAll: FATAL ERROR during zip creation/saving:", err)
+      alert("Failed to create zip file. Check console for details.")
     } finally {
       setIsZipping(false)
     }
