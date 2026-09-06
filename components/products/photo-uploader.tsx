@@ -1,7 +1,6 @@
 "use client"
 import * as React from "react"
 import { Upload, X, Wand2, Loader2, Image as ImageIcon } from "lucide-react"
-import imageCompression from "browser-image-compression"
 
 export type UploadedPhoto = {
   id: string
@@ -76,21 +75,11 @@ export function PhotoUploader({ onPhotosChange }: PhotoUploaderProps) {
     }
 
     try {
-      // 1. Compress Image
+      // Direct Upload to Cloudinary (NO COMPRESSION FOR PRINT QUALITY)
       updatePhotoState(uploadInfo.id, { progress: 10 })
-      
-      const options = {
-        maxSizeMB: 0.5, // 500 KB target
-        maxWidthOrHeight: 1920,
-        useWebWorker: true,
-      }
-      
-      const compressedFile = await imageCompression(uploadInfo.file, options)
-      updatePhotoState(uploadInfo.id, { progress: 40 })
 
-      // 2. Upload to Cloudinary
       const formData = new FormData()
-      formData.append("file", compressedFile)
+      formData.append("file", uploadInfo.file)
       formData.append("upload_preset", uploadPreset)
 
       const xhr = new XMLHttpRequest()
