@@ -46,6 +46,7 @@ export const metadata: Metadata = {
 
 import { GlobalModals } from "@/components/global-modals";
 import { WhatsAppFloat } from "@/components/ui/whatsapp-float";
+import { CartSync } from "@/components/cart-sync";
 import Script from "next/script";
 
 export default function RootLayout({
@@ -59,9 +60,11 @@ export default function RootLayout({
         className={`${fraunces.variable} ${publicSans.variable} ${ibmPlexMono.variable} antialiased bg-[#FBF6EE] text-[#221F1C] font-sans selection:bg-[#DFBC94] selection:text-white`}
         suppressHydrationWarning
       >
+        <CartSync />
         {children}
         <GlobalModals />
         <WhatsAppFloat />
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       </body>
     </html>
   );
