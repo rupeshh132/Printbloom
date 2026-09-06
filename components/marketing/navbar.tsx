@@ -4,7 +4,7 @@ import NextLink from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Search, User, ShoppingCart } from "lucide-react"
+import { Search, User, ShoppingCart, ChevronRight } from "lucide-react"
 import { useUIStore } from "@/store/use-ui-store"
 import { useCart } from "@/store/use-cart"
 import { useRouter } from "next/navigation"
@@ -192,53 +192,74 @@ export function Navbar() {
         </button>
       </div>
 
+      {/* Mobile Menu Backdrop */}
+      {menuOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/40 z-40 backdrop-blur-[2px] transition-opacity"
+          style={{ top: '80px' }}
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[#FBF6EE] border-t border-[#E0D9CF] px-4 py-6 flex flex-col gap-5 overflow-y-auto" style={{ maxHeight: 'calc(100dvh - 80px)' }}>
-          <div className="flex items-center justify-between pb-4 border-b border-[#E0D9CF]">
+        <div className="md:hidden fixed left-0 right-0 bg-[#FBF6EE] border-b border-[#E0D9CF] px-5 py-6 flex flex-col z-50 overflow-y-auto shadow-xl" style={{ top: '80px', maxHeight: 'calc(100dvh - 80px)' }}>
+          
+          {/* Quick Actions Bar */}
+          <div className="flex items-center justify-between pb-6 mb-2">
             <button 
               onClick={() => { setMenuOpen(false); openSearchModal(); }}
-              className="flex items-center gap-2 text-[#221F1C] hover:text-[#DFBC94]"
+              className="flex flex-col items-center gap-1.5 text-[#221F1C] hover:text-[#DFBC94] w-20 p-2 bg-white rounded-lg shadow-sm border border-[#E0D9CF]"
             >
-              <Search className="w-5 h-5" /> Search
+              <Search className="w-5 h-5" /> 
+              <span className="text-[10px] font-medium uppercase tracking-wider">Search</span>
             </button>
             <button 
               onClick={() => { setMenuOpen(false); handleUserClick(); }}
-              className="flex items-center gap-2 text-[#221F1C] hover:text-[#DFBC94]"
+              className="flex flex-col items-center gap-1.5 text-[#221F1C] hover:text-[#DFBC94] w-20 p-2 bg-white rounded-lg shadow-sm border border-[#E0D9CF]"
             >
               {user?.user_metadata?.avatar_url ? (
                 <img src={user.user_metadata.avatar_url} alt="Profile" className="w-5 h-5 rounded-full object-cover" />
               ) : (
                 <User className="w-5 h-5" />
               )}
-              Profile
+              <span className="text-[10px] font-medium uppercase tracking-wider">Profile</span>
             </button>
             <button 
               onClick={() => { setMenuOpen(false); openCartDrawer(); }}
-              className="flex items-center gap-2 text-[#221F1C] hover:text-[#DFBC94] relative"
+              className="flex flex-col items-center gap-1.5 text-[#221F1C] hover:text-[#DFBC94] relative w-20 p-2 bg-white rounded-lg shadow-sm border border-[#E0D9CF]"
             >
               <ShoppingCart className="w-5 h-5" /> 
               {isMounted && cartItems.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#DFBC94] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                <span className="absolute top-1 right-3 bg-[#DFBC94] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
                   {cartItems.length}
                 </span>
               )}
-              Cart
+              <span className="text-[10px] font-medium uppercase tracking-wider">Cart</span>
             </button>
           </div>
-          {navLinks.map((link) => (
-            <NextLink
-              key={link.href}
-              href={link.href}
-              className="font-sans text-base text-[#221F1C] hover:text-[#DFBC94] transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.label}
-            </NextLink>
-          ))}
-          <Button asChild size="sm" className="w-full mt-2">
-            <NextLink href="/products" onClick={() => setMenuOpen(false)}>Order Now</NextLink>
-          </Button>
+
+          {/* Navigation Links */}
+          <div className="flex flex-col border-t border-[#E0D9CF]">
+            {navLinks.map((link) => (
+              <NextLink
+                key={link.href}
+                href={link.href}
+                className="flex items-center justify-between py-4 border-b border-[#E0D9CF]/50 text-base text-[#221F1C] hover:text-[#DFBC94] hover:bg-white/50 transition-colors px-2"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span className="font-medium tracking-wide">{link.label}</span>
+                <ChevronRight className="w-4 h-4 text-[#9A8F85]" />
+              </NextLink>
+            ))}
+          </div>
+          
+          {/* Action Button - added pb-24 to avoid WhatsApp icon overlap */}
+          <div className="mt-8 pb-24">
+            <Button asChild className="w-full py-6 text-sm uppercase tracking-widest bg-[#221F1C] hover:bg-black text-white rounded-sm shadow-md">
+              <NextLink href="/products" onClick={() => setMenuOpen(false)}>Order Now</NextLink>
+            </Button>
+          </div>
         </div>
       )}
     </header>
