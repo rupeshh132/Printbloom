@@ -19,23 +19,23 @@ export function WhatsAppButton({ phone, customerName, flipbookLink = "" }: { pho
   const templates: WhatsAppTemplate[] = [
     {
       label: "🛒 Abandoned Cart Follow-up",
-      text: `Hi ${customerName}! 👋 \n\nHumne notice kiya ki aapne PrintBloom par kuch items cart mein add kiye the lekin order complete nahi kiya.\n\nKya aapko koi help chahiye? Hum aapki poori madad kar sakte hain! 😊\n\nAapka order complete karne ke liye yahan click karein: ${siteUrl}`
+      text: `Hi ${customerName}! 👋 \n\nWe noticed you added some items to your PrintBloom cart but haven't completed your order yet.\n\nDo you need any help? We'd be happy to assist you! 😊\n\nYou can complete your order by clicking here: ${siteUrl}`
     },
     {
       label: "✨ Special Offer",
-      text: `Hi ${customerName}! ✨ \n\nAapke liye special offer! Aaj hi order karein aur paayein exclusive discount. 🎁\n\nOffer limited time ke liye hai, jaldi karo! 🏃‍♂️\n\n${siteUrl}`
+      text: `Hi ${customerName}! ✨ \n\nWe have a special offer just for you! Place your order today to claim an exclusive discount. 🎁\n\nThis is a limited-time offer, so hurry! 🏃‍♂️\n\n${siteUrl}`
     },
     {
       label: "📦 Send Flipbook Link",
-      text: `Hi ${customerName}, aapka PrintBloom Flipbook preview ready hai! ✨ \nYahan check karein: ${flipbookLink || "[Paste Link Here]"}\n\nKripya isko review karein aur agar sab perfect hai toh 'Approve' likh kar reply karein taaki hum printing process start kar sakein.`
+      text: `Hi ${customerName}, your PrintBloom Flipbook preview is ready! ✨ \n\nYou can check it out here: ${flipbookLink || "[Paste Link Here]"}\n\nPlease review it, and if everything looks perfect, reply with 'Approve' so we can begin the printing process.`
     },
     {
       label: "🚚 Dispatch Update",
-      text: `Hi ${customerName}, Good News! 🚚 Aapka PrintBloom order dispatch ho gaya hai. \n\nTracking Link: [Paste Tracking Link]\n\nUmeed hai aapko gift pasand aayega! ❤️`
+      text: `Hi ${customerName}, Good News! 🚚 Your PrintBloom order has been dispatched. \n\nTracking Link: [Paste Tracking Link]\n\nWe hope you love your gift! ❤️`
     },
     {
       label: "📸 Request Better Photos",
-      text: `Hi ${customerName}, humein aapke PrintBloom order par work start karna hai. Lekin kuch photos ki quality thodi low hai. \n\nKya aap unhe dubara as a 'Document' bhej sakte hain taaki print quality ekdum premium aaye?`
+      text: `Hi ${customerName}, we're ready to start working on your PrintBloom order! However, we noticed that a few of the uploaded photos are of low resolution. \n\nCould you please resend them as a 'Document' on WhatsApp? This ensures the final print quality is absolutely premium.`
     }
   ]
 
