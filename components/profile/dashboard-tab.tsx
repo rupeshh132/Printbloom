@@ -16,7 +16,12 @@ export function DashboardTab({
   wishlist: any[]
 }) {
   
-  const totalPoints = pointsHistory?.reduce((sum, record) => sum + record.points, 0) || 0
+  const totalPoints = pointsHistory?.reduce((acc, curr) => {
+    if (curr.transaction_type === 'earned' || curr.transaction_type === 'refunded') return acc + curr.points;
+    if (curr.transaction_type === 'redeemed') return acc - curr.points;
+    return acc;
+  }, 0) || 0;
+  
   const recentOrders = orders?.slice(0, 2) || []
   const upcomingReminders = reminders?.filter(r => new Date(r.event_date) >= new Date()).slice(0, 2) || []
 
