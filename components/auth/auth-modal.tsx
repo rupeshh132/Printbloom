@@ -12,7 +12,7 @@ export function AuthModal() {
   const searchParams = useSearchParams()
   const refCode = searchParams?.get('ref')
   
-  const [mode, setMode] = useState<"login" | "signup">(refCode ? "signup" : "login")
+  const [mode, setMode] = useState<"login" | "signup" | "forgot">(refCode ? "signup" : "login")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -31,8 +31,32 @@ export function AuthModal() {
   }
 
   const toggleMode = () => {
-    setMode(mode === "login" ? "signup" : "login")
+    setMode(mode === "login" || mode === "forgot" ? "signup" : "login")
     resetForm()
+  }
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) {
+      setError("Please enter your email address.")
+      return
+    }
+    setError("")
+    setSuccess("")
+    setLoading(true)
+
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+    
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${siteUrl}/update-password`,
+    })
+
+    if (error) {
+      setError(error.message)
+    } else {
+      setSuccess("Check your email for the password reset link.")
+    }
+    setLoading(false)
   }
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -115,7 +139,7 @@ export function AuthModal() {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-[#E0D9CF]">
           <h2 className="font-serif text-xl text-[#221F1C]">
-            {mode === "login" ? "Log In" : "Create Account"}
+            {mode === "forgot" ? "Reset Password" : mode === "login" ? "Log In" : "Create Account"}
           </h2>
           <button onClick={() => { closeAuthModal(); resetForm(); }} className="text-[#9A8F85] hover:text-[#DFBC94]">
             <X className="w-5 h-5" />
@@ -136,7 +160,7 @@ export function AuthModal() {
             </div>
           )}
 
-          <form onSubmit={handleAuth} className="flex flex-col gap-4">
+          <form onSubmit={mode === "forgot" ? handleForgotPassword : handleAuth} className="flex flex-col gap-4">
             
             {mode === "signup" && (
               <div className="flex flex-col gap-2">
@@ -174,44 +198,69 @@ export function AuthModal() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-[#6B6259]">Password</label>
-              <div className="flex relative">
-                <span className="absolute left-0 top-0 bottom-0 flex items-center pl-3 text-[#9A8F85]">
-                  <Lock className="w-4 h-4" />
-                </span>
-                <input 
-                  type="password"
-                  required
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
-                />
+            {mode !== "forgot" && (
+              <div className="flex flex-col gap-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-sm font-medium text-[#6B6259]">Password</label>
+                  {mode === "login" && (
+                    <button 
+                      type="button" 
+                      onClick={() => { setMode("forgot"); setError(""); setSuccess(""); }} 
+                      className="text-xs text-[#DFBC94] hover:underline"
+                    >
+                      Forgot password?
+                    </button>
+                  )}
+                </div>
+                <div className="flex relative">
+                  <span className="absolute left-0 top-0 bottom-0 flex items-center pl-3 text-[#9A8F85]">
+                    <Lock className="w-4 h-4" />
+                  </span>
+                  <input 
+                    type="password"
+                    required
+                    minLength={6}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <button 
               type="submit"
               disabled={loading}
               className="w-full h-12 mt-2 bg-[#221F1C] text-white font-medium rounded-full hover:bg-[#DFBC94] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loading ? "Please wait..." : mode === "login" ? "Log In" : "Sign Up"}
+              {loading ? "Please wait..." : mode === "forgot" ? "Send Reset Link" : mode === "login" ? "Log In" : "Sign Up"}
             </button>
           </form>
 
           <div className="mt-6 text-center border-t border-[#E0D9CF] pt-6 flex flex-col gap-2">
-            <p className="text-sm text-[#221F1C]">
-              {mode === "login" ? "Don't have an account?" : "Already have an account?"}
-            </p>
-            <button 
-              type="button"
-              onClick={toggleMode}
-              className="text-[#DFBC94] text-sm font-medium hover:underline"
-            >
-              {mode === "login" ? "Create an account" : "Log in instead"}
-            </button>
+            {mode === "forgot" ? (
+              <button 
+                type="button"
+                onClick={() => { setMode("login"); setError(""); setSuccess(""); }}
+                className="text-[#DFBC94] text-sm font-medium hover:underline"
+              >
+                Back to log in
+              </button>
+            ) : (
+              <>
+                <p className="text-sm text-[#221F1C]">
+                  {mode === "login" ? "Don't have an account?" : "Already have an account?"}
+                </p>
+                <button 
+                  type="button"
+                  onClick={toggleMode}
+                  className="text-[#DFBC94] text-sm font-medium hover:underline"
+                >
+                  {mode === "login" ? "Create an account" : "Log in instead"}
+                </button>
+              </>
+            )}
           </div>
         </div>
 
