@@ -118,7 +118,7 @@ export default async function PromoCodesPage() {
                         {code.used_count || 0} / {code.max_uses !== null ? code.max_uses : '∞'}
                       </td>
                       <td className="p-4 text-sm text-[#9A8F85]">
-                        {code.expiry_date ? new Date(code.expiry_date).toLocaleDateString() : 'Never'}
+                        {code.expiry_date ? formatDate(code.expiry_date) : 'Never'}
                       </td>
                       <td className="p-4">
                         <span className={`px-2 py-1 text-xs rounded-sm ${code.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>

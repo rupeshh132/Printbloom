@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import NextLink from "next/link"
 import { ArrowLeft, Download, Copy, Image as ImageIcon } from "lucide-react"
 import { OrderCustomizationClient } from "@/components/admin/order-customization-client"
+import { formatDateTime } from "@/lib/utils"
 
 export default async function AdminOrderDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -58,7 +59,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h1 className="font-serif text-3xl text-[#221F1C] mb-2 uppercase">Order #{order.id.split('-')[0]}</h1>
-          <p className="text-[#6B6259]">Placed on {new Date(order.created_at).toLocaleString()}</p>
+          <p className="text-[#6B6259]">Placed on {formatDateTime(order.created_at)}</p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3">

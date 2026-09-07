@@ -6,6 +6,7 @@ import { updateEnquiryStatus } from "@/app/actions/enquiries"
 import { CopyUploadLink } from "@/components/admin/copy-upload-link"
 import { WhatsAppButton } from "@/components/admin/whatsapp-button"
 import { Calendar, Tag } from "lucide-react"
+import { formatDateWithoutYear } from "@/lib/utils"
 
 const COLUMNS = [
   { id: "new", title: "New", color: "bg-[#DFBC94]/20 border-[#DFBC94]/30 text-[#8B6B43]" },
@@ -110,7 +111,7 @@ export function EnquiriesKanban({ initialEnquiries, flipbooks = [] }: { initialE
                             <div>
                               <h4 className="font-medium text-[#221F1C] leading-none mb-1">{enq.name}</h4>
                               <p className="text-[10px] uppercase text-[#9A8F85] tracking-wider">
-                                {new Date(enq.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                                {formatDateWithoutYear(enq.created_at)}
                               </p>
                             </div>
                             <WhatsAppButton 

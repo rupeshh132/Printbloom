@@ -2,6 +2,7 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { getAllFlipbooks } from "@/app/actions/flipbooks"
 import { CopyUploadLink } from "@/components/admin/copy-upload-link"
 import NextLink from "next/link"
+import { formatDate } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
@@ -39,7 +40,7 @@ export default async function FlipbooksManagerPage() {
               {flipbooks.map((fb: any) => (
                 <tr key={fb.id} className="hover:bg-[#FBF6EE]/50">
                   <td className="p-4 text-sm text-[#9A8F85]">
-                    {new Date(fb.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                    {formatDate(fb.created_at)}
                   </td>
                   <td className="p-4 font-medium text-[#221F1C]">{fb.title}</td>
                   <td className="p-4 text-sm text-[#6D635B]">{fb.images?.length || 0} Pages</td>

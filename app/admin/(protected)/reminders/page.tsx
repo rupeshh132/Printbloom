@@ -1,5 +1,6 @@
 import { getUpcomingReminders, getAllReminders } from "@/app/actions/reminders"
 import { SectionHeading } from "@/components/ui/section-heading"
+import { formatDate, formatDateWithoutYear } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
@@ -39,7 +40,7 @@ export default async function AdminRemindersPage() {
                 <div>
                   <h3 className="font-medium text-[#221F1C]">{rem.customer_name}</h3>
                   <p className="text-sm text-[#6B6259]">
-                    <strong className="text-[#DFBC94]">{rem.occasion_name}</strong> on {new Date(rem.occasion_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })}
+                    <strong className="text-[#DFBC94]">{rem.occasion_name}</strong> on {formatDateWithoutYear(rem.occasion_date)}
                   </p>
                   <p className="text-xs text-[#9A8F85] mt-1 font-mono">{rem.phone_number}</p>
                 </div>
@@ -78,7 +79,7 @@ export default async function AdminRemindersPage() {
                 <td className="px-6 py-4 text-[#6B6259]">{rem.phone_number}</td>
                 <td className="px-6 py-4 text-[#DFBC94]">{rem.occasion_name}</td>
                 <td className="px-6 py-4 text-[#6B6259]">
-                  {new Date(rem.occasion_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  {formatDate(rem.occasion_date)}
                 </td>
               </tr>
             ))}

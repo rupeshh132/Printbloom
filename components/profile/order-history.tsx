@@ -1,6 +1,8 @@
 import * as React from "react"
 import { Package, Download, RefreshCw, Truck, CheckCircle2, Circle } from "lucide-react"
 import { ReorderButton } from "@/components/profile/reorder-button"
+import { formatDate } from "@/lib/utils"
+import { formatDate } from "@/lib/utils"
 
 // A helper component to render the tracking timeline
 function OrderTracking({ status }: { status: string }) {
@@ -63,9 +65,7 @@ export function OrderHistory({ orders }: { orders: any[] }) {
       </div>
       
       {displayOrders.map((order) => {
-        const orderDate = new Date(order.created_at).toLocaleDateString("en-IN", {
-          year: "numeric", month: "short", day: "numeric"
-        })
+        const orderDate = formatDate(order.created_at)
         
         return (
           <div key={order.id} className="bg-white border border-[#E0D9CF] rounded-sm overflow-hidden">

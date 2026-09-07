@@ -2,6 +2,7 @@ import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { notFound, redirect } from "next/navigation"
 import { InvoiceActions } from "@/components/profile/invoice-actions"
 import Link from "next/link"
+import { formatDate } from "@/lib/utils"
 
 export default async function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -46,9 +47,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
   }
 
   // Format date
-  const orderDate = new Date(order.created_at).toLocaleDateString("en-IN", {
-    year: "numeric", month: "long", day: "numeric"
-  })
+  const orderDate = formatDate(order.created_at)
 
   // Get address object
   const addr = Array.isArray(order.addresses) ? order.addresses[0] : order.addresses

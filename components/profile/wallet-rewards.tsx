@@ -1,6 +1,7 @@
 "use client"
 import * as React from "react"
 import { Coins, Gift, Copy, CheckCircle2, ArrowRight } from "lucide-react"
+import { formatDateTime } from "@/lib/utils"
 
 export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[], userId: string }) {
   const [copied, setCopied] = React.useState(false)
@@ -102,9 +103,7 @@ export function WalletRewards({ pointsHistory, userId }: { pointsHistory: any[],
           <div className="border border-[#E0D9CF] rounded-xl bg-white overflow-hidden shadow-sm">
             {pointsHistory.map((txn, index) => {
               const isPositive = txn.transaction_type === 'earned' || txn.transaction_type === 'refunded'
-              const date = new Date(txn.created_at).toLocaleDateString("en-IN", {
-                year: "numeric", month: "short", day: "numeric"
-              })
+              const date = formatDateTime(txn.created_at)
               
               return (
                 <div key={txn.id} className={`flex items-center justify-between p-5 ${index !== pointsHistory.length - 1 ? 'border-b border-[#E0D9CF]' : ''}`}>

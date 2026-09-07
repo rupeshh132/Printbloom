@@ -2,6 +2,8 @@
 import * as React from "react"
 import { CalendarDays, Cake, Heart, Plus, Trash2, Bell } from "lucide-react"
 import { addUserReminder, deleteUserReminder } from "@/app/actions/user-reminders"
+import { formatDateWithoutYear } from "@/lib/utils"
+import { formatDateWithoutYear } from "@/lib/utils"
 
 export function SmartReminders({ reminders }: { reminders: any[] }) {
   const [isAdding, setIsAdding] = React.useState(false)
@@ -124,8 +126,7 @@ export function SmartReminders({ reminders }: { reminders: any[] }) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {reminders.map((reminder) => {
-            const dateObj = new Date(reminder.event_date);
-            const dateStr = dateObj.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+            const dateStr = formatDateWithoutYear(reminder.event_date);
             const daysLeft = getDaysLeft(reminder.event_date);
             
             return (

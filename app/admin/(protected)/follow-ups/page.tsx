@@ -1,6 +1,7 @@
 import { SectionHeading } from "@/components/ui/section-heading"
 import { getFollowUps, updateFollowUpStatus } from "@/app/actions/follow-ups"
 import { WhatsAppButton } from "@/components/admin/whatsapp-button"
+import { formatDateTime } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
@@ -72,7 +73,7 @@ export default async function FollowUpsPage() {
                   return (
                     <tr key={lead.id} className="hover:bg-[#FBF6EE]/60 transition-colors">
                       <td className="px-5 py-4 text-[#9A8F85] whitespace-nowrap">
-                        {new Date(lead.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                        {formatDateTime(lead.created_at)}
                       </td>
                       <td className="px-5 py-4 font-semibold text-[#221F1C]">{lead.customer_name}</td>
                       <td className="px-5 py-4 text-[#6B6259] font-mono text-xs">{lead.phone_number}</td>

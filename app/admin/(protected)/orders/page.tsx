@@ -1,6 +1,7 @@
 import { SectionHeading } from "@/components/ui/section-heading"
 import { getAdminOrders } from "@/app/actions/admin-orders"
 import NextLink from "next/link"
+import { formatDate } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -63,7 +64,7 @@ export default async function AdminOrdersList({ searchParams }: { searchParams: 
                     <p className="font-medium text-[#221F1C] uppercase">#{order.id.split('-')[0]}</p>
                   </td>
                   <td className="p-4 text-sm text-[#6B6259]">
-                    {new Date(order.created_at).toLocaleDateString()}
+                    {formatDate(order.created_at)}
                   </td>
                   <td className="p-4 text-sm">
                     ₹{order.total_amount}
