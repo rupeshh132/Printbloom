@@ -90,7 +90,9 @@ export default function CartPage() {
       });
       const orderData = await orderRes.json();
       
-      if (!orderData.id) throw new Error("Could not create Razorpay order");
+      if (!orderRes.ok || !orderData.id) {
+        throw new Error(orderData.error || "Could not create Razorpay order. Please try again.");
+      }
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -135,9 +137,9 @@ export default function CartPage() {
         alert(response.error.description);
       });
       rzp.open();
-    } catch (error) {
-      console.error(error);
-      alert("Failed to initiate checkout");
+    } catch (error: any) {
+      console.error("Checkout Failed:", error);
+      alert(error.message || "Failed to initiate checkout");
     } finally {
       setIsProcessing(false);
     }

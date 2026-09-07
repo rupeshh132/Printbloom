@@ -52,8 +52,10 @@ export async function POST(request: Request) {
       }
       
       if (!parsedPrice || parsedPrice <= 0) {
-        console.error("Failed to parse valid price for item:", item);
-        return NextResponse.json({ error: `Invalid price configuration for ${item.name}. Please contact support.` }, { status: 400 });
+        console.error(`[ADMIN ALERT] Missing or invalid price (₹${parsedPrice}) detected for product: ${item.name}. Please set a valid Starting Price in the Admin Panel.`);
+        return NextResponse.json({ 
+          error: `The price for "${item.name}" is currently unavailable. We are fixing this. Please contact support or try again later.` 
+        }, { status: 400 });
       }
       
       total += parsedPrice * item.quantity;
