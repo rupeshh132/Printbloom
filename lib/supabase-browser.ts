@@ -1,6 +1,7 @@
 import { createBrowserClient } from "@supabase/ssr"
+import { SupabaseClient } from "@supabase/supabase-js"
 
-export function createSupabaseBrowserClient() {
+export function createSupabaseBrowserClient(): SupabaseClient {
   if (typeof window === 'undefined') {
     return createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
