@@ -2,7 +2,6 @@ import * as React from "react"
 import { Package, Download, RefreshCw, Truck, CheckCircle2, Circle } from "lucide-react"
 import { ReorderButton } from "@/components/profile/reorder-button"
 import { formatDate } from "@/lib/utils"
-import { formatDate } from "@/lib/utils"
 
 // A helper component to render the tracking timeline
 function OrderTracking({ status }: { status: string }) {

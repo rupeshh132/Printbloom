@@ -3,7 +3,6 @@ import * as React from "react"
 import { CalendarDays, Cake, Heart, Plus, Trash2, Bell } from "lucide-react"
 import { addUserReminder, deleteUserReminder } from "@/app/actions/user-reminders"
 import { formatDateWithoutYear } from "@/lib/utils"
-import { formatDateWithoutYear } from "@/lib/utils"
 
 export function SmartReminders({ reminders }: { reminders: any[] }) {
   const [isAdding, setIsAdding] = React.useState(false)
