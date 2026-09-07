@@ -11,18 +11,20 @@ type AddToCartProps = {
     image: string
     variant?: string
     is_digital?: boolean
+    slug?: string
   }
   customizationData?: any[]
+  minPhotos?: number
 }
 
-export function AddToCartButton({ product, customizationData = [] }: AddToCartProps) {
+export function AddToCartButton({ product, customizationData = [], minPhotos = 0 }: AddToCartProps) {
   const { addItem } = useCart()
   const { openCartDrawer } = useUIStore()
 
   const handleAdd = () => {
-    // Basic validation: require at least one uploaded photo if customizing
-    if (customizationData.length === 0) {
-      alert("Please upload at least one photo before adding to cart.")
+    // Basic validation based on requirements
+    if (minPhotos > 0 && customizationData.length < minPhotos) {
+      alert(`Please upload at least ${minPhotos} reference ${minPhotos === 1 ? 'photo' : 'photos'} before adding to cart.`)
       return
     }
 

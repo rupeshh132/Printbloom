@@ -1,0 +1,1 @@
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS images_status VARCHAR(20) DEFAULT 'complete';

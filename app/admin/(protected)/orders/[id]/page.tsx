@@ -1,8 +1,8 @@
-import { getAdminOrderById, updateOrderStatus } from "@/app/actions/admin-orders"
+import { getAdminOrderById, updateOrderStatus, updateImagesStatus } from "@/app/actions/admin-orders"
 import { getFlipbooksByEnquiry } from "@/app/actions/flipbooks"
 import { notFound } from "next/navigation"
 import NextLink from "next/link"
-import { ArrowLeft, Download, Copy } from "lucide-react"
+import { ArrowLeft, Download, Copy, Image as ImageIcon } from "lucide-react"
 import { OrderCustomizationClient } from "@/components/admin/order-customization-client"
 
 export default async function AdminOrderDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -20,6 +20,12 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
     "use server"
     const status = formData.get("status") as string
     await updateOrderStatus(order.id, status)
+  }
+
+  const handleUpdateImagesStatus = async (formData: FormData) => {
+    "use server"
+    const images_status = formData.get("images_status") as string
+    await updateImagesStatus(order.id, images_status)
   }
 
   return (
@@ -49,32 +55,50 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
         </div>
       )}
 
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h1 className="font-serif text-3xl text-[#221F1C] mb-2 uppercase">Order #{order.id.split('-')[0]}</h1>
           <p className="text-[#6B6259]">Placed on {new Date(order.created_at).toLocaleString()}</p>
         </div>
         
-        {/* Status Updater */}
-        <form action={handleUpdateStatus} className="flex items-center gap-3 bg-white p-2 rounded-full border border-[#E0D9CF] shadow-sm">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#9A8F85] ml-3">Status</span>
-          <select 
-            name="status" 
-            defaultValue={order.status}
-            className="text-sm font-medium bg-transparent border-none focus:ring-0 cursor-pointer text-[#221F1C]"
-          >
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="designing">Designing</option>
-            <option value="printing">Printing</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-          <button type="submit" className="bg-[#DFBC94] text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-[#c9a67f] transition-colors">
-            Update
-          </button>
-        </form>
+        <div className="flex flex-col sm:flex-row gap-3">
+          {/* Images Status Updater */}
+          <form action={handleUpdateImagesStatus} className="flex items-center gap-2 bg-white p-2 rounded-full border border-[#E0D9CF] shadow-sm">
+            <ImageIcon className="w-4 h-4 text-[#9A8F85] ml-2" />
+            <select 
+              name="images_status" 
+              defaultValue={order.images_status || 'complete'}
+              className={`text-sm font-medium bg-transparent border-none focus:ring-0 cursor-pointer ${order.images_status === 'partial' ? 'text-amber-600' : 'text-green-600'}`}
+            >
+              <option value="partial">Partial Photos</option>
+              <option value="complete">All Photos Received</option>
+            </select>
+            <button type="submit" className="bg-[#F5F0E8] text-[#221F1C] text-xs font-medium px-4 py-2 rounded-full hover:bg-[#E0D9CF] transition-colors">
+              Save
+            </button>
+          </form>
+
+          {/* Status Updater */}
+          <form action={handleUpdateStatus} className="flex items-center gap-3 bg-white p-2 rounded-full border border-[#E0D9CF] shadow-sm">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#9A8F85] ml-3">Order Status</span>
+            <select 
+              name="status" 
+              defaultValue={order.status}
+              className="text-sm font-medium bg-transparent border-none focus:ring-0 cursor-pointer text-[#221F1C]"
+            >
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="designing">Designing</option>
+              <option value="printing">Printing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button type="submit" className="bg-[#DFBC94] text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-[#c9a67f] transition-colors">
+              Update
+            </button>
+          </form>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

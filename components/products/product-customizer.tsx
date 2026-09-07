@@ -6,6 +6,8 @@ import { PhotoUploader, UploadedPhoto } from "./photo-uploader"
 import { AddToCartButton } from "./add-to-cart-button"
 import { WishlistButton } from "./wishlist-button"
 import { productVariantsMap, ProductVariant } from "@/lib/pricing"
+import { getPhotoRequirements } from "@/lib/photo-requirements"
+import { Info } from "lucide-react"
 
 export function ProductCustomizer({ product, slug, isWishlisted }: { product: any, slug: string, isWishlisted: boolean }) {
   const [photos, setPhotos] = React.useState<UploadedPhoto[]>([])
@@ -16,10 +18,13 @@ export function ProductCustomizer({ product, slug, isWishlisted }: { product: an
   const variants = productVariantsMap[slug] || [{ label: "Default", price: product.starting_price || 999 }]
   const [selectedVariant, setSelectedVariant] = React.useState<ProductVariant>(variants[0])
 
+  // Get photo requirements
+  const photoReq = getPhotoRequirements(slug, selectedVariant.label)
+
   const handleBuyNow = () => {
-    // Basic validation
-    if (photos.length === 0) {
-      alert("Please upload at least one photo before buying.")
+    // Basic validation based on requirements
+    if (photoReq.min > 0 && photos.length < photoReq.min) {
+      alert(`Please upload at least ${photoReq.min} reference ${photoReq.min === 1 ? 'photo' : 'photos'} to book your order.`)
       return
     }
 
@@ -82,6 +87,21 @@ export function ProductCustomizer({ product, slug, isWishlisted }: { product: an
         </div>
       )}
 
+      {/* Partial Upload Notice */}
+      {photoReq.min > 0 && (
+        <div className="mb-6 p-4 bg-[#FBF6EE] border border-[#DFBC94] rounded-sm flex items-start gap-3 text-sm text-[#6B6259]">
+          <Info className="w-5 h-5 text-[#DFBC94] shrink-0 mt-0.5" />
+          <div>
+            <p className="font-medium text-[#221F1C] mb-1">
+              Total photos required: {photoReq.totalText}
+            </p>
+            <p>
+              To book your order quickly, you only need to upload <strong>{photoReq.min} reference {photoReq.min === 1 ? 'photo' : 'photos'}</strong> right now. You can send the rest of your photos to our team via WhatsApp after placing the order.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Photo Uploader Engine */}
       <PhotoUploader onPhotosChange={setPhotos} />
 
@@ -94,9 +114,11 @@ export function ProductCustomizer({ product, slug, isWishlisted }: { product: an
               name: product.name,
               price: selectedVariant.price,
               image: product.main_image_url,
-              variant: selectedVariant.label
+              variant: selectedVariant.label,
+              slug: slug // Pass slug so cart knows what this is
             }}
             customizationData={photos}
+            minPhotos={photoReq.min}
           />
         </div>
         <button 

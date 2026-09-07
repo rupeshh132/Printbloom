@@ -128,6 +128,26 @@ export async function POST(request: Request) {
 
     const razorpayOrder = await razorpay.orders.create(options);
     
+    // Calculate images_status
+    // If any item in the order has a photo requirement > 0, we mark the whole order as 'partial'
+    const { getPhotoRequirements } = await import("@/lib/photo-requirements");
+    let needsPhotos = false;
+    for (const item of items) {
+      const dbProduct = products.find((p: any) => 
+        p.id === item.productId || 
+        p.slug === item.productId ||
+        (p.id && item.productId.startsWith(p.id)) ||
+        (p.slug && item.productId.startsWith(p.slug))
+      );
+      if (dbProduct) {
+        const req = getPhotoRequirements(dbProduct.slug, item.variant || "Default");
+        if (req.min > 0) {
+          needsPhotos = true;
+          break;
+        }
+      }
+    }
+
     // 3. Insert Pending Order into DB
     let insertData: any = {
       user_id: user.id,
@@ -135,7 +155,8 @@ export async function POST(request: Request) {
       status: 'processing',
       payment_status: 'pending',
       razorpay_order_id: razorpayOrder.id,
-      points_used: validatedPointsToRedeem
+      points_used: validatedPointsToRedeem,
+      images_status: needsPhotos ? 'partial' : 'complete'
     };
     if (addressId) {
       insertData.shipping_address_id = addressId;

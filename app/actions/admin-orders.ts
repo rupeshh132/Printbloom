@@ -75,3 +75,24 @@ export async function updateOrderStatus(id: string, status: string) {
   revalidatePath(`/admin/orders/${id}`)
   return { success: true }
 }
+
+export async function updateImagesStatus(id: string, images_status: string) {
+  const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
+  
+  const { error } = await supabase
+    .from("orders")
+    .update({ images_status })
+    .eq("id", id)
+
+  if (error) {
+    console.error("Failed to update images status:", error)
+    throw new Error(error.message)
+  }
+
+  revalidatePath("/admin/orders")
+  revalidatePath(`/admin/orders/${id}`)
+  return { success: true }
+}
