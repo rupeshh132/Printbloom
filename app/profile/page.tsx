@@ -37,6 +37,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
     .from("orders")
     .select(`*, order_items (*)`)
     .eq("user_id", user.id)
+    .eq("payment_status", "paid")
     .order("created_at", { ascending: false })
 
   const { getProducts } = await import("@/app/actions/products");

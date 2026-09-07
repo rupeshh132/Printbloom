@@ -51,6 +51,11 @@ export async function POST(request: Request) {
         parsedPrice = priceMatch ? parseFloat(priceMatch[0].replace(/,/g, "")) : 0;
       }
       
+      if (!parsedPrice || parsedPrice <= 0) {
+        console.error("Failed to parse valid price for item:", item);
+        return NextResponse.json({ error: `Invalid price configuration for ${item.name}. Please contact support.` }, { status: 400 });
+      }
+      
       total += parsedPrice * item.quantity;
     }
 
@@ -198,6 +203,10 @@ export async function POST(request: Request) {
         if (!parsedPrice) {
           const priceMatch = dbProduct?.starting_price_label?.match(/[\d,]+\.?\d*/);
           parsedPrice = priceMatch ? parseFloat(priceMatch[0].replace(/,/g, "")) : 0;
+        }
+
+        if (!parsedPrice || parsedPrice <= 0) {
+          throw new Error(`Critical Error: Invalid price calculated for ${item.name} during DB insertion.`);
         }
         
         return {

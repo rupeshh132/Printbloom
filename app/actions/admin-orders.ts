@@ -15,6 +15,7 @@ export async function getAdminOrders() {
       addresses (*),
       order_items (*)
     `)
+    .eq("payment_status", "paid")
     .order("created_at", { ascending: false })
 
   if (error) {
