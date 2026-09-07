@@ -2,7 +2,7 @@ import * as React from "react"
 import { redirect } from "next/navigation"
 import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { Navbar } from "@/components/marketing/navbar"
-import { User, Package, MapPin, Heart, ArrowRight, Wallet, CalendarDays, MessageSquare } from "lucide-react"
+import { User, Package, MapPin, Heart, ArrowRight, Wallet, CalendarDays, MessageSquare, LayoutDashboard } from "lucide-react"
 import { SignOutButton } from "@/components/auth/signout-button"
 import NextLink from "next/link"
 import { OrderHistory } from "@/components/profile/order-history"
@@ -12,6 +12,7 @@ import { SmartReminders } from "@/components/profile/smart-reminders"
 import { WishlistTab } from "@/components/profile/wishlist-tab"
 import { EnquiryTab } from "@/components/profile/enquiry-tab"
 import { ProfileInfoTab } from "@/components/profile/profile-info-tab"
+import { DashboardTab } from "@/components/profile/dashboard-tab"
 import { AvatarUpload } from "@/components/profile/avatar-upload"
 import { OrderSuccessPopup } from "@/components/profile/order-success-popup"
 import { Suspense } from "react"
@@ -28,7 +29,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
   }
 
   const resolvedParams = await searchParams;
-  const currentTab = resolvedParams.tab || "profile"
+  const currentTab = resolvedParams.tab || "dashboard"
   const fullName = user.user_metadata?.full_name || "PrintBloom User"
 
   // Fetch orders
@@ -94,76 +95,94 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
         
         <h1 className="font-serif text-3xl md:text-4xl text-[#221F1C] mb-8">My Account</h1>
         
-        <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
           
           {/* Sidebar */}
           <div className="w-full md:w-64 flex-shrink-0">
-            <div className="bg-white border border-[#E0D9CF] rounded-sm overflow-hidden flex flex-col">
+            <div className="flex flex-col gap-6">
               
-              <div className="p-6 border-b border-[#E0D9CF] flex items-center gap-4 bg-[#FBF6EE]">
+              {/* User Info Card */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm flex items-center gap-4 border border-[#E0D9CF]">
                 <AvatarUpload currentAvatar={user.user_metadata?.avatar_url} fullName={fullName} />
                 <div>
-                  <h3 className="font-medium text-[#221F1C] truncate max-w-[150px]">{fullName}</h3>
-                  <p className="text-xs text-[#9A8F85] truncate max-w-[150px]">{user.email}</p>
+                  <h3 className="font-semibold text-[#221F1C] truncate max-w-[150px] md:max-w-[120px]">{fullName}</h3>
+                  <p className="text-xs text-[#9A8F85] truncate max-w-[150px] md:max-w-[120px]">{user.email}</p>
                 </div>
               </div>
 
-              <div className="flex md:flex-col overflow-x-auto md:overflow-visible hide-scrollbar bg-white">
+              {/* Navigation Links */}
+              <div className="flex md:flex-col overflow-x-auto md:overflow-visible hide-scrollbar gap-2 md:gap-1 pb-2 md:pb-0">
+                <NextLink 
+                  href="/profile?tab=dashboard" 
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-2.5 md:py-3 md:px-4 rounded-full md:rounded-xl transition-all ${currentTab === "dashboard" ? "bg-[#221F1C] text-white md:bg-white md:text-[#221F1C] md:shadow-sm md:border md:border-[#E0D9CF] md:font-medium" : "bg-white border border-[#E0D9CF] md:border-transparent md:bg-transparent text-[#6B6259] hover:bg-[#F4ECDD]"}`}
+                >
+                  <LayoutDashboard className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Dashboard</span>
+                </NextLink>
                 <NextLink 
                   href="/profile?tab=profile" 
-                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "profile" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-2.5 md:py-3 md:px-4 rounded-full md:rounded-xl transition-all ${currentTab === "profile" ? "bg-[#221F1C] text-white md:bg-white md:text-[#221F1C] md:shadow-sm md:border md:border-[#E0D9CF] md:font-medium" : "bg-white border border-[#E0D9CF] md:border-transparent md:bg-transparent text-[#6B6259] hover:bg-[#F4ECDD]"}`}
                 >
                   <User className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Profile Info</span>
                 </NextLink>
                 <NextLink 
                   href="/profile?tab=orders" 
-                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "orders" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-2.5 md:py-3 md:px-4 rounded-full md:rounded-xl transition-all ${currentTab === "orders" ? "bg-[#221F1C] text-white md:bg-white md:text-[#221F1C] md:shadow-sm md:border md:border-[#E0D9CF] md:font-medium" : "bg-white border border-[#E0D9CF] md:border-transparent md:bg-transparent text-[#6B6259] hover:bg-[#F4ECDD]"}`}
                 >
                   <Package className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">My Orders</span>
                 </NextLink>
                 <NextLink 
                   href="/profile?tab=addresses" 
-                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "addresses" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-2.5 md:py-3 md:px-4 rounded-full md:rounded-xl transition-all ${currentTab === "addresses" ? "bg-[#221F1C] text-white md:bg-white md:text-[#221F1C] md:shadow-sm md:border md:border-[#E0D9CF] md:font-medium" : "bg-white border border-[#E0D9CF] md:border-transparent md:bg-transparent text-[#6B6259] hover:bg-[#F4ECDD]"}`}
                 >
                   <MapPin className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Saved Addresses</span>
                 </NextLink>
                 <NextLink 
                   href="/profile?tab=rewards" 
-                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "rewards" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-2.5 md:py-3 md:px-4 rounded-full md:rounded-xl transition-all ${currentTab === "rewards" ? "bg-[#221F1C] text-white md:bg-white md:text-[#221F1C] md:shadow-sm md:border md:border-[#E0D9CF] md:font-medium" : "bg-white border border-[#E0D9CF] md:border-transparent md:bg-transparent text-[#6B6259] hover:bg-[#F4ECDD]"}`}
                 >
                   <Wallet className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Wallet & Rewards</span>
                 </NextLink>
                 <NextLink 
                   href="/profile?tab=reminders" 
-                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "reminders" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-2.5 md:py-3 md:px-4 rounded-full md:rounded-xl transition-all ${currentTab === "reminders" ? "bg-[#221F1C] text-white md:bg-white md:text-[#221F1C] md:shadow-sm md:border md:border-[#E0D9CF] md:font-medium" : "bg-white border border-[#E0D9CF] md:border-transparent md:bg-transparent text-[#6B6259] hover:bg-[#F4ECDD]"}`}
                 >
                   <CalendarDays className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Smart Reminders</span>
                 </NextLink>
                 <NextLink 
                   href="/profile?tab=wishlist" 
-                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "wishlist" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-2.5 md:py-3 md:px-4 rounded-full md:rounded-xl transition-all ${currentTab === "wishlist" ? "bg-[#221F1C] text-white md:bg-white md:text-[#221F1C] md:shadow-sm md:border md:border-[#E0D9CF] md:font-medium" : "bg-white border border-[#E0D9CF] md:border-transparent md:bg-transparent text-[#6B6259] hover:bg-[#F4ECDD]"}`}
                 >
                   <Heart className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Wishlist</span>
                 </NextLink>
                 <NextLink 
                   href="/profile?tab=enquiry" 
-                  className={`flex-shrink-0 flex items-center gap-2 p-3 md:p-4 transition-colors ${currentTab === "enquiry" ? "text-[#DFBC94] bg-[#F5F0E8] font-medium border-b-2 md:border-b-0 md:border-l-4 border-[#DFBC94]" : "text-[#6B6259] hover:bg-[#FBF6EE] border-b-2 md:border-b-0 md:border-l-4 border-transparent"}`}
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-2.5 md:py-3 md:px-4 rounded-full md:rounded-xl transition-all ${currentTab === "enquiry" ? "bg-[#221F1C] text-white md:bg-white md:text-[#221F1C] md:shadow-sm md:border md:border-[#E0D9CF] md:font-medium" : "bg-white border border-[#E0D9CF] md:border-transparent md:bg-transparent text-[#6B6259] hover:bg-[#F4ECDD]"}`}
                 >
                   <MessageSquare className="w-4 h-4 md:w-5 md:h-5" /> <span className="text-sm md:text-base whitespace-nowrap">Custom Request</span>
                 </NextLink>
-                <div className="flex-shrink-0 md:hidden flex items-center px-3 border-l border-[#E0D9CF] my-2 ml-2">
+                <div className="flex-shrink-0 md:hidden flex items-center px-2">
                   <SignOutButton />
                 </div>
               </div>
               
-              <div className="p-2 border-t border-[#E0D9CF] mt-0 md:mt-2 hidden md:block">
+              <div className="hidden md:block px-4">
                 <SignOutButton />
               </div>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 bg-white border border-[#E0D9CF] rounded-sm p-6 md:p-10 shadow-sm min-h-[500px]">
+          <div className="flex-1 min-h-[500px]">
+            
+            {currentTab === "dashboard" && (
+              <DashboardTab 
+                fullName={fullName} 
+                orders={orders || []} 
+                pointsHistory={pointsHistory || []} 
+                reminders={reminders || []}
+                wishlist={wishlist || []}
+              />
+            )}
             
             {currentTab === "profile" && (
               <ProfileInfoTab user={user} />
@@ -174,23 +193,33 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
             )}
 
             {currentTab === "addresses" && (
-              <AddressBook addresses={addresses || []} />
+              <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#E0D9CF] shadow-sm animate-in fade-in duration-500">
+                <AddressBook addresses={addresses || []} />
+              </div>
             )}
 
             {currentTab === "rewards" && (
-              <WalletRewards pointsHistory={pointsHistory || []} userId={user.id} />
+              <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#E0D9CF] shadow-sm animate-in fade-in duration-500">
+                <WalletRewards pointsHistory={pointsHistory || []} userId={user.id} />
+              </div>
             )}
 
             {currentTab === "reminders" && (
-              <SmartReminders reminders={reminders || []} />
+              <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#E0D9CF] shadow-sm animate-in fade-in duration-500">
+                <SmartReminders reminders={reminders || []} />
+              </div>
             )}
 
             {currentTab === "wishlist" && (
-              <WishlistTab items={wishlist || []} />
+              <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#E0D9CF] shadow-sm animate-in fade-in duration-500">
+                <WishlistTab items={wishlist || []} />
+              </div>
             )}
             
             {currentTab === "enquiry" && (
-              <EnquiryTab />
+              <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#E0D9CF] shadow-sm animate-in fade-in duration-500">
+                <EnquiryTab />
+              </div>
             )}
             
           </div>

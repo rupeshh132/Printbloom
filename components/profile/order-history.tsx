@@ -43,13 +43,13 @@ export function OrderHistory({ orders }: { orders: any[] }) {
 
   if (!displayOrders || displayOrders.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-20 h-20 bg-[#F5F0E8] rounded-full flex items-center justify-center text-[#9A8F85] mb-4">
+      <div className="bg-white rounded-2xl p-6 md:p-12 border border-[#E0D9CF] shadow-sm animate-in fade-in duration-500 flex flex-col items-center justify-center text-center min-h-[400px]">
+        <div className="w-24 h-24 bg-[#FBF6EE] rounded-full flex items-center justify-center text-[#DFBC94] mb-6">
           <Package className="w-10 h-10" />
         </div>
-        <h3 className="text-xl font-medium text-[#221F1C] mb-2">No orders yet</h3>
-        <p className="text-[#6B6259] mb-6 max-w-md">Looks like you haven't created any custom memories with us yet. Start personalizing your first gift today!</p>
-        <a href="/products" className="bg-[#221F1C] text-white px-6 py-3 rounded-full font-medium hover:bg-black transition-colors">
+        <h3 className="font-serif text-2xl text-[#221F1C] mb-2">No orders yet</h3>
+        <p className="text-[#6B6259] mb-8 max-w-md">Looks like you haven't created any custom memories with us yet. Start personalizing your first gift today!</p>
+        <a href="/products" className="bg-[#221F1C] text-white px-8 py-3.5 rounded-full font-medium hover:bg-[#DFBC94] hover:text-[#221F1C] transition-colors">
           Start Shopping
         </a>
       </div>
@@ -57,8 +57,10 @@ export function OrderHistory({ orders }: { orders: any[] }) {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-medium text-[#221F1C] mb-6">Recent Orders</h2>
+    <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#E0D9CF] shadow-sm animate-in fade-in duration-500 space-y-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-medium text-[#221F1C]">My Orders</h2>
+      </div>
       
       {displayOrders.map((order) => {
         const orderDate = new Date(order.created_at).toLocaleDateString("en-IN", {

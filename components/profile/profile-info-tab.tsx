@@ -33,7 +33,7 @@ export function ProfileInfoTab({ user }: { user: any }) {
   }
 
   return (
-    <>
+    <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#E0D9CF] shadow-sm animate-in fade-in duration-500">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-medium text-[#221F1C]">Profile Information</h2>
         {!isEditing && (
@@ -139,6 +139,6 @@ export function ProfileInfoTab({ user }: { user: any }) {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
