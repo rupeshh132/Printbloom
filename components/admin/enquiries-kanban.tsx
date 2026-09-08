@@ -135,6 +135,18 @@ export function EnquiriesKanban({ initialEnquiries, flipbooks = [] }: { initialE
                                 <span>{enq.occasion}</span>
                               </div>
                             )}
+                            {enq.required_by && (
+                              <div className="flex items-center gap-2 text-xs text-red-600 font-medium mt-1">
+                                <span className="w-3.5 h-3.5 flex-shrink-0 text-center">⏰</span>
+                                <span>Req: {formatDateWithoutYear(enq.required_by)}</span>
+                              </div>
+                            )}
+                            {enq.notes && (
+                              <div className="flex items-start gap-2 text-xs text-[#6D635B] bg-[#FBF6EE] p-2 rounded border border-[#E0D9CF]/50 mt-2">
+                                <span className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-[#DFBC94] text-center">📝</span>
+                                <span className="line-clamp-3 italic">"{enq.notes}"</span>
+                              </div>
+                            )}
                           </div>
 
                           <div className="pt-3 border-t border-[#E0D9CF] mt-1">
