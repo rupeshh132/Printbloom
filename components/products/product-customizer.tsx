@@ -103,7 +103,7 @@ export function ProductCustomizer({ product, slug, isWishlisted }: { product: an
       )}
 
       {/* Photo Uploader Engine */}
-      <PhotoUploader onPhotosChange={setPhotos} />
+      <PhotoUploader onPhotosChange={setPhotos} maxText={photoReq.totalText !== "0" ? photoReq.totalText : undefined} />
 
       {/* Actions */}
       <div className="flex gap-3 w-full mt-4">

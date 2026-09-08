@@ -17,9 +17,10 @@ export type UploadedPhoto = {
 
 interface PhotoUploaderProps {
   onPhotosChange: (photos: UploadedPhoto[]) => void
+  maxText?: string
 }
 
-export function PhotoUploader({ onPhotosChange }: PhotoUploaderProps) {
+export function PhotoUploader({ onPhotosChange, maxText }: PhotoUploaderProps) {
   const [photos, setPhotos] = React.useState<UploadedPhoto[]>([])
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
@@ -202,7 +203,7 @@ export function PhotoUploader({ onPhotosChange }: PhotoUploaderProps) {
         </div>
         <h3 className="font-serif text-xl text-[#221F1C] mb-2">Upload your memories</h3>
         <p className="text-sm text-[#6B6259]">Drag & drop your photos here, or click to browse</p>
-        <p className="text-xs text-[#9A8F85] mt-2">Supports JPG, PNG (Max 80 photos)</p>
+        <p className="text-xs text-[#9A8F85] mt-2">Supports JPG, PNG (Max {maxText || "80"} photos)</p>
       </div>
 
       {/* Grid of uploaded photos */}

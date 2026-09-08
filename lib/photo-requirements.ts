@@ -4,9 +4,9 @@ export interface PhotoRequirement {
 }
 
 // Data-driven map of minimum required photos and the total text for the UI
-// Format: slug -> variant -> requirement
+// EXACTLY matches slugs and variant labels from lib/pricing.ts
 export const PHOTO_REQUIREMENTS: Record<string, Record<string, PhotoRequirement>> = {
-  "custom-magazine": {
+  "custom-magazine-a5": {
     "8 Pages": { min: 3, totalText: "30-35" },
     "12 Pages": { min: 3, totalText: "45-55" },
     "16 Pages": { min: 3, totalText: "65-75" },
@@ -29,52 +29,39 @@ export const PHOTO_REQUIREMENTS: Record<string, Record<string, PhotoRequirement>
     "Medium": { min: 3, totalText: "10-12" },
     "Large": { min: 3, totalText: "15-20" },
   },
-  "polaroid-set": {
-    "15 Polaroids": { min: 3, totalText: "15" },
-    "25 Polaroids": { min: 3, totalText: "25" },
+  "polaroids": {
+    "15 pcs": { min: 3, totalText: "15" },
+    "25 pcs": { min: 3, totalText: "25" },
   },
   "spotify-cards": {
-    "3 Cards": { min: 3, totalText: "3" },
-    "6 Cards": { min: 3, totalText: "6" },
+    "3 cards": { min: 3, totalText: "3" },
+    "6 cards": { min: 3, totalText: "6" },
   },
   "desk-calendar": {
-    "1 Calendar": { min: 3, totalText: "13-15" },
+    "Default": { min: 3, totalText: "13-15" },
   },
   "personalised-newspaper": {
     "4 Pages": { min: 3, totalText: "15-20" },
     "6 Pages": { min: 3, totalText: "25" },
   },
   "fridge-magnet-polaroids": {
-    "1 Magnet": { min: 1, totalText: "1" },
     "2 Magnets": { min: 2, totalText: "2" },
+    "4 Magnets": { min: 4, totalText: "4" },
   },
   "keychains": {
-    "1 Keychain": { min: 1, totalText: "1" },
-    "2 Keychains": { min: 2, totalText: "2" },
+    "1 pc": { min: 1, totalText: "1" },
+    "Set of 2": { min: 2, totalText: "2" },
   },
   "photo-booth-strips": {
-    "3 Strips": { min: 3, totalText: "9-12" },
-    "6 Strips": { min: 3, totalText: "18-24" },
+    "3 strips": { min: 3, totalText: "9-12" },
+    "6 strips": { min: 3, totalText: "18-24" },
   }
 };
 
-// Helper function to safely get requirements. 
-// Returns min: 0 if the product doesn't need photos.
 export function getPhotoRequirements(slug: string, variantLabel: string): PhotoRequirement {
-  const productMap = PHOTO_REQUIREMENTS[slug] || PHOTO_REQUIREMENTS[`${slug}-a5`] || PHOTO_REQUIREMENTS[`${slug}-a4`];
-  
-  if (productMap) {
-    // Try to find exact variant match
-    if (productMap[variantLabel]) {
-      return productMap[variantLabel];
-    }
-    // Fallback: just return the first entry if variant doesn't match perfectly
-    const firstKey = Object.keys(productMap)[0];
-    if (firstKey) {
-      return productMap[firstKey];
-    }
+  if (PHOTO_REQUIREMENTS[slug] && PHOTO_REQUIREMENTS[slug][variantLabel]) {
+    return PHOTO_REQUIREMENTS[slug][variantLabel];
   }
-
-  // If product is not in the map, assume it doesn't need photos (min: 0)
+  // Default fallback if a variant is not mapped
   return { min: 0, totalText: "0" };
 }
