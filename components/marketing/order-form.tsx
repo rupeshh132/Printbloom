@@ -111,20 +111,6 @@ export function OrderForm({ products }: OrderFormProps) {
             </select>
           </div>
 
-          {(product === "custom-magazine-a5" || product === "custom-magazine-a4" || product === "softcopy-magazine") && (
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="pages" className="text-sm font-medium">Page Count</label>
-              <select
-                id="pages" name="pages"
-                className="h-12 border border-border-subtle bg-white px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-accent"
-              >
-                <option value="8">8 Pages</option>
-                <option value="12">12 Pages — Most Popular</option>
-                <option value="16">16 Pages</option>
-                <option value="20">20 Pages</option>
-              </select>
-            </div>
-          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col space-y-2">
