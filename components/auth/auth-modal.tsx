@@ -137,13 +137,15 @@ export function AuthModal() {
       <div className="relative w-full max-w-md bg-white rounded-md shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#E0D9CF]">
-          <h2 className="font-serif text-xl text-[#221F1C]">
-            {mode === "forgot" ? "Reset Password" : mode === "login" ? "Log In" : "Create Account"}
-          </h2>
-          <button onClick={() => { closeAuthModal(); resetForm(); }} className="text-[#9A8F85] hover:text-[#DFBC94]">
+        <div className="flex flex-col items-center justify-center p-6 pb-4 border-b border-[#E0D9CF] relative">
+          <button onClick={() => { closeAuthModal(); resetForm(); }} className="absolute top-4 right-4 text-[#9A8F85] hover:text-[#DFBC94] transition-colors">
             <X className="w-5 h-5" />
           </button>
+          
+          <img src="/logo.png" alt="PrintBloom" className="h-14 w-14 object-contain rounded-full shadow-sm mb-3" />
+          <h2 className="font-serif text-2xl text-[#221F1C] text-center">
+            {mode === "forgot" ? "Reset Password" : mode === "login" ? "Welcome Back 🤍" : "Join PrintBloom 🤍"}
+          </h2>
         </div>
 
         {/* Body */}
