@@ -64,16 +64,16 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
       <div className="bg-white w-full max-w-3xl shadow-sm border border-[#E0D9CF] p-12 print:shadow-none print:border-none print:p-0">
         
         {/* Header */}
-        <div className="flex justify-between items-start mb-12">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-6 sm:gap-0 mb-8 sm:mb-12">
           <div>
-            <h1 className="font-serif text-4xl text-[#221F1C] tracking-tight mb-2 uppercase">PrintBloom</h1>
+            <h1 className="font-serif text-3xl sm:text-4xl text-[#221F1C] tracking-tight mb-2 uppercase">PrintBloom</h1>
             <p className="text-sm text-[#6B6259]">Email: printbloom.in@gmail.com</p>
             <p className="text-sm text-[#6B6259]">WhatsApp: +91 8691094045</p>
             <p className="text-sm text-[#6B6259]">Instagram: @printbloom.in</p>
             {/* <p className="text-sm text-[#6B6259]">Website: printbloom.in</p> */}
           </div>
-          <div className="text-right">
-            <h2 className="text-2xl font-semibold text-[#221F1C] mb-1">INVOICE</h2>
+          <div className="text-left sm:text-right">
+            <h2 className="text-xl sm:text-2xl font-semibold text-[#221F1C] mb-1">INVOICE</h2>
             <p className="font-mono text-sm text-[#6B6259]">Invoice No.: {order.invoice_no || `PB-${order.id.split('-')[0].toUpperCase()}`}</p>
             <p className="text-sm text-[#6B6259] mt-1">Order Date: {orderDate}</p>
             <p className="text-sm text-[#6B6259] mt-1">Payment Status: {order.payment_status?.toUpperCase() || 'PAID'}</p>
@@ -132,7 +132,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
 
         {/* Totals */}
         <div className="flex justify-end border-b border-[#E0D9CF] pb-6 mb-6">
-          <div className="w-1/2">
+          <div className="w-full sm:w-1/2">
             <div className="flex justify-between py-2 text-sm text-[#6B6259]">
               <span>Subtotal</span>
               <span>₹{subtotal}</span>
