@@ -50,8 +50,22 @@ export function FlipbookCreator({ token, returnUrl }: { token: string, returnUrl
         
         if (!cloudName || !uploadPreset) throw new Error("Cloudinary config missing")
 
+        // Compress image before upload to avoid Cloudinary 10MB limits while keeping max possible quality
+        const options = {
+          maxSizeMB: 9,
+          maxWidthOrHeight: 4000,
+          useWebWorker: true,
+        };
+        
+        let compressedFile = file;
+        try {
+          compressedFile = await import("browser-image-compression").then(mod => mod.default(file, options));
+        } catch (e) {
+          console.warn("Compression failed, using original file", e);
+        }
+
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", compressedFile);
         formData.append("upload_preset", uploadPreset);
         formData.append("folder", `flipbooks/${token}`);
         
