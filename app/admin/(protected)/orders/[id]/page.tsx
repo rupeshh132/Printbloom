@@ -170,23 +170,49 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
 
           <div className="bg-white border border-[#E0D9CF] rounded-sm p-6 shadow-sm">
             <h3 className="font-serif text-lg text-[#221F1C] border-b border-[#E0D9CF] pb-3 mb-5">Payment Details</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between text-[#6B6259] text-sm">
-                <span>Subtotal</span>
-                <span>₹{order.order_items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0)}</span>
-              </div>
-              <div className="flex justify-between text-[#6B6259] text-sm pb-4 border-b border-[#E0D9CF] border-dashed">
-                <span>Delivery & Discounts</span>
-                <span>{order.total_amount - order.order_items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0) > 0 ? '+' : ''}₹{(order.total_amount - order.order_items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0)).toFixed(2)}</span>
-              </div>
-            </div>
-            <div className="flex justify-between font-medium text-lg mt-4 pt-4 border-t border-[#E0D9CF]">
-              <span>Total</span>
-              <span>₹{order.total_amount}</span>
-            </div>
+            {(() => {
+              const subtotal = order.order_items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
+              const hasOnlyDigitalItems = order.order_items.length > 0 && order.order_items.every((item: any) => item.product_name?.includes('Softcopy Magazine'));
+              const deliveryFee = hasOnlyDigitalItems ? 0 : 90;
+              const pointsUsed = order.points_used || 0;
+              const discountAmount = Math.max(0, subtotal + deliveryFee - pointsUsed - order.total_amount);
+
+              return (
+                <>
+                  <div className="space-y-3 pb-4 border-b border-[#E0D9CF] border-dashed">
+                    <div className="flex justify-between text-[#6B6259] text-sm">
+                      <span>Subtotal</span>
+                      <span>₹{subtotal.toFixed(2)}</span>
+                    </div>
+                    
+                    <div className="flex justify-between text-[#6B6259] text-sm">
+                      <span>Delivery Fee</span>
+                      <span>+₹{deliveryFee.toFixed(2)}</span>
+                    </div>
+
+                    {discountAmount > 0 && (
+                      <div className="flex justify-between text-green-600 text-sm">
+                        <span>Discount {order.applied_promo ? `(${order.applied_promo})` : ''}</span>
+                        <span>-₹{discountAmount.toFixed(2)}</span>
+                      </div>
+                    )}
+
+                    {pointsUsed > 0 && (
+                      <div className="flex justify-between text-[#DFBC94] font-medium text-sm">
+                        <span>Wallet Points Used</span>
+                        <span>-₹{pointsUsed.toFixed(2)}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex justify-between font-medium text-lg mt-4 pt-4 border-t border-[#E0D9CF]">
+                    <span>Total</span>
+                    <span>₹{order.total_amount.toFixed(2)}</span>
+                  </div>
+                </>
+              )
+            })()}
           </div>
         </div>
-
       </div>
     </div>
   )

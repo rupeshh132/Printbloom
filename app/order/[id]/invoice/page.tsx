@@ -56,7 +56,8 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
   const subtotal = order.order_items?.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0) || order.total_amount
   const hasOnlyDigitalItems = order.order_items?.length > 0 && order.order_items.every((item: any) => item.product_name?.includes('Softcopy Magazine'))
   const shipping = hasOnlyDigitalItems ? 0 : 90
-  const discountAmount = Math.max(0, subtotal + shipping - order.total_amount)
+  const pointsUsed = order.points_used || 0;
+  const discountAmount = Math.max(0, subtotal + shipping - pointsUsed - order.total_amount);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 font-sans">
@@ -138,7 +139,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
             </div>
             {discountAmount > 0 ? (
               <div className="flex justify-between py-2 text-sm text-[#6B6259]">
-                <span>Discount</span>
+                <span>Discount {order.applied_promo ? `(${order.applied_promo})` : ''}</span>
                 <span>-₹{discountAmount}</span>
               </div>
             ) : null}
@@ -147,6 +148,12 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
               <span>Shipping</span>
               <span>{shipping > 0 ? `₹${shipping}` : 'Free'}</span>
             </div>
+            {pointsUsed > 0 && (
+              <div className="flex justify-between py-2 text-sm text-[#DFBC94]">
+                <span>Wallet Points Used</span>
+                <span>-₹{pointsUsed}</span>
+              </div>
+            )}
             <div className="flex justify-between pt-4 mt-2 border-t border-dashed border-[#E0D9CF] text-base font-semibold text-[#221F1C]">
               <span>TOTAL PAID</span>
               <span>₹{order.total_amount}</span>
