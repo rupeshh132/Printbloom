@@ -1,6 +1,7 @@
 "use server"
 
-import { createSupabaseServerClient } from "@/lib/supabase-server"
+import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
+import { ADMIN_EMAILS } from "@/lib/admin-config"
 import { revalidatePath } from "next/cache"
 
 export async function saveReminder(formData: FormData) {
@@ -73,11 +74,20 @@ export async function getUpcomingReminders(daysAhead: number = 20) {
   return upcoming
 }
 
+
+
 export async function markReminderSent(id: string) {
-  const supabase = await createSupabaseServerClient()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) {
+    return { success: false, error: "Unauthorized" }
+  }
+
+  const supabaseAdmin = await createSupabaseAdminClient()
   const currentYear = new Date().getFullYear()
   
-  const { error } = await supabase.from("reminders").update({
+  const { error } = await supabaseAdmin.from("reminders").update({
     last_notified_year: currentYear
   }).eq("id", id)
 
