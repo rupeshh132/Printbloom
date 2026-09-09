@@ -27,7 +27,18 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Protect admin routes
+  if (request.nextUrl.pathname.startsWith("/admin") && !request.nextUrl.pathname.startsWith("/admin/login")) {
+    if (!user) {
+      return NextResponse.redirect(new URL("/admin/login", request.url))
+    }
+    const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase()) : [];
+    if (!adminEmails.includes(user.email?.toLowerCase() ?? "")) {
+      return NextResponse.redirect(new URL("/", request.url))
+    }
+  }
 
   return supabaseResponse
 }
