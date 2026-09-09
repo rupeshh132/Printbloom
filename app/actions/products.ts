@@ -2,6 +2,7 @@
 
 import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
+import { ADMIN_EMAILS } from "@/lib/admin-config"
 
 // Fetch all products for public catalogue
 export async function getProducts() {
@@ -25,7 +26,6 @@ export async function getProducts() {
 export async function getProductsAdmin() {
   const supabaseUser = await createSupabaseServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()
-  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const supabaseAdmin = await createSupabaseAdminClient()
@@ -200,7 +200,6 @@ export async function seedProducts(): Promise<void> {
 export async function toggleProductStatus(id: string, currentStatus: string) {
   const supabaseUser = await createSupabaseServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()
-  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const supabaseAdmin = await createSupabaseAdminClient()
@@ -213,7 +212,6 @@ export async function toggleProductStatus(id: string, currentStatus: string) {
 export async function duplicateProduct(id: string) {
   const supabaseUser = await createSupabaseServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()
-  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const supabaseAdmin = await createSupabaseAdminClient()
@@ -257,7 +255,6 @@ export async function duplicateProduct(id: string) {
 export async function createProduct(formData: FormData) {
   const supabaseUser = await createSupabaseServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()
-  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const name = formData.get("name") as string
@@ -307,7 +304,6 @@ export async function createProduct(formData: FormData) {
 export async function deleteProduct(id: string) {
   const supabaseUser = await createSupabaseServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()
-  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
   
   const supabaseAdmin = await createSupabaseAdminClient()
@@ -331,7 +327,6 @@ export async function getProductById(id: string) {
 export async function updateProduct(id: string, formData: FormData) {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
-  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const name = formData.get("name") as string
