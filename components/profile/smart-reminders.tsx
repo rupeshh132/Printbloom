@@ -135,7 +135,9 @@ export function SmartReminders({ reminders }: { reminders: any[] }) {
                 </div>
                 
                 <div className="flex-1">
-                  <h4 className="font-medium text-[#221F1C] text-lg capitalize">{reminder.person_name}'s {reminder.event_type}</h4>
+                  <h4 className="font-medium text-[#221F1C] text-lg capitalize">
+                    {reminder.event_type === 'other' ? reminder.person_name : `${reminder.person_name}'s ${reminder.event_type}`}
+                  </h4>
                   <p className="text-[#6B6259] text-sm mt-0.5">{dateStr}</p>
                   
                   <div className="mt-3 flex items-center gap-2">

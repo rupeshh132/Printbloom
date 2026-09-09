@@ -1,17 +1,10 @@
 import { SectionHeading } from "@/components/ui/section-heading"
 import { getDashboardCounts } from "@/app/actions/enquiries"
-import { seedProducts } from "@/app/actions/products"
 import { getDashboardChartData } from "@/app/actions/dashboard"
-import { Button } from "@/components/ui/button"
 import { DashboardCharts } from "@/components/admin/dashboard-charts"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
-
-async function handleSeed() {
-  "use server"
-  await seedProducts()
-}
 
 export default async function AdminDashboard() {
   const [counts, { monthlyData, productData }] = await Promise.all([
@@ -23,11 +16,6 @@ export default async function AdminDashboard() {
     <div>
       <div className="flex justify-between items-start mb-8">
         <SectionHeading as="h1" className="text-[#221F1C]">Dashboard</SectionHeading>
-        <form action={handleSeed}>
-          <Button variant="outline" size="sm" type="submit">
-            Seed Products (Run Once)
-          </Button>
-        </form>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -50,10 +38,6 @@ export default async function AdminDashboard() {
 
       {/* Advanced Features Component */}
       <DashboardCharts monthlyData={monthlyData} productData={productData} />
-
-      <div className="bg-amber-50 border border-amber-200 p-4 rounded-sm text-sm text-amber-800">
-        <strong>First time setup?</strong> Click "Seed Products (Run Once)" button above to add PrintBloom's full product catalog to your database.
-      </div>
     </div>
   )
 }

@@ -77,8 +77,11 @@ export default async function AdminJournalPage() {
                             </button>
                           </form>
                           
-                          <NextLink href={`/admin/journal/${story.id}`} className="p-2 text-[#9A8F85] hover:text-[#DFBC94] hover:bg-[#FBF6EE] rounded-sm transition-colors" title="Edit Story">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                          <NextLink 
+                            href={`/admin/journal/${story.id}/edit`}
+                            className="text-xs text-[#8B6B43] hover:text-[#DFBC94] underline underline-offset-2"
+                          >
+                            Edit
                           </NextLink>
 
                           <form action={async () => {

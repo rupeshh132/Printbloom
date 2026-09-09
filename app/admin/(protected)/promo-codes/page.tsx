@@ -3,6 +3,7 @@ import { getPromoCodes, createPromoCode, togglePromoCode, deletePromoCode } from
 import { DeleteSubmitButton } from "@/components/admin/delete-submit-button"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
+import NextLink from "next/link"
 
 export const dynamic = "force-dynamic"
 
@@ -127,11 +128,17 @@ export default async function PromoCodesPage() {
                         </span>
                       </td>
                       <td className="p-4 text-right flex items-center justify-end gap-3">
+                        <NextLink 
+                          href={`/admin/promo-codes/${code.id}/edit`}
+                          className="text-xs text-[#8B6B43] hover:text-[#DFBC94] underline underline-offset-2"
+                        >
+                          Edit
+                        </NextLink>
                         <form action={async () => {
                           "use server"
                           await togglePromoCode(code.id, !code.active)
                         }}>
-                          <button type="submit" className="text-xs text-[#9A8F85] hover:text-[#221F1C]">
+                          <button type="submit" className="text-xs text-[#8B6B43] hover:text-[#DFBC94] underline underline-offset-2">
                             {code.active ? 'Disable' : 'Enable'}
                           </button>
                         </form>

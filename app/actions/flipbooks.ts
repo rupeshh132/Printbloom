@@ -53,6 +53,40 @@ export async function getFlipbooksByEnquiry(token: string) {
   }
   return data
 }
+export async function deleteFlipbook(id: string) {
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) return { success: false, error: "Unauthorized" }
+
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { error } = await supabaseAdmin.from("flipbooks").delete().eq("id", id)
+  
+  if (error) {
+    console.error("Error deleting flipbook:", error)
+    return { success: false, error: error.message }
+  }
+  
+  revalidatePath("/admin/(protected)/flipbooks")
+  return { success: true }
+}
+
+export async function updateFlipbookTitle(id: string, title: string) {
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) return { success: false, error: "Unauthorized" }
+
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { error } = await supabaseAdmin.from("flipbooks").update({ title }).eq("id", id)
+  
+  if (error) {
+    console.error("Error updating flipbook title:", error)
+    return { success: false, error: error.message }
+  }
+  
+  revalidatePath("/admin/(protected)/flipbooks")
+  return { success: true }
+}
+
 export async function getAllFlipbooks() {
   const supabaseUser = await createSupabaseServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()

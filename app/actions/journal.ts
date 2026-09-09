@@ -4,6 +4,13 @@ import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
 import { ADMIN_EMAILS } from "@/lib/admin-config"
 
+export async function getJournalById(id: string) {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase.from("stories").select("*").eq("id", id).single()
+  if (error) return null
+  return data
+}
+
 export async function getJournals() {
   const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase

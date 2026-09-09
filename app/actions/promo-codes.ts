@@ -5,6 +5,42 @@ import { revalidatePath } from "next/cache"
 import { ADMIN_EMAILS } from "@/lib/admin-config"
 
 
+export async function getPromoCodeById(id: string) {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase.from("promo_codes").select("*").eq("id", id).single()
+  if (error) return null
+  return data
+}
+
+export async function updatePromoCode(id: string, formData: FormData) {
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) return { success: false, error: "Unauthorized" }
+
+  const code = (formData.get("code") as string).toUpperCase()
+  const discount_type = formData.get("discount_type") as "percentage" | "fixed"
+  const discount_value = Number(formData.get("discount_value"))
+  const expiry_date = formData.get("expiry_date") as string
+  const max_uses = formData.get("max_uses") ? Number(formData.get("max_uses")) : null
+
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { error } = await supabaseAdmin.from("promo_codes").update({
+    code,
+    discount_type,
+    discount_value,
+    expiry_date: expiry_date || null,
+    max_uses
+  }).eq("id", id)
+
+  if (error) {
+    console.error("Error updating promo code:", error)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath("/admin/(protected)/promo-codes")
+  return { success: true }
+}
+
 export async function getPromoCodes() {
   const supabaseUser = await createSupabaseServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()

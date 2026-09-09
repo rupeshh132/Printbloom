@@ -2,8 +2,10 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { getFollowUps, updateFollowUpStatus } from "@/app/actions/follow-ups"
 import { WhatsAppButton } from "@/components/admin/whatsapp-button"
 import { formatDateTime } from "@/lib/utils"
+import { FollowUpsSearchFilter } from "@/components/admin/followups-search-filter"
 
 export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 const STATUS_STYLES: Record<string, { bg: string, text: string, dot: string }> = {
   pending:   { bg: "bg-red-50",    text: "text-red-700",   dot: "bg-red-400" },
@@ -11,8 +13,19 @@ const STATUS_STYLES: Record<string, { bg: string, text: string, dot: string }> =
   recovered: { bg: "bg-green-50",  text: "text-green-700", dot: "bg-green-400" },
 }
 
-export default async function FollowUpsPage() {
-  const followUps = await getFollowUps()
+export default async function FollowUpsPage({ searchParams }: { searchParams: Promise<{ search?: string }> }) {
+  const params = await searchParams
+  const search = params.search?.toLowerCase() || ""
+  
+  let followUps = await getFollowUps()
+
+  if (search) {
+    followUps = followUps.filter((f: any) => {
+      const name = (f.customer_name || '').toLowerCase()
+      const phone = (f.phone_number || '').toLowerCase()
+      return name.includes(search) || phone.includes(search)
+    })
+  }
 
   const pending   = followUps.filter((f: any) => f.status === "pending").length
   const contacted = followUps.filter((f: any) => f.status === "contacted").length
@@ -29,6 +42,8 @@ export default async function FollowUpsPage() {
           </p>
         </div>
       </div>
+
+      <FollowUpsSearchFilter />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4 mb-8">
@@ -49,7 +64,7 @@ export default async function FollowUpsPage() {
         {followUps.length === 0 ? (
           <div className="py-20 text-center text-[#9A8F85]">
             <p className="text-5xl mb-4">🛒</p>
-            <p className="font-serif text-xl text-[#221F1C] mb-2">No abandoned carts!</p>
+            <p className="font-serif text-xl text-[#221F1C] mb-2">No abandoned carts found!</p>
             <p className="text-sm">When customers start checking out, they'll appear here.</p>
           </div>
         ) : (
@@ -59,47 +74,47 @@ export default async function FollowUpsPage() {
                 <tr>
                   <th className="px-5 py-3.5 font-mono text-[10px] text-[#9A8F85] uppercase tracking-wider font-normal">Date</th>
                   <th className="px-5 py-3.5 font-mono text-[10px] text-[#9A8F85] uppercase tracking-wider font-normal">Customer</th>
-                  <th className="px-5 py-3.5 font-mono text-[10px] text-[#9A8F85] uppercase tracking-wider font-normal">Phone</th>
-                  <th className="px-5 py-3.5 font-mono text-[10px] text-[#9A8F85] uppercase tracking-wider font-normal">Cart Value</th>
+                  <th className="px-5 py-3.5 font-mono text-[10px] text-[#9A8F85] uppercase tracking-wider font-normal">Total</th>
                   <th className="px-5 py-3.5 font-mono text-[10px] text-[#9A8F85] uppercase tracking-wider font-normal">Status</th>
-                  <th className="px-5 py-3.5 font-mono text-[10px] text-[#9A8F85] uppercase tracking-wider font-normal">Actions</th>
+                  <th className="px-5 py-3.5 font-mono text-[10px] text-[#9A8F85] uppercase tracking-wider font-normal">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#F0EBE3]">
-                {followUps.map((lead: any) => {
-                  const style = STATUS_STYLES[lead.status] || STATUS_STYLES.pending
-                  const nextStatus = lead.status === 'pending' ? 'contacted' : lead.status === 'contacted' ? 'recovered' : 'pending'
-                  const nextLabel  = lead.status === 'pending' ? '✓ Mark Contacted' : lead.status === 'contacted' ? '✅ Mark Recovered' : '↺ Reset'
+              <tbody className="divide-y divide-[#E0D9CF]">
+                {followUps.map((f: any) => {
+                  const style = STATUS_STYLES[f.status] || STATUS_STYLES.pending
                   return (
-                    <tr key={lead.id} className="hover:bg-[#FBF6EE]/60 transition-colors">
-                      <td className="px-5 py-4 text-[#9A8F85] whitespace-nowrap">
-                        {formatDateTime(lead.created_at)}
-                      </td>
-                      <td className="px-5 py-4 font-semibold text-[#221F1C]">{lead.customer_name}</td>
-                      <td className="px-5 py-4 text-[#6B6259] font-mono text-xs">{lead.phone_number}</td>
-                      <td className="px-5 py-4 font-semibold text-[#DFBC94]">₹{lead.cart_total}</td>
+                    <tr key={f.id} className="hover:bg-[#FBF6EE]/50 transition-colors">
                       <td className="px-5 py-4">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`}></span>
-                          {lead.status}
-                        </span>
+                        <span className="text-[#6D635B] whitespace-nowrap">{formatDateTime(f.created_at)}</span>
                       </td>
                       <td className="px-5 py-4">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          {/* WhatsApp button */}
-                          <WhatsAppButton phone={lead.phone_number} customerName={lead.customer_name} />
-                          
-                          {/* Status update button */}
+                        <p className="font-medium text-[#221F1C]">{f.customer_name}</p>
+                        <p className="text-xs text-[#9A8F85]">{f.phone_number}</p>
+                      </td>
+                      <td className="px-5 py-4 text-[#221F1C] font-medium">
+                        ₹{f.cart_total}
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border ${style.bg} border-${style.bg.replace('bg-', '')} ${style.text}`}>
+                          <div className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
+                          <span className="text-[10px] uppercase font-medium tracking-wider">{f.status}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2">
+                          <WhatsAppButton 
+                            phone={f.phone_number} 
+                            customerName={f.customer_name} 
+                          />
                           <form action={async () => {
                             "use server"
-                            await updateFollowUpStatus(lead.id, nextStatus)
+                            await updateFollowUpStatus(f.id, f.status === "pending" ? "contacted" : "recovered")
                           }}>
-                            <button 
-                              type="submit"
-                              className="text-xs bg-[#F5F0E8] text-[#221F1C] hover:bg-[#E8E0D5] border border-[#E0D9CF] px-3 py-1.5 rounded-sm font-medium transition-colors whitespace-nowrap"
-                            >
-                              {nextLabel}
-                            </button>
+                            {f.status !== "recovered" && (
+                              <button type="submit" className="text-xs text-[#8B6B43] hover:text-[#DFBC94] underline underline-offset-2">
+                                Mark as {f.status === "pending" ? "Contacted" : "Recovered"}
+                              </button>
+                            )}
                           </form>
                         </div>
                       </td>

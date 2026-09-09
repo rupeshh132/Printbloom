@@ -1,6 +1,8 @@
 import { SectionHeading } from "@/components/ui/section-heading"
-import { getAllFlipbooks } from "@/app/actions/flipbooks"
+import { getAllFlipbooks, deleteFlipbook } from "@/app/actions/flipbooks"
 import { CopyUploadLink } from "@/components/admin/copy-upload-link"
+import { EditableFlipbookTitle } from "@/components/admin/editable-flipbook-title"
+import { DeleteSubmitButton } from "@/components/admin/delete-submit-button"
 import NextLink from "next/link"
 import { formatDate } from "@/lib/utils"
 
@@ -42,7 +44,9 @@ export default async function FlipbooksManagerPage() {
                   <td className="p-4 text-sm text-[#9A8F85]">
                     {formatDate(fb.created_at)}
                   </td>
-                  <td className="p-4 font-medium text-[#221F1C]">{fb.title}</td>
+                  <td className="p-4">
+                    <EditableFlipbookTitle id={fb.id} initialTitle={fb.title} />
+                  </td>
                   <td className="p-4 text-sm text-[#6D635B]">{fb.images?.length || 0} Pages</td>
                   <td className="p-4 text-sm">
                     {fb.enquiry_token ? (
@@ -58,6 +62,7 @@ export default async function FlipbooksManagerPage() {
                   </td>
                   <td className="p-4 text-right flex items-center justify-end gap-4">
                     <CopyUploadLink token={fb.id} isFlipbook />
+                    
                     <a 
                       href={`/flipbook/${fb.id}`}
                       target="_blank"
@@ -65,6 +70,13 @@ export default async function FlipbooksManagerPage() {
                     >
                       View Flipbook
                     </a>
+
+                    <form action={async () => {
+                      "use server"
+                      await deleteFlipbook(fb.id)
+                    }}>
+                      <DeleteSubmitButton />
+                    </form>
                   </td>
                 </tr>
               ))}

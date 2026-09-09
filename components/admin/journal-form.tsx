@@ -61,25 +61,29 @@ export function JournalForm({ initialData }: { initialData?: any }) {
     setIsSaving(true)
     setError(null)
 
+    const formData = new FormData(e.currentTarget)
+    if (mediaUrl) {
+      formData.append("media_url", mediaUrl)
+      formData.append("media_type", mediaType)
+    }
+
+    if (initialData?.id) {
+      formData.append("id", initialData.id)
+    }
+
     try {
-      const formData = new FormData(e.currentTarget)
-      if (mediaUrl) {
-        formData.append("media_url", mediaUrl)
-        formData.append("media_type", mediaType)
-      }
-
-      if (initialData) {
-        formData.append("id", initialData.id)
-      }
-
+      const { createJournalEntry } = await import("@/app/actions/journal")
       const result = await createJournalEntry(formData)
+
       if (result?.error) {
         throw new Error(result.error)
       }
       
-      if (!initialData) {
+      if (!initialData?.id) {
         e.currentTarget.reset()
         setMediaUrl("")
+      } else {
+        window.location.href = "/admin/journal"
       }
     } catch(err: any) {
       setError(err.message || "Failed to save story")

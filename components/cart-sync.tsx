@@ -23,18 +23,38 @@ export function CartSync() {
           .eq("user_id", session.user.id)
           .single()
 
-        if (data && data.items) {
-          // If server has items and local is empty, use server's cart
-          if (items.length === 0 && data.items.length > 0) {
+        if (data && data.items && data.items.length > 0) {
+          const currentLocalItems = useCart.getState().items;
+          
+          if (currentLocalItems.length === 0) {
+            // If local is empty, use server's cart
             isSyncingFromServer.current = true
             useCart.setState({ items: data.items })
+          } else {
+            // If both local and server have items, MERGE THEM
+            isSyncingFromServer.current = true
             
-            // Reset flag after state update
-            setTimeout(() => {
-              isSyncingFromServer.current = false
-            }, 100)
-          } 
-          // If local has items and server is empty, local will naturally sync up in the next effect
+            // Create a deep copy to avoid mutating state directly
+            const mergedItems = JSON.parse(JSON.stringify(currentLocalItems));
+            
+            data.items.forEach((serverItem: any) => {
+              const existingItem = mergedItems.find((i: any) => i.id === serverItem.id);
+              if (existingItem) {
+                // Add quantities if same product/variant is in both carts
+                existingItem.quantity += serverItem.quantity;
+              } else {
+                // Add new items from server to local cart
+                mergedItems.push(serverItem);
+              }
+            });
+            
+            useCart.setState({ items: mergedItems })
+          }
+          
+          // Reset flag after state update
+          setTimeout(() => {
+            isSyncingFromServer.current = false
+          }, 100)
         }
       } catch (err) {
         console.error("Failed to fetch cart from server:", err)

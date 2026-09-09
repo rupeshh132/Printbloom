@@ -89,13 +89,26 @@ export function OrderForm({ products }: OrderFormProps) {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="name" className="text-sm font-medium">Your Name</label>
-            <input
-              type="text" id="name" name="name" required
-              className="h-12 border border-border-subtle bg-white px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-accent"
-              placeholder="Rahul Verma"
-            />
+          <input type="hidden" name="source" value="marketing" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="name" className="text-sm font-medium">Your Name</label>
+              <input
+                type="text" id="name" name="name" required
+                className="h-12 border border-border-subtle bg-white px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-accent"
+                placeholder="Rahul Verma"
+              />
+            </div>
+
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="phone" className="text-sm font-medium">WhatsApp Number</label>
+              <input
+                type="tel" id="phone" name="phone" required
+                className="h-12 border border-border-subtle bg-white px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-accent"
+                placeholder="+91 9876543210"
+              />
+            </div>
           </div>
 
           <div className="flex flex-col space-y-2">

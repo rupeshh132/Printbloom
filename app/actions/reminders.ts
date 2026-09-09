@@ -14,7 +14,9 @@ export async function saveReminder(formData: FormData) {
   }
 
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
   
+  // 1. Save to the Admin CRM (Current behavior for everyone)
   const { error } = await supabase
     .from("reminders")
     .insert([{ 
@@ -27,6 +29,17 @@ export async function saveReminder(formData: FormData) {
   if (error) {
     console.error("Error saving reminder:", error)
     return { success: false, error: error.message }
+  }
+
+  // 2. If user is logged in, ALSO save to their personal dashboard
+  if (user) {
+    await supabase.from("user_reminders").insert({
+      user_id: user.id,
+      person_name: occasionName, // Mapping the public field to the private field
+      event_type: "other",       // Defaulting to "other" or mapping logic
+      event_date: occasionDate
+    })
+    revalidatePath("/profile")
   }
   
   revalidatePath("/admin/reminders")
@@ -46,14 +59,35 @@ export async function getUpcomingReminders(daysAhead: number = 20) {
   targetDate.setDate(targetDate.getDate() + daysAhead)
   const targetMonth = targetDate.getMonth()
   const targetDay = targetDate.getDate()
+  const currentYear = new Date().getFullYear()
   
   const upcoming = data.filter(reminder => {
     if (!reminder.occasion_date) return false;
+    // Hide if already notified this year
+    if (reminder.last_notified_year === currentYear) return false;
+    
     const rDate = new Date(reminder.occasion_date)
     return rDate.getMonth() === targetMonth && rDate.getDate() === targetDay
   })
   
   return upcoming
+}
+
+export async function markReminderSent(id: string) {
+  const supabase = await createSupabaseServerClient()
+  const currentYear = new Date().getFullYear()
+  
+  const { error } = await supabase.from("reminders").update({
+    last_notified_year: currentYear
+  }).eq("id", id)
+
+  if (error) {
+    console.error("Error marking reminder sent:", error)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath("/admin/reminders")
+  return { success: true }
 }
 
 export async function getAllReminders() {

@@ -1,7 +1,8 @@
 import { SectionHeading } from "@/components/ui/section-heading"
 import { DeleteSubmitButton } from "@/components/admin/delete-submit-button"
-import { getProductsAdmin, toggleProductStatus, seedProducts } from "@/app/actions/products"
+import { getProductsAdmin, toggleProductStatus, duplicateProduct } from "@/app/actions/products"
 import { Button } from "@/components/ui/button"
+import { ExternalLink, Copy } from "lucide-react"
 
 export default async function AdminProducts() {
   const products = await getProductsAdmin()
@@ -17,9 +18,6 @@ export default async function AdminProducts() {
           <Button asChild size="sm" variant="default">
             <a href="/admin/products/new">Add New Product</a>
           </Button>
-          <form action={seedProducts}>
-            <Button size="sm" variant="outline" type="submit">Seed Default Products</Button>
-          </form>
         </div>
       </div>
 
@@ -27,7 +25,7 @@ export default async function AdminProducts() {
         <div className="bg-white border border-[#E0D9CF] rounded-sm p-12 text-center">
           <p className="text-4xl mb-4">📦</p>
           <p className="font-serif text-xl text-[#221F1C] mb-2">No products yet</p>
-          <p className="text-sm text-[#9A8F85] mb-6">Click "Seed Default Products" to add PrintBloom's catalogue.</p>
+          <p className="text-sm text-[#9A8F85] mb-6">Create a new product to get started.</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
@@ -40,7 +38,7 @@ export default async function AdminProducts() {
                 <th className="p-4 font-normal">Starting Price</th>
                 <th className="p-4 font-normal">Hero</th>
                 <th className="p-4 font-normal">Status</th>
-                <th className="p-4 font-normal">Actions</th>
+                <th className="p-4 font-normal text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E0D9CF]">
@@ -59,23 +57,40 @@ export default async function AdminProducts() {
                     </span>
                   </td>
                   <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      {/* Edit Button (Placeholder link for now) */}
+                    <div className="flex items-center justify-end gap-3">
                       <a 
-                        href={`/admin/products/${product.id}/edit`} 
-                        className="text-xs text-blue-600 hover:underline flex items-center"
-                        title="Edit Product"
+                        href={`/products/${product.slug}`} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="text-xs text-[#8B6B43] hover:text-[#DFBC94] flex items-center gap-1"
+                        title="Preview Product"
                       >
+                        <ExternalLink className="w-3 h-3" /> Preview
+                      </a>
+                      
+                      <form action={async () => {
+                        "use server"
+                        await duplicateProduct(product.id)
+                      }}>
+                        <button 
+                          type="submit" 
+                          className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                          title="Duplicate Product"
+                        >
+                          <Copy className="w-3 h-3" /> Copy
+                        </button>
+                      </form>
+
+                      <a href={`/admin/products/${product.id}/edit`} className="text-xs text-[#8B6B43] hover:text-[#DFBC94] underline underline-offset-2">
                         Edit
                       </a>
-
-                      {/* Publish / Unpublish Toggle */}
+                      
                       <form action={async () => {
                         "use server"
                         await toggleProductStatus(product.id, product.status)
                       }}>
-                        <button type="submit" className="text-xs text-amber-600 hover:underline">
-                          {product.status === "published" ? "Unpublish" : "Publish"}
+                        <button type="submit" className="text-xs text-[#8B6B43] hover:text-[#DFBC94] underline underline-offset-2">
+                          {product.status === "published" ? "Hide" : "Publish"}
                         </button>
                       </form>
 

@@ -41,5 +41,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
+# PrintBloom Media Folders
+reels videos/
+Reactions videos/
+reviews/
+public/videos/
+softcopy magzines images/
+polaroids images/
+photobooth strips images/
+photo keychains image/
+fridge magnet polaroids image/
+spotify cards image/
+*.mp4
+*.MOV
 # Media ignores removed to allow public UI videos to be tracked by Vercel

@@ -8,17 +8,25 @@ import { ADMIN_EMAILS } from "@/lib/admin-config"
 export async function saveEnquiryAction(formData: FormData) {
   const supabase = await createSupabaseServerClient()
 
+  // Get current user if logged in (for user panel requests)
+  const { data: { user } } = await supabase.auth.getUser()
+
   const name = formData.get("name") as string
+  const phone = formData.get("phone") as string
   const product = formData.get("product") as string
   const occasion = formData.get("occasion") as string
   const requiredBy = formData.get("requiredBy") as string
   const notes = formData.get("notes") as string
   const pages = formData.get("pages") as string
+  const source = (formData.get("source") as string) || "marketing"
 
   const { data: enquiry, error } = await supabase
     .from("enquiries")
     .insert({
       name,
+      phone,
+      source,
+      user_id: user ? user.id : null,
       occasion,
       required_by: requiredBy || null,
       notes: notes || null,
@@ -131,6 +139,28 @@ export async function getEnquiryByToken(token: string) {
   }
 
   return data
+}
+
+export async function updateEnquiryNote(id: string, notes: string) {
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
+
+  const { createSupabaseAdminClient } = await import("@/lib/supabase-server")
+  const supabaseAdmin = await createSupabaseAdminClient()
+
+  const { error } = await supabaseAdmin
+    .from("enquiries")
+    .update({ notes })
+    .eq("id", id)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  revalidatePath("/admin/enquiries")
+  return { success: true }
 }
 
 // Update upload status

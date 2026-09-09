@@ -52,6 +52,8 @@ export function EnquiryTab() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        <input type="hidden" name="source" value="profile" />
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-medium text-[#221F1C]">Your Name *</label>
@@ -62,6 +64,18 @@ export function EnquiryTab() {
               required
               className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"
               placeholder="e.g. Rahul Sharma"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="phone" className="text-sm font-medium text-[#221F1C]">WhatsApp Number *</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              className="w-full h-11 px-4 border border-[#E0D9CF] focus:outline-none focus:border-[#DFBC94] rounded-sm"
+              placeholder="+91 9876543210"
             />
           </div>
 

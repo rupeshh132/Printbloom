@@ -209,6 +209,50 @@ export async function toggleProductStatus(id: string, currentStatus: string) {
   revalidatePath("/admin/(protected)/products")
 }
 
+// Duplicate a product
+export async function duplicateProduct(id: string) {
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  const { ADMIN_EMAILS } = await import("@/lib/admin-config")
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
+
+  const supabaseAdmin = await createSupabaseAdminClient()
+  
+  // Fetch original product
+  const { data: original, error: fetchError } = await supabaseAdmin
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single()
+    
+  if (fetchError || !original) throw new Error("Product not found")
+
+  // Generate new unique slug
+  const randomSuffix = Math.floor(Math.random() * 10000).toString()
+  const newSlug = `${original.slug}-copy-${randomSuffix}`
+
+  // Prepare duplicate data
+  const duplicateData = {
+    ...original,
+    id: undefined, // Let DB generate new ID
+    created_at: undefined,
+    updated_at: undefined,
+    name: `${original.name} (Copy)`,
+    slug: newSlug,
+    status: "draft",
+    sort_order: (original.sort_order || 0) + 1
+  }
+
+  const { error: insertError } = await supabaseAdmin.from("products").insert(duplicateData)
+  
+  if (insertError) {
+    console.error("Duplicate error:", insertError)
+    throw new Error("Failed to duplicate product")
+  }
+
+  revalidatePath("/admin/(protected)/products")
+}
+
 // Create a new product
 export async function createProduct(formData: FormData) {
   const supabaseUser = await createSupabaseServerClient()
