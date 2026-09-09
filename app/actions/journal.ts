@@ -1,6 +1,6 @@
 "use server"
 
-import { createSupabaseServerClient } from "@/lib/supabase-server"
+import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
 import { ADMIN_EMAILS } from "@/lib/admin-config"
 
@@ -59,9 +59,11 @@ export async function getJournalBySlug(slug: string) {
 }
 
 export async function createJournalEntry(formData: FormData) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
+
+  const supabaseAdmin = await createSupabaseAdminClient()
 
   const id = formData.get("id") as string
   const title = formData.get("title") as string
@@ -77,7 +79,7 @@ export async function createJournalEntry(formData: FormData) {
   let error;
   if (id) {
     // Update existing story
-    const res = await supabase.from("stories").update({
+    const res = await supabaseAdmin.from("stories").update({
       title,
       content,
       media_url,
@@ -88,7 +90,7 @@ export async function createJournalEntry(formData: FormData) {
     error = res.error
   } else {
     // Insert new story
-    const res = await supabase.from("stories").insert({
+    const res = await supabaseAdmin.from("stories").insert({
       title,
       slug,
       content,
@@ -113,22 +115,24 @@ export async function createJournalEntry(formData: FormData) {
 }
 
 export async function toggleJournalPublished(id: string, published: boolean) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  await supabase.from("stories").update({ published }).eq("id", id)
+  const supabaseAdmin = await createSupabaseAdminClient()
+  await supabaseAdmin.from("stories").update({ published }).eq("id", id)
   revalidatePath("/admin/journal")
   revalidatePath("/journal")
   revalidatePath("/")
 }
 
 export async function deleteJournalEntry(id: string) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  await supabase.from("stories").delete().eq("id", id)
+  const supabaseAdmin = await createSupabaseAdminClient()
+  await supabaseAdmin.from("stories").delete().eq("id", id)
   revalidatePath("/admin/journal")
   revalidatePath("/journal")
   revalidatePath("/")
