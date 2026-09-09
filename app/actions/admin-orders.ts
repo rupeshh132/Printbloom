@@ -3,12 +3,15 @@ import { createSupabaseServerClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
 
 export async function getAdminOrders() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  const { data, error } = await supabase
+  const { createSupabaseAdminClient } = await import("@/lib/supabase-server")
+  const supabaseAdmin = await createSupabaseAdminClient()
+
+  const { data, error } = await supabaseAdmin
     .from("orders")
     .select(`
       *,
@@ -27,12 +30,15 @@ export async function getAdminOrders() {
 }
 
 export async function getAdminOrderById(id: string) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  const { data, error } = await supabase
+  const { createSupabaseAdminClient } = await import("@/lib/supabase-server")
+  const supabaseAdmin = await createSupabaseAdminClient()
+
+  const { data, error } = await supabaseAdmin
     .from("orders")
     .select(`
       *,
@@ -43,7 +49,7 @@ export async function getAdminOrderById(id: string) {
     .single()
 
   if (error) {
-    console.error("Error fetching order details (likely RLS blocked):", error.message || error)
+    console.error("Error fetching order details:", error.message || error)
     return null
   }
 
