@@ -1,19 +1,20 @@
 "use server"
 
-import { createSupabaseServerClient } from "@/lib/supabase-server"
+import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
 import { ADMIN_EMAILS } from "@/lib/admin-config"
 
 
 export async function getPromoCodes() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) {
     return []
   }
 
-  const { data, error } = await supabase
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { data, error } = await supabaseAdmin
     .from("promo_codes")
     .select("*")
     .order("created_at", { ascending: false })
@@ -27,8 +28,8 @@ export async function getPromoCodes() {
 }
 
 export async function createPromoCode(formData: FormData) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
@@ -39,7 +40,8 @@ export async function createPromoCode(formData: FormData) {
   const max_uses_str = formData.get("max_uses") as string
   const max_uses = max_uses_str ? parseInt(max_uses_str, 10) : null
 
-  const { error } = await supabase.from("promo_codes").insert({
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { error } = await supabaseAdmin.from("promo_codes").insert({
     code: code.toUpperCase(),
     discount_type,
     discount_value,
@@ -58,22 +60,24 @@ export async function createPromoCode(formData: FormData) {
 }
 
 export async function togglePromoCode(id: string, active: boolean) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  await supabase.from("promo_codes").update({ active }).eq("id", id)
+  const supabaseAdmin = await createSupabaseAdminClient()
+  await supabaseAdmin.from("promo_codes").update({ active }).eq("id", id)
   revalidatePath("/admin/promo-codes")
 }
 
 export async function deletePromoCode(id: string) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  await supabase.from("promo_codes").delete().eq("id", id)
+  const supabaseAdmin = await createSupabaseAdminClient()
+  await supabaseAdmin.from("promo_codes").delete().eq("id", id)
   revalidatePath("/admin/promo-codes")
 }
 

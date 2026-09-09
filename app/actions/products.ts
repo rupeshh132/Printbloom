@@ -1,6 +1,6 @@
 "use server"
 
-import { createSupabaseServerClient } from "@/lib/supabase-server"
+import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
 
 // Fetch all products for public catalogue
@@ -23,12 +23,13 @@ export async function getProducts() {
 
 // Fetch all products for admin (all statuses)
 export async function getProductsAdmin() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  const { data, error } = await supabase
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { data, error } = await supabaseAdmin
     .from("products")
     .select("*")
     .order("sort_order", { ascending: true })
@@ -197,20 +198,21 @@ export async function seedProducts(): Promise<void> {
 
 // Toggle product status
 export async function toggleProductStatus(id: string, currentStatus: string) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
+  const supabaseAdmin = await createSupabaseAdminClient()
   const newStatus = currentStatus === "published" ? "draft" : "published"
-  await supabase.from("products").update({ status: newStatus }).eq("id", id)
+  await supabaseAdmin.from("products").update({ status: newStatus }).eq("id", id)
   revalidatePath("/admin/(protected)/products")
 }
 
 // Create a new product
 export async function createProduct(formData: FormData) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
@@ -234,7 +236,8 @@ export async function createProduct(formData: FormData) {
 
   const finalMainImageUrl = (imageUrls.length > 0) ? imageUrls[0] : (mainImageUrl || null)
 
-  const { error } = await supabase.from("products").insert({
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { error } = await supabaseAdmin.from("products").insert({
     name,
     slug,
     tagline,
@@ -258,12 +261,13 @@ export async function createProduct(formData: FormData) {
 
 // Delete a product
 export async function deleteProduct(id: string) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
   const { ADMIN_EMAILS } = await import("@/lib/admin-config")
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
   
-  const { error } = await supabase.from("products").delete().eq("id", id)
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { error } = await supabaseAdmin.from("products").delete().eq("id", id)
   
   if (error) {
     console.error("Error deleting product:", error)

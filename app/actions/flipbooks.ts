@@ -1,14 +1,16 @@
 "use server"
 
-import { createSupabaseServerClient } from "@/lib/supabase-server"
+import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
+import { ADMIN_EMAILS } from "@/lib/admin-config"
 
 export async function createFlipbook(enquiryToken: string, title: string, images: string[]) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { success: false, error: "Unauthorized" }
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) return { success: false, error: "Unauthorized" }
   
-  const { data, error } = await supabase
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { data, error } = await supabaseAdmin
     .from("flipbooks")
     .insert([{ enquiry_token: enquiryToken, title, images }])
     .select()
@@ -52,8 +54,12 @@ export async function getFlipbooksByEnquiry(token: string) {
   return data
 }
 export async function getAllFlipbooks() {
-  const supabase = await createSupabaseServerClient()
-  const { data, error } = await supabase.from("flipbooks").select("*").order("created_at", { ascending: false })
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) return []
+
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { data, error } = await supabaseAdmin.from("flipbooks").select("*").order("created_at", { ascending: false })
   if (error) return []
   return data || []
 }

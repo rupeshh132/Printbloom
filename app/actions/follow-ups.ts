@@ -1,6 +1,6 @@
 "use server"
 
-import { createSupabaseServerClient } from "@/lib/supabase-server"
+import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
 import { ADMIN_EMAILS } from "@/lib/admin-config"
 
@@ -42,11 +42,12 @@ export async function saveFollowUpLead(customer_name: string, phone_number: stri
 }
 
 export async function getFollowUps() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) return []
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) return []
 
-  const { data, error } = await supabase
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { data, error } = await supabaseAdmin
     .from("follow_ups")
     .select("*")
     .order("created_at", { ascending: false })
@@ -60,10 +61,11 @@ export async function getFollowUps() {
 }
 
 export async function updateFollowUpStatus(id: string, status: string) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) throw new Error("Unauthorized")
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  await supabase.from("follow_ups").update({ status }).eq("id", id)
+  const supabaseAdmin = await createSupabaseAdminClient()
+  await supabaseAdmin.from("follow_ups").update({ status }).eq("id", id)
   revalidatePath("/admin/follow-ups")
 }

@@ -1,7 +1,8 @@
 "use server"
 
-import { createSupabaseServerClient } from "@/lib/supabase-server"
+import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
+import { ADMIN_EMAILS } from "@/lib/admin-config"
 
 // Save enquiry to Supabase when user submits order form
 export async function saveEnquiryAction(formData: FormData) {
@@ -57,9 +58,12 @@ export async function saveEnquiryAction(formData: FormData) {
 
 // Fetch all enquiries for admin
 export async function getEnquiries() {
-  const supabase = await createSupabaseServerClient()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) return []
 
-  const { data, error } = await supabase
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { data, error } = await supabaseAdmin
     .from("enquiries")
     .select(`
       *,
@@ -81,22 +85,26 @@ export async function getEnquiries() {
 
 // Update enquiry status
 export async function updateEnquiryStatus(id: string, status: string) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthorized")
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
-  await supabase.from("enquiries").update({ status }).eq("id", id)
+  const supabaseAdmin = await createSupabaseAdminClient()
+  await supabaseAdmin.from("enquiries").update({ status }).eq("id", id)
   revalidatePath("/admin/enquiries")
 }
 
 // Fetch dashboard counts
 export async function getDashboardCounts() {
-  const supabase = await createSupabaseServerClient()
+  const supabaseUser = await createSupabaseServerClient()
+  const { data: { user } } = await supabaseUser.auth.getUser()
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) return { newEnquiries: 0, activeProducts: 0, totalStories: 0 }
 
+  const supabaseAdmin = await createSupabaseAdminClient()
   const [enquiries, products, stories] = await Promise.all([
-    supabase.from("enquiries").select("id", { count: "exact" }).eq("status", "new"),
-    supabase.from("products").select("id", { count: "exact" }).eq("status", "published"),
-    supabase.from("stories").select("id", { count: "exact" }),
+    supabaseAdmin.from("enquiries").select("id", { count: "exact" }).eq("status", "new"),
+    supabaseAdmin.from("products").select("id", { count: "exact" }).eq("status", "published"),
+    supabaseAdmin.from("stories").select("id", { count: "exact" }),
   ])
 
   return {
