@@ -75,7 +75,7 @@ export default async function FlipbooksManagerPage() {
                       "use server"
                       await deleteFlipbook(fb.id)
                     }}>
-                      <DeleteSubmitButton />
+                      <DeleteSubmitButton itemName="Flipbook" />
                     </form>
                   </td>
                 </tr>
