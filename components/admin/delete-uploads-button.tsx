@@ -5,6 +5,7 @@ import * as React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { deleteEnquiryUploads } from "@/app/actions/enquiries"
+import { useConfirmStore } from "@/store/use-confirm-store"
 
 interface DeleteUploadsButtonProps {
   token: string
@@ -15,26 +16,30 @@ export function DeleteUploadsButton({ token, count }: DeleteUploadsButtonProps) 
   const [isDeleting, setIsDeleting] = useState(false)
   const router = useRouter()
 
-  const handleDelete = async () => {
-    if (!window.confirm(`Are you sure you want to delete all uploads? This action cannot be undone and files will be permanently removed from Cloudinary.`)) {
-      return;
-    }
+  const { openConfirmModal } = useConfirmStore()
 
-    setIsDeleting(true)
-    
-    try {
-      const res = await deleteEnquiryUploads(token)
-      if (res.success) {
-        toast.success("All files deleted successfully. Storage has been freed.")
-        router.push("/admin/enquiries")
-      } else {
-        toast.error(`Failed to delete files: ${res.error}`)
+  const handleDelete = () => {
+    openConfirmModal({
+      title: "Delete All Uploads",
+      message: "Are you sure you want to delete all uploads? This action cannot be undone and files will be permanently removed from Cloudinary.",
+      confirmText: "Delete",
+      onConfirm: async () => {
+        setIsDeleting(true)
+        try {
+          const res = await deleteEnquiryUploads(token)
+          if (res.success) {
+            toast.success("All files deleted successfully. Storage has been freed.")
+            router.push("/admin/enquiries")
+          } else {
+            toast.error(`Failed to delete files: ${res.error}`)
+          }
+        } catch (e: any) {
+          toast.error(`Error: ${e.message}`)
+        } finally {
+          setIsDeleting(false)
+        }
       }
-    } catch (e: any) {
-      toast.error(`Error: ${e.message}`)
-    } finally {
-      setIsDeleting(false)
-    }
+    })
   }
 
   return (

@@ -4,10 +4,13 @@ import * as React from "react"
 import { CalendarDays, Cake, Heart, Plus, Trash2, Bell } from "lucide-react"
 import { addUserReminder, deleteUserReminder } from "@/app/actions/user-reminders"
 import { formatDateWithoutYear } from "@/lib/utils"
+import { useConfirmStore } from "@/store/use-confirm-store"
 
 export function SmartReminders({ reminders }: { reminders: any[] }) {
   const [isAdding, setIsAdding] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+
+  const { openConfirmModal } = useConfirmStore()
 
   async function handleAdd(formData: FormData) {
     setIsSubmitting(true)
@@ -22,14 +25,20 @@ export function SmartReminders({ reminders }: { reminders: any[] }) {
     }
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("Are you sure you want to delete this reminder?")) return
-    try {
-      await deleteUserReminder(id)
-    } catch (error) {
-      console.error(error)
-      toast.error("Failed to delete reminder")
-    }
+  function handleDelete(id: string) {
+    openConfirmModal({
+      title: "Delete Reminder",
+      message: "Are you sure you want to delete this reminder?",
+      confirmText: "Delete",
+      onConfirm: async () => {
+        try {
+          await deleteUserReminder(id)
+        } catch (error) {
+          console.error(error)
+          toast.error("Failed to delete reminder")
+        }
+      }
+    })
   }
 
   const getDaysLeft = (dateString: string) => {

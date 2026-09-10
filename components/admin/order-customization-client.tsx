@@ -6,12 +6,14 @@ import JSZip from "jszip"
 import { saveAs } from "file-saver"
 import { deleteOrderImages } from "@/app/actions/admin-images"
 import { useRouter } from "next/navigation"
+import { useConfirmStore } from "@/store/use-confirm-store"
 
 export function OrderCustomizationClient({ customizations, orderItemId, orderId }: { customizations: any[], orderItemId: string, orderId: string }) {
   const [copiedIndex, setCopiedIndex] = React.useState<number | null>(null)
   const [isZipping, setIsZipping] = React.useState(false)
   const [isDeleting, setIsDeleting] = React.useState(false)
   const router = useRouter()
+  const { openConfirmModal } = useConfirmStore()
 
   const handleCopy = async (text: string, index: number) => {
     try {
@@ -135,23 +137,27 @@ export function OrderCustomizationClient({ customizations, orderItemId, orderId 
     }
   }
 
-  const handleDeleteAll = async () => {
+  const handleDeleteAll = () => {
     if (customizations.length === 0) return
-    if (!window.confirm("Are you sure you want to delete all photos? This will remove them from Cloudinary and the database permanently.")) {
-      return
-    }
-
-    setIsDeleting(true)
-    try {
-      const imageUrls = customizations.map(c => c.cloudinaryUrl)
-      await deleteOrderImages(orderItemId, orderId, imageUrls)
-      router.refresh()
-    } catch (err: any) {
-      console.error("Delete failed:", err)
-      toast.error(err.message || "Failed to delete images")
-    } finally {
-      setIsDeleting(false)
-    }
+    
+    openConfirmModal({
+      title: "Delete All Photos",
+      message: "Are you sure you want to delete all photos? This will remove them from Cloudinary and the database permanently.",
+      confirmText: "Delete All",
+      onConfirm: async () => {
+        setIsDeleting(true)
+        try {
+          const imageUrls = customizations.map(c => c.cloudinaryUrl)
+          await deleteOrderImages(orderItemId, orderId, imageUrls)
+          router.refresh()
+        } catch (err: any) {
+          console.error("Delete failed:", err)
+          toast.error(err.message || "Failed to delete images")
+        } finally {
+          setIsDeleting(false)
+        }
+      }
+    })
   }
 
   // Calculate grid columns based on number of photos. 

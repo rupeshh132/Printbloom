@@ -3,10 +3,12 @@ import { toast } from "sonner";
 import * as React from "react"
 import { MapPin, Plus, Trash2, Home, Building2 } from "lucide-react"
 import { addAddress, deleteAddress } from "@/app/actions/addresses"
+import { useConfirmStore } from "@/store/use-confirm-store"
 
 export function AddressBook({ addresses }: { addresses: any[] }) {
   const [isAdding, setIsAdding] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const { openConfirmModal } = useConfirmStore()
 
   async function handleAdd(formData: FormData) {
     setIsSubmitting(true)
@@ -21,14 +23,20 @@ export function AddressBook({ addresses }: { addresses: any[] }) {
     }
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("Are you sure you want to delete this address?")) return
-    try {
-      await deleteAddress(id)
-    } catch (error) {
-      console.error(error)
-      toast.error("Failed to delete address")
-    }
+  function handleDelete(id: string) {
+    openConfirmModal({
+      title: "Delete Address",
+      message: "Are you sure you want to delete this address?",
+      confirmText: "Delete",
+      onConfirm: async () => {
+        try {
+          await deleteAddress(id)
+        } catch (error) {
+          console.error(error)
+          toast.error("Failed to delete address")
+        }
+      }
+    })
   }
 
   if (isAdding) {
