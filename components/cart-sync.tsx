@@ -30,25 +30,35 @@ export function CartSync() {
             // If local is empty, use server's cart
             isSyncingFromServer.current = true
             useCart.setState({ items: data.items })
+            if (typeof window !== 'undefined') sessionStorage.setItem('cart_synced', 'true');
           } else {
             // If both local and server have items, MERGE THEM
             isSyncingFromServer.current = true
             
-            // Create a deep copy to avoid mutating state directly
-            const mergedItems = JSON.parse(JSON.stringify(currentLocalItems));
-            
-            data.items.forEach((serverItem: any) => {
-              const existingItem = mergedItems.find((i: any) => i.id === serverItem.id);
-              if (existingItem) {
-                // Add quantities if same product/variant is in both carts
-                existingItem.quantity += serverItem.quantity;
-              } else {
-                // Add new items from server to local cart
-                mergedItems.push(serverItem);
-              }
-            });
-            
-            useCart.setState({ items: mergedItems })
+            const hasSyncedThisSession = typeof window !== 'undefined' && sessionStorage.getItem('cart_synced') === 'true';
+
+            if (hasSyncedThisSession) {
+              // Already merged this session, just trust the server cart to avoid duplicate merges on page navigation
+              useCart.setState({ items: data.items })
+            } else {
+              // First time logging in or new tab: merge carefully
+              const mergedItems = JSON.parse(JSON.stringify(currentLocalItems));
+              
+              data.items.forEach((serverItem: any) => {
+                const existingItem = mergedItems.find((i: any) => i.id === serverItem.id);
+                if (existingItem) {
+                  // BUG FIX: Do NOT indiscriminately add quantities (+=), which causes runaway duplication on navigation.
+                  // Just take the maximum quantity so we don't lose items, but don't double count.
+                  existingItem.quantity = Math.max(existingItem.quantity, serverItem.quantity);
+                } else {
+                  // Add new items from server to local cart
+                  mergedItems.push(serverItem);
+                }
+              });
+              
+              useCart.setState({ items: mergedItems })
+              if (typeof window !== 'undefined') sessionStorage.setItem('cart_synced', 'true');
+            }
           }
           
           // Reset flag after state update
