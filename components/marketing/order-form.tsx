@@ -1,4 +1,5 @@
-"use client";
+"use client"
+import { toast } from "sonner";;
 import * as React from "react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,7 @@ export function OrderForm({ products }: OrderFormProps) {
     const result = await saveEnquiryAction(formData);
 
     if (result.error) {
-      alert("Oops! There was an error saving your order to the database. Please try again.");
+      toast.error("Oops! There was an error saving your order to the database. Please try again.");
       setLoading(false);
       return;
     }

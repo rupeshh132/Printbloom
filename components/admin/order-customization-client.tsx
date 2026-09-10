@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import { Download, Copy, Check, Trash2, Archive } from "lucide-react"
 import JSZip from "jszip"
@@ -115,7 +116,7 @@ export function OrderCustomizationClient({ customizations, orderItemId, orderId 
       
       if (successCount === 0) {
         console.error("DownloadAll: No photos were successfully fetched. Aborting ZIP generation.");
-        alert("Failed to fetch any photos. Check console for exact errors.");
+        toast.error("Failed to fetch any photos. Check console for exact errors.");
         setIsZipping(false);
         return;
       }
@@ -128,7 +129,7 @@ export function OrderCustomizationClient({ customizations, orderItemId, orderId 
       console.log("DownloadAll: saveAs triggered.");
     } catch (err) {
       console.error("DownloadAll: FATAL ERROR during zip creation/saving:", err)
-      alert("Failed to create zip file. Check console for details.")
+      toast.error("Failed to create zip file. Check console for details.")
     } finally {
       setIsZipping(false)
     }
@@ -147,7 +148,7 @@ export function OrderCustomizationClient({ customizations, orderItemId, orderId 
       router.refresh()
     } catch (err: any) {
       console.error("Delete failed:", err)
-      alert(err.message || "Failed to delete images")
+      toast.error(err.message || "Failed to delete images")
     } finally {
       setIsDeleting(false)
     }

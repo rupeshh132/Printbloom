@@ -3,6 +3,7 @@
 import { updatePromoCode } from "@/app/actions/promo-codes"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { toast } from "sonner";
 
 export function PromoCodeEditForm({ code }: { code: any }) {
   const [isSaving, setIsSaving] = useState(false)
@@ -15,7 +16,7 @@ export function PromoCodeEditForm({ code }: { code: any }) {
     const result = await updatePromoCode(code.id, formData)
     
     if (result && result.success === false) {
-      alert(`Failed to update: ${result.error}`)
+      toast.error(`Failed to update: ${result.error}`)
       setIsSaving(false)
     } else {
       window.location.href = "/admin/promo-codes"

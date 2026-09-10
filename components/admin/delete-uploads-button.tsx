@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 
 import * as React from "react"
 import { useState } from "react"
@@ -24,13 +25,13 @@ export function DeleteUploadsButton({ token, count }: DeleteUploadsButtonProps) 
     try {
       const res = await deleteEnquiryUploads(token)
       if (res.success) {
-        alert("All files deleted successfully. Storage has been freed.")
+        toast.success("All files deleted successfully. Storage has been freed.")
         router.push("/admin/enquiries")
       } else {
-        alert(`Failed to delete files: ${res.error}`)
+        toast.error(`Failed to delete files: ${res.error}`)
       }
     } catch (e: any) {
-      alert(`Error: ${e.message}`)
+      toast.error(`Error: ${e.message}`)
     } finally {
       setIsDeleting(false)
     }

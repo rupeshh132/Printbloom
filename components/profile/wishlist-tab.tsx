@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import Image from "next/image"
 import NextLink from "next/link"
@@ -19,7 +20,7 @@ export function WishlistTab({ items }: { items: any[] }) {
       await toggleWishlist(slug, "", "", 0)
     } catch (e) {
       console.error(e)
-      alert("Failed to remove from wishlist")
+      toast.error("Failed to remove from wishlist")
       // Revert if failed
       setWishlistItems(items)
     }

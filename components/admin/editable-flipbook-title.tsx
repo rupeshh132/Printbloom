@@ -4,6 +4,7 @@ import * as React from "react"
 import { useState } from "react"
 import { updateFlipbookTitle } from "@/app/actions/flipbooks"
 import { Edit3, Check, X } from "lucide-react"
+import { toast } from "sonner";
 
 export function EditableFlipbookTitle({ id, initialTitle }: { id: string, initialTitle: string }) {
   const [isEditing, setIsEditing] = useState(false)
@@ -23,7 +24,7 @@ export function EditableFlipbookTitle({ id, initialTitle }: { id: string, initia
     if (result.success) {
       setIsEditing(false)
     } else {
-      alert("Failed to update title")
+      toast.error("Failed to update title")
     }
   }
 

@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 
 import * as React from "react"
 import { SectionHeading } from "@/components/ui/section-heading"
@@ -26,7 +27,7 @@ export default function NewProductPage() {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files)
       if (files.length + selectedFiles.length > 6) {
-        alert("Maximum 6 images allowed per product.")
+        toast.error("Maximum 6 images allowed per product.")
         return
       }
       const newFiles = [...files, ...selectedFiles].slice(0, 6)

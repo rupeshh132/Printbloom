@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import { Heart } from "lucide-react"
 import { toggleWishlist } from "@/app/actions/wishlist"
@@ -20,7 +21,7 @@ export function WishlistButton({ productSlug, productName, productImageUrl, prod
     try {
       const result = await toggleWishlist(productSlug, productName, productImageUrl, productPrice)
       if (result.error) {
-        alert(result.error)
+        toast.error(result.error)
       } else {
         setIsWishlisted(result.isWishlisted!)
       }

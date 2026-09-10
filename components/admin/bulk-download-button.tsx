@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 
 import * as React from "react"
 import JSZip from "jszip"
@@ -34,7 +35,7 @@ export function BulkDownloadButton({ files, customerName }: { files: any[], cust
       saveAs(content, `PrintBloom_${customerName.replace(/[^a-z0-9]/gi, '_')}.zip`)
     } catch (error) {
       console.error("Failed to generate ZIP", error)
-      alert("Failed to generate ZIP file.")
+      toast.error("Failed to generate ZIP file.")
     } finally {
       setIsDownloading(false)
     }

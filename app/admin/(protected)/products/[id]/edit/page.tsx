@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { updateProduct, getProductById } from "@/app/actions/products"
 import { useRouter } from "next/navigation"
 import imageCompression from "browser-image-compression"
+import { toast } from "sonner";
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files)
       if (files.length + existingImages.length + selectedFiles.length > 6) {
-        alert(`Maximum 6 images allowed per product. You currently have ${existingImages.length} saved.`)
+        toast.error(`Maximum 6 images allowed per product. You currently have ${existingImages.length} saved.`)
         return
       }
       const newFiles = [...files, ...selectedFiles].slice(0, 6 - existingImages.length)

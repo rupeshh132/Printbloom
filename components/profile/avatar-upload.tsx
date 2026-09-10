@@ -4,6 +4,7 @@ import * as React from "react"
 import { useState } from "react"
 import { User, Camera, Loader2 } from "lucide-react"
 import { updateUserProfile } from "@/app/actions/user"
+import { toast } from "sonner";
 
 export function AvatarUpload({ currentAvatar, fullName }: { currentAvatar?: string, fullName: string }) {
   const [isUploading, setIsUploading] = useState(false)
@@ -43,7 +44,7 @@ export function AvatarUpload({ currentAvatar, fullName }: { currentAvatar?: stri
     } catch (err: any) {
       console.error(err)
       setPreview(currentAvatar) // Revert on failure
-      alert("Failed to upload profile picture.")
+      toast.error("Failed to upload profile picture.")
     } finally {
       setIsUploading(false)
     }

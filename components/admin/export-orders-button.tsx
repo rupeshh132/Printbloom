@@ -3,12 +3,13 @@
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import { formatDate } from "@/lib/utils"
+import { toast } from "sonner";
 
 export function ExportOrdersButton({ orders }: { orders: any[] }) {
   
   const handleExport = () => {
     if (orders.length === 0) {
-      alert("No orders to export")
+      toast.error("No orders to export")
       return
     }
 

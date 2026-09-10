@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 
 import * as React from "react"
 import { useState } from "react"
@@ -32,7 +33,7 @@ export function FlipbookCreator({ token, returnUrl }: { token: string, returnUrl
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim() || files.length === 0) {
-      alert("Please provide a title and at least 1 page image.")
+      toast.error("Please provide a title and at least 1 page image.")
       return
     }
 
@@ -88,14 +89,14 @@ export function FlipbookCreator({ token, returnUrl }: { token: string, returnUrl
       const res = await createFlipbook(token, title, uploadedUrls)
       
       if (res.success) {
-        alert("Flipbook created successfully! You can now share the link.")
+        toast.success("Flipbook created successfully! You can now share the link.")
         router.push(returnUrl || `/admin/enquiries/${token}`)
       } else {
-        alert(`Failed to save flipbook: ${res.error}`)
+        toast.error(`Failed to save flipbook: ${res.error}`)
       }
     } catch (err: any) {
       console.error(err)
-      alert(`Error during creation: ${err.message}`)
+      toast.error(`Error during creation: ${err.message}`)
     } finally {
       setIsUploading(false)
     }

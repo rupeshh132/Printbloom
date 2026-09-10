@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import { MapPin, Plus, Trash2, Home, Building2 } from "lucide-react"
 import { addAddress, deleteAddress } from "@/app/actions/addresses"
@@ -14,7 +15,7 @@ export function AddressBook({ addresses }: { addresses: any[] }) {
       setIsAdding(false)
     } catch (error) {
       console.error(error)
-      alert("Failed to add address")
+      toast.error("Failed to add address")
     } finally {
       setIsSubmitting(false)
     }
@@ -26,7 +27,7 @@ export function AddressBook({ addresses }: { addresses: any[] }) {
       await deleteAddress(id)
     } catch (error) {
       console.error(error)
-      alert("Failed to delete address")
+      toast.error("Failed to delete address")
     }
   }
 

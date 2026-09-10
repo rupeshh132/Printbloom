@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { saveReminder } from "@/app/actions/reminders"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner";
 
 export function AdminReminderForm() {
   const [isSaving, setIsSaving] = useState(false)
@@ -17,9 +18,9 @@ export function AdminReminderForm() {
     
     if (result.success) {
       form.reset()
-      alert("Reminder added successfully!")
+      toast.success("Reminder added successfully!")
     } else {
-      alert(`Error: ${result.error}`)
+      toast.error(`Error: ${result.error}`)
     }
     setIsSaving(false)
   }

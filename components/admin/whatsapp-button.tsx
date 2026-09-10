@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { MessageCircle } from "lucide-react"
+import { toast } from "sonner";
 
 export function WhatsAppButton({ phone, customerName, flipbookLink = "" }: { phone: string, customerName: string, flipbookLink?: string }) {
   const cleanPhone = phone?.replace(/\D/g, '') || ""
@@ -13,7 +14,7 @@ export function WhatsAppButton({ phone, customerName, flipbookLink = "" }: { pho
       url = `https://wa.me/${cleanPhone}`
     } else {
       url = `https://web.whatsapp.com/`
-      alert(`Phone number unavailable. Opening WhatsApp Web.`)
+      toast.error(`Phone number unavailable. Opening WhatsApp Web.`)
     }
     window.open(url, '_blank')
   }

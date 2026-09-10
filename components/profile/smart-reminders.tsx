@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import { CalendarDays, Cake, Heart, Plus, Trash2, Bell } from "lucide-react"
 import { addUserReminder, deleteUserReminder } from "@/app/actions/user-reminders"
@@ -15,7 +16,7 @@ export function SmartReminders({ reminders }: { reminders: any[] }) {
       setIsAdding(false)
     } catch (error) {
       console.error(error)
-      alert("Failed to add reminder")
+      toast.error("Failed to add reminder")
     } finally {
       setIsSubmitting(false)
     }
@@ -27,7 +28,7 @@ export function SmartReminders({ reminders }: { reminders: any[] }) {
       await deleteUserReminder(id)
     } catch (error) {
       console.error(error)
-      alert("Failed to delete reminder")
+      toast.error("Failed to delete reminder")
     }
   }
 

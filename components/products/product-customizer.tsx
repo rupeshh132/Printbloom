@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { useCart } from "@/store/use-cart"
@@ -24,13 +25,13 @@ export function ProductCustomizer({ product, slug, isWishlisted }: { product: an
   const handleBuyNow = () => {
     // Basic validation based on requirements
     if (photoReq.min > 0 && photos.length < photoReq.min) {
-      alert(`Please upload at least ${photoReq.min} reference ${photoReq.min === 1 ? 'photo' : 'photos'} to book your order.`)
+      toast.error(`Please upload at least ${photoReq.min} reference ${photoReq.min === 1 ? 'photo' : 'photos'} to book your order.`)
       return
     }
 
     const isStillUploading = photos.some(photo => photo.isUploading)
     if (isStillUploading) {
-      alert("Please wait for all photos to finish uploading.")
+      toast.error("Please wait for all photos to finish uploading.")
       return
     }
 

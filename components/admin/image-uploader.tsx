@@ -1,11 +1,12 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 
 export function ImageUploader({ onUploadSuccess }: { onUploadSuccess?: (url: string) => void }) {
   const handleUpload = () => {
     // This will integrate with next-cloudinary or direct Cloudinary widget in the future.
-    alert("Cloudinary upload widget will open here.");
+    toast.error("Cloudinary upload widget will open here.");
     if (onUploadSuccess) {
       onUploadSuccess("https://placeholder.image.url/printbloom");
     }

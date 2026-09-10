@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import { useState } from "react"
 import { useCart } from "@/store/use-cart"
@@ -34,7 +35,7 @@ export default function CartPage() {
 
   const handlePayment = async () => {
     if (!selectedAddressId) {
-      alert("Please select an address before paying");
+      toast.error("Please select an address before paying");
       setCurrentStep("address");
       return;
     }
@@ -121,11 +122,11 @@ export default function CartPage() {
               useCart.getState().clearCart();
               router.push("/profile?tab=orders&order_success=true");
             } else {
-              alert("Payment verification failed: " + (verifyData.message || "Unknown DB error"));
+              toast.error("Payment verification failed: " + (verifyData.message || "Unknown DB error"));
             }
           } catch (err) {
             console.error(err);
-            alert("Error verifying payment");
+            toast.error("Error verifying payment");
           }
         },
         prefill: { email: user.email, contact: "" },
@@ -134,12 +135,12 @@ export default function CartPage() {
 
       const rzp = new (window as any).Razorpay(options);
       rzp.on("payment.failed", function (response: any) {
-        alert(response.error.description);
+        toast.error(response.error.description);
       });
       rzp.open();
     } catch (error: any) {
       console.error("Checkout Failed:", error);
-      alert(error.message || "Failed to initiate checkout");
+      toast.error(error.message || "Failed to initiate checkout");
     } finally {
       setIsProcessing(false);
     }

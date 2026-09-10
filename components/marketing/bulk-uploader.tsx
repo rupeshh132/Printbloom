@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 
 import * as React from "react"
 import { useState, useCallback } from "react"
@@ -33,7 +34,7 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
     const validFiles = Array.from(e.target.files).filter(file => {
       const MAX_SIZE = 15 * 1024 * 1024; // 15MB
       if (file.size > MAX_SIZE) {
-        alert(`File ${file.name} is too large. Maximum allowed size is 15MB.`);
+        toast.error(`File ${file.name} is too large. Maximum allowed size is 15MB.`);
         return false;
       }
       return true;
@@ -129,12 +130,12 @@ export function BulkUploader({ token, enquiryName }: { token: string; enquiryNam
         await updateEnquiryUploadStatus(token, "completed")
       } catch (e) {
         console.error("Failed to update enquiry status:", e)
-        alert("Upload successful, but failed to notify admin. Please contact support.")
+        toast.success("Upload successful, but failed to notify admin. Please contact support.")
       }
       setIsComplete(true);
     } catch(e) {
       console.error("Upload process failed:", e);
-      alert("An unexpected error occurred during upload. Please try again.");
+      toast.error("An unexpected error occurred during upload. Please try again.");
     }
 
     setIsUploading(false)

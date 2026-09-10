@@ -1,4 +1,5 @@
 "use client"
+import { toast } from "sonner";
 import * as React from "react"
 import { Upload, X, Wand2, Loader2, Image as ImageIcon } from "lucide-react"
 
@@ -171,11 +172,11 @@ export function PhotoUploader({ onPhotosChange, maxText }: PhotoUploaderProps) {
       if (data.captions) {
         updatePhotoState(id, { magicCaptions: data.captions })
       } else {
-        alert(data.error || "Failed to generate captions")
+        toast.error(data.error || "Failed to generate captions")
       }
     } catch (e) {
       console.error(e)
-      alert("Error generating magic caption")
+      toast.error("Error generating magic caption")
     } finally {
       updatePhotoState(id, { isGeneratingCaption: false })
     }
