@@ -15,7 +15,7 @@ export function LogoLoader({ className = "w-64" }: { className?: string }) {
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <Lottie 
-        animationData={animationData} 
+        src={animationData} 
         loop={true} 
         autoplay={true}
       />
