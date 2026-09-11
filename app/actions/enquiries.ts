@@ -3,9 +3,15 @@
 import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
 import { ADMIN_EMAILS } from "@/lib/admin-config"
+import { checkRateLimit, getIP } from "@/lib/rate-limit"
 
 // Save enquiry to Supabase when user submits order form
 export async function saveEnquiryAction(formData: FormData) {
+  const ip = getIP();
+  if (!checkRateLimit(ip, "saveEnquiryAction").success) {
+    return { error: "Too many requests. Please wait a minute." }
+  }
+
   const supabase = await createSupabaseServerClient()
 
   // Get current user if logged in (for user panel requests)

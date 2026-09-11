@@ -3,7 +3,7 @@
 import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server"
 import { revalidatePath } from "next/cache"
 import { ADMIN_EMAILS } from "@/lib/admin-config"
-
+import { checkRateLimit, getIP } from "@/lib/rate-limit"
 
 export async function getPromoCodeById(id: string) {
   const supabase = await createSupabaseServerClient()
@@ -119,6 +119,11 @@ export async function deletePromoCode(id: string) {
 
 // For customer checkout validation
 export async function validatePromoCode(code: string) {
+  const ip = getIP();
+  if (!checkRateLimit(ip, "validatePromoCode").success) {
+    return { error: "Too many attempts. Please wait a minute." }
+  }
+
   const supabase = await createSupabaseServerClient()
 
   const { data, error } = await supabase
