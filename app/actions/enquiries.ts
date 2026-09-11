@@ -7,7 +7,7 @@ import { checkRateLimit, getIP } from "@/lib/rate-limit"
 
 // Save enquiry to Supabase when user submits order form
 export async function saveEnquiryAction(formData: FormData) {
-  const ip = getIP();
+  const ip = await getIP();
   if (!checkRateLimit(ip, "saveEnquiryAction").success) {
     return { error: "Too many requests. Please wait a minute." }
   }

@@ -119,7 +119,7 @@ export async function deletePromoCode(id: string) {
 
 // For customer checkout validation
 export async function validatePromoCode(code: string) {
-  const ip = getIP();
+  const ip = await getIP();
   if (!checkRateLimit(ip, "validatePromoCode").success) {
     return { error: "Too many attempts. Please wait a minute." }
   }

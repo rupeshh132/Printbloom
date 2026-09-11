@@ -11,8 +11,8 @@ const rateLimitMap = new Map<string, RateLimitEntry>();
 const LIMIT = 10;
 const WINDOW_MS = 60 * 1000; // 1 minute
 
-export function getIP(): string {
-  const headersList = headers();
+export async function getIP(): Promise<string> {
+  const headersList = await headers();
   const forwardedFor = headersList.get("x-forwarded-for");
   if (forwardedFor) return forwardedFor.split(",")[0].trim();
   return headersList.get("x-real-ip") || "unknown-ip";

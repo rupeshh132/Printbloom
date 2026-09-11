@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache"
 import { checkRateLimit, getIP } from "@/lib/rate-limit"
 
 export async function saveReminder(formData: FormData) {
-  const ip = getIP();
+  const ip = await getIP();
   if (!checkRateLimit(ip, "saveReminder").success) {
     return { success: false, error: "Too many requests. Please wait a minute." }
   }
