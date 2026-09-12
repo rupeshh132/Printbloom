@@ -123,8 +123,8 @@ export default async function PromoCodesPage() {
                         {code.expiry_date ? formatDate(code.expiry_date) : 'Never'}
                       </td>
                       <td className="p-4">
-                        <span className={`px-2 py-1 text-xs rounded-sm ${code.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                          {code.active ? 'Active' : 'Inactive'}
+                        <span className={`px-2 py-1 text-xs rounded-sm ${code.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                          {code.is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                       <td className="p-4 text-right flex items-center justify-end gap-3">
@@ -136,10 +136,10 @@ export default async function PromoCodesPage() {
                         </NextLink>
                         <form action={async () => {
                           "use server"
-                          await togglePromoCode(code.id, !code.active)
+                          await togglePromoCode(code.id, !code.is_active)
                         }}>
                           <button type="submit" className="text-xs text-[#8B6B43] hover:text-[#DFBC94] underline underline-offset-2">
-                            {code.active ? 'Disable' : 'Enable'}
+                            {code.is_active ? 'Disable' : 'Enable'}
                           </button>
                         </form>
                         <form action={async () => {

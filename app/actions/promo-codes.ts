@@ -83,7 +83,7 @@ export async function createPromoCode(formData: FormData) {
     discount_value,
     expiry_date: expiry_date || null,
     max_uses,
-    active: true
+    is_active: true
   })
 
   if (error) {
@@ -96,15 +96,15 @@ export async function createPromoCode(formData: FormData) {
   return { success: true }
 }
 
-export async function togglePromoCode(id: string, active: boolean) {
+export async function togglePromoCode(id: string, is_active: boolean) {
   const supabaseUser = await createSupabaseServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()
   
   if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? "")) throw new Error("Unauthorized")
 
   const supabaseAdmin = await createSupabaseAdminClient()
-  await supabaseAdmin.from("promo_codes").update({ active }).eq("id", id)
-  revalidatePath("/admin/promo-codes")
+  await supabaseAdmin.from("promo_codes").update({ is_active }).eq("id", id)
+  revalidatePath("/admin/(protected)/promo-codes")
 }
 
 export async function deletePromoCode(id: string) {
@@ -137,8 +137,8 @@ export async function validatePromoCode(code: string) {
     return { error: "Invalid discount code" }
   }
 
-  if (!data.active) {
-    return { error: "This discount code is no longer active" }
+  if (!data.is_active) {
+    return { error: "This promo code is no longer active" }
   }
 
   if (data.expiry_date && new Date(data.expiry_date) < new Date()) {
