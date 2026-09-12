@@ -6,10 +6,11 @@ import { User, Camera, Loader2 } from "lucide-react"
 import { updateUserProfile } from "@/app/actions/user"
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 
 export function AvatarUpload({ currentAvatar, fullName }: { currentAvatar?: string, fullName: string }) {
   const router = useRouter();
+  const supabase = createSupabaseBrowserClient();
   const [isUploading, setIsUploading] = useState(false)
   const [preview, setPreview] = useState(currentAvatar)
 
