@@ -78,7 +78,11 @@ export function AuthModal() {
       })
 
       if (error) {
-        setError(error.message)
+        if (error.message.includes("Password should contain")) {
+          setError("Password must contain at least 6 characters, including uppercase, lowercase, numbers, and a special character.")
+        } else {
+          setError(error.message)
+        }
       } else if (data.user?.identities?.length === 0) {
         setError("User already exists with this email address.")
       } else {
