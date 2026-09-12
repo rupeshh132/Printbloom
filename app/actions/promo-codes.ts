@@ -129,7 +129,7 @@ export async function validatePromoCode(code: string) {
 
   const { data, error } = await supabase
     .from("promo_codes")
-    .select("discount_type, discount_value, active, expiry_date, max_uses, used_count")
+    .select("discount_type, discount_value, is_active, expiry_date, max_uses, used_count")
     .eq("code", code.toUpperCase())
     .single()
 
