@@ -233,7 +233,7 @@ export function AuthModal() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-0 top-0 bottom-0 flex items-center pr-3 text-[#9A8F85] hover:text-[#DFBC94] transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
