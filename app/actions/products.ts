@@ -352,7 +352,8 @@ export async function updateProduct(id: string, formData: FormData) {
     updateData.main_image_url = mainImageUrl
   }
 
-  const { error } = await supabase
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { error } = await supabaseAdmin
     .from("products")
     .update(updateData)
     .eq("id", id)
