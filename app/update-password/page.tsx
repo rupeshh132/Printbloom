@@ -3,12 +3,14 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser"
 import { Navbar } from "@/components/marketing/navbar"
-import { Lock } from "lucide-react"
+import { Lock, Eye, EyeOff } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 export default function UpdatePasswordPage() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
@@ -92,14 +94,21 @@ export default function UpdatePasswordPage() {
                       <Lock className="w-4 h-4" />
                     </span>
                     <input 
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       required
                       minLength={6}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
+                      className="w-full h-12 pl-10 pr-12 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-0 top-0 bottom-0 flex items-center pr-3 text-[#9A8F85] hover:text-[#DFBC94] transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                   </div>
                 </div>
 
@@ -110,14 +119,21 @@ export default function UpdatePasswordPage() {
                       <Lock className="w-4 h-4" />
                     </span>
                     <input 
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       required
                       minLength={6}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full h-12 pl-10 pr-4 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
+                      className="w-full h-12 pl-10 pr-12 border border-[#E0D9CF] rounded-sm focus:outline-none focus:border-[#DFBC94] bg-white transition-colors text-sm"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-0 top-0 bottom-0 flex items-center pr-3 text-[#9A8F85] hover:text-[#DFBC94] transition-colors"
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                   </div>
                 </div>
 

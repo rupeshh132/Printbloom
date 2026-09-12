@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import { loginAction } from "@/app/admin/actions"
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
+import { Eye, EyeOff } from "lucide-react"
 
 const initialState = {
   error: "",
@@ -10,6 +11,7 @@ const initialState = {
 
 export default function AdminLoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, initialState)
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <div className="min-h-screen bg-[#221F1C] flex items-center justify-center px-4">
@@ -46,15 +48,24 @@ export default function AdminLoginPage() {
               <label htmlFor="password" className="text-sm font-mono text-[#9A8F85] uppercase tracking-wider">
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                autoComplete="current-password"
-                className="h-12 bg-[#221F1C] border border-white/10 text-[#FBF6EE] px-4 focus:outline-none focus:border-[#DFBC94] transition-colors"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  required
+                  autoComplete="current-password"
+                  className="w-full h-12 bg-[#221F1C] border border-white/10 text-[#FBF6EE] pl-4 pr-12 focus:outline-none focus:border-[#DFBC94] transition-colors"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-0 top-0 bottom-0 flex items-center pr-4 text-[#9A8F85] hover:text-[#DFBC94] transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
 
             {state?.error && (
