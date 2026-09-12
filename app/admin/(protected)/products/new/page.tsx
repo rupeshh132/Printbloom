@@ -31,8 +31,11 @@ export default function NewProductPage() {
         return
       }
       const newFiles = [...files, ...selectedFiles].slice(0, 6)
+      const newPreviews = [...previews, ...selectedFiles.map(f => URL.createObjectURL(f))].slice(0, 6)
       setFiles(newFiles)
-      setPreviews(newFiles.map(f => URL.createObjectURL(f)))
+      setPreviews(newPreviews)
+      
+      e.target.value = ""
     }
   }
 
@@ -40,7 +43,11 @@ export default function NewProductPage() {
     const newFiles = [...files]
     newFiles.splice(index, 1)
     setFiles(newFiles)
-    setPreviews(newFiles.map(f => URL.createObjectURL(f)))
+    
+    const newPreviews = [...previews]
+    URL.revokeObjectURL(newPreviews[index])
+    newPreviews.splice(index, 1)
+    setPreviews(newPreviews)
   }
 
   const [category, setCategory] = React.useState("blank")

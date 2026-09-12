@@ -28,8 +28,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         return
       }
       const newFiles = [...files, ...selectedFiles].slice(0, 6 - existingImages.length)
+      const newPreviews = [...previews, ...selectedFiles.map(f => URL.createObjectURL(f))].slice(0, 6 - existingImages.length)
       setFiles(newFiles)
-      setPreviews(newFiles.map(f => URL.createObjectURL(f)))
+      setPreviews(newPreviews)
+      
+      // Reset input value so the same file can be selected again if needed
+      e.target.value = ""
     }
   }
 
@@ -37,7 +41,11 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     const newFiles = [...files]
     newFiles.splice(index, 1)
     setFiles(newFiles)
-    setPreviews(newFiles.map(f => URL.createObjectURL(f)))
+    
+    const newPreviews = [...previews]
+    URL.revokeObjectURL(newPreviews[index]) // Prevent memory leak
+    newPreviews.splice(index, 1)
+    setPreviews(newPreviews)
   }
 
   const removeExistingImage = (index: number) => {
