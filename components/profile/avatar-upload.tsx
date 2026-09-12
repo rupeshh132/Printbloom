@@ -40,7 +40,9 @@ export function AvatarUpload({ currentAvatar, fullName }: { currentAvatar?: stri
       const data = await res.json()
       if (data.secure_url) {
         setPreview(data.secure_url)
-        await updateUserProfile({ avatar_url: data.secure_url })
+        const resProfile = await updateUserProfile({ avatar_url: data.secure_url })
+        if (!resProfile.success) throw new Error(resProfile.error)
+        
         await supabase.auth.refreshSession();
         router.refresh();
       } else {
