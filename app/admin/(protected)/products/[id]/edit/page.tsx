@@ -31,9 +31,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       const newPreviews = [...previews, ...selectedFiles.map(f => URL.createObjectURL(f))].slice(0, 6 - existingImages.length)
       setFiles(newFiles)
       setPreviews(newPreviews)
-      
-      // Reset input value so the same file can be selected again if needed
-      e.target.value = ""
     }
   }
 
@@ -117,16 +114,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         for (let i = 0; i < files.length; i++) {
           const currentFile = files[i]
           
-          // Compress Image
-          const options = {
-            maxSizeMB: 0.5,
-            maxWidthOrHeight: 1920,
-            useWebWorker: true,
-          }
-          const compressedFile = await imageCompression(currentFile, options)
+          // Bypass compression as it might be corrupting specific file formats (like HEIC)
+          // or failing silently on the user's specific browser/device.
+          const fileToUpload = currentFile;
           
           const uploadData = new FormData()
-          uploadData.append("file", compressedFile)
+          uploadData.append("file", fileToUpload, currentFile.name)
           uploadData.append("upload_preset", "Printbloom")
           uploadData.append("cloud_name", "gnltrlq1")
 

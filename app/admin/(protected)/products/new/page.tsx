@@ -117,21 +117,18 @@ export default function NewProductPage() {
       let uploadedUrls: string[] = []
       
       if (files.length > 0) {
-        for (const currentFile of files) {
-          // Compress Image
-          const options = {
-            maxSizeMB: 0.5,
-            maxWidthOrHeight: 1920,
-            useWebWorker: true,
-          }
-          const compressedFile = await imageCompression(currentFile, options)
+        for (let i = 0; i < files.length; i++) {
+          const currentFile = files[i]
           
-          const fileExt = compressedFile.name.split(".").pop()
+          // Bypass compression as it might be corrupting specific file formats
+          const fileToUpload = currentFile;
+          
+          const fileExt = fileToUpload.name.split(".").pop()
           const fileName = `${Math.random()}.${fileExt}`
           
           const { error: uploadError } = await supabase.storage
             .from("images")
-            .upload(`products/${fileName}`, compressedFile)
+            .upload(`products/${fileName}`, fileToUpload)
 
           if (uploadError) throw new Error("Image upload failed: " + uploadError.message)
 
