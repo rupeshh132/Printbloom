@@ -7,14 +7,17 @@ export function DashboardTab({
   orders, 
   pointsHistory, 
   reminders,
-  wishlist
+  wishlist,
+  createdAt
 }: { 
   fullName: string, 
   orders: any[], 
   pointsHistory: any[], 
   reminders: any[],
-  wishlist: any[]
+  wishlist: any[],
+  createdAt?: string
 }) {
+  const isNewUser = createdAt ? (new Date().getTime() - new Date(createdAt).getTime()) < 24 * 60 * 60 * 1000 : false;
   
   const totalPoints = pointsHistory?.reduce((acc, curr) => {
     if (curr.transaction_type === 'earned' || curr.transaction_type === 'refunded') return acc + curr.points;
@@ -29,7 +32,9 @@ export function DashboardTab({
     <div className="space-y-8 animate-in fade-in duration-500">
       
       <div className="bg-[#FBF6EE] rounded-2xl p-6 md:p-8 border border-[#E0D9CF]">
-        <h2 className="font-serif text-2xl md:text-3xl text-[#221F1C] mb-2">Welcome back, {fullName.split(' ')[0]}!</h2>
+        <h2 className="font-serif text-2xl md:text-3xl text-[#221F1C] mb-2">
+          {isNewUser ? "Welcome" : "Welcome back"}, {fullName.split(' ')[0]}!
+        </h2>
         <p className="text-[#6B6259]">Here's what's happening with your PrintBloom account today.</p>
       </div>
 

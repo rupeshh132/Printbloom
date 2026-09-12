@@ -182,6 +182,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
                 pointsHistory={pointsHistory || []} 
                 reminders={reminders || []}
                 wishlist={wishlist || []}
+                createdAt={user.created_at}
               />
             )}
             
