@@ -88,9 +88,10 @@ export async function createPromoCode(formData: FormData) {
 
   if (error) {
     console.error("Failed to create promo code:", error)
-    return { error: error.message }
+    throw new Error("Failed to create promo code: " + error.message)
   }
 
+  revalidatePath("/admin/(protected)/promo-codes")
   revalidatePath("/admin/promo-codes")
   return { success: true }
 }
