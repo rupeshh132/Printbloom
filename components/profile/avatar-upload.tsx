@@ -5,8 +5,11 @@ import { useState } from "react"
 import { User, Camera, Loader2 } from "lucide-react"
 import { updateUserProfile } from "@/app/actions/user"
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export function AvatarUpload({ currentAvatar, fullName }: { currentAvatar?: string, fullName: string }) {
+  const router = useRouter();
   const [isUploading, setIsUploading] = useState(false)
   const [preview, setPreview] = useState(currentAvatar)
 
@@ -38,6 +41,8 @@ export function AvatarUpload({ currentAvatar, fullName }: { currentAvatar?: stri
       if (data.secure_url) {
         setPreview(data.secure_url)
         await updateUserProfile({ avatar_url: data.secure_url })
+        await supabase.auth.refreshSession();
+        router.refresh();
       } else {
         throw new Error(data.error?.message || "Upload failed")
       }
