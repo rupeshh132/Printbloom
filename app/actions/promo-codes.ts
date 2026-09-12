@@ -6,8 +6,8 @@ import { ADMIN_EMAILS } from "@/lib/admin-config"
 import { checkRateLimit, getIP } from "@/lib/rate-limit"
 
 export async function getPromoCodeById(id: string) {
-  const supabase = await createSupabaseServerClient()
-  const { data, error } = await supabase.from("promo_codes").select("*").eq("id", id).single()
+  const supabaseAdmin = await createSupabaseAdminClient()
+  const { data, error } = await supabaseAdmin.from("promo_codes").select("*").eq("id", id).single()
   if (error) return null
   return data
 }
@@ -118,16 +118,16 @@ export async function deletePromoCode(id: string) {
   revalidatePath("/admin/promo-codes")
 }
 
-// For customer checkout validation
+  // For customer checkout validation
 export async function validatePromoCode(code: string) {
   const ip = await getIP();
   if (!checkRateLimit(ip, "validatePromoCode").success) {
     return { error: "Too many attempts. Please wait a minute." }
   }
 
-  const supabase = await createSupabaseServerClient()
+  const supabaseAdmin = await createSupabaseAdminClient()
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from("promo_codes")
     .select("discount_type, discount_value, is_active, expiry_date, max_uses, used_count")
     .eq("code", code.toUpperCase())
